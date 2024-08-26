@@ -1,9 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using Autofac;
+using Autofac.Core;
+using Microsoft.EntityFrameworkCore;
 using RoadOfGroping.Common.Helper;
 using RoadOfGroping.Core.OrderTest;
 using RoadOfGroping.Interface.Dependency;
+using RoadOfGroping.Repository.UnitOfWorks;
 using RoadOfGroping.Utility.ApiResult;
 using RoadOfGroping.Utility.AppModel;
 using RoadOfGroping.Utility.Token;

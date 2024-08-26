@@ -1,5 +1,6 @@
 using System.Text;
 using Autofac;
+using Autofac.Core;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ using RoadOfGroping.Host.Extensions;
 using RoadOfGroping.Host.Modules;
 using RoadOfGroping.Model.Extensions;
 using RoadOfGroping.Repository.Extensions;
+using RoadOfGroping.Repository.Middlewares;
+using RoadOfGroping.Repository.UnitOfWorks;
 using RoadOfGroping.Utility.ApiResult;
 using RoadOfGroping.Utility.ErrorHandler;
 
@@ -221,8 +224,11 @@ builder.Services.AddMvc(options =>
 
 builder.Services.AddApplication<RoadOfGropingHostModule>();
 
-var obj = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.Contains("RoadOfGroping")).ToList();
+//注册仓储服务
 builder.Services.UseRepository<RoadOfGropingDbContext>();
+
+builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork<RoadOfGropingDbContext>));
+builder.Services.AddTransient<UnitOfWorkMiddleware>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -249,6 +255,8 @@ app.UseAuthentication();//你是谁在前
 app.UseAuthorization();//能干什么在后
 
 #endregion 启用身份验证
+
+app.UseMiddleware<UnitOfWorkMiddleware>();
 
 app.MapControllers();
 

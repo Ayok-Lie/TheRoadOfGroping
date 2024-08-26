@@ -13,10 +13,11 @@ namespace RoadOfGroping.Core.OrderTest
         {
             return await QueryAsNoTracking.ToListAsync();
         }
-        public async Task AddOrder()
+        public async Task Create()
         {
             var order = new Order()
             {
+                Id = 2,
                 DateTime = DateTime.UtcNow,
                 Name = "Test",
             };

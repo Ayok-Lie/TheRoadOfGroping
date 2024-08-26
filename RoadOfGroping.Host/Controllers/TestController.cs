@@ -41,6 +41,14 @@ namespace RoadOfGroping.Host.Controllers
             //return BadRequest();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Create()
+        {
+            await orderRepository.Create();
+
+            return Ok();
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetTestResult(string userId)

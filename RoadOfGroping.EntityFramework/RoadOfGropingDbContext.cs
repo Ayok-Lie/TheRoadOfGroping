@@ -36,7 +36,6 @@ namespace RoadOfGroping.EntityFramework
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
             var result = await base.SaveChangesAsync(cancellationToken);
-            //await _mediator.DispatchDomainEventsAsync(this);
             return true;
         }
 
