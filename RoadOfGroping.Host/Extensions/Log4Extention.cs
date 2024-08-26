@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace TheRoadOfGroping.Utility
+﻿namespace RoadOfGroping.Host.Extensions
 {
-    public class TheLog4Extention
+    public class Log4Extention
     {
         public static void InitLog4(ILoggingBuilder loggingBuilder)
         {

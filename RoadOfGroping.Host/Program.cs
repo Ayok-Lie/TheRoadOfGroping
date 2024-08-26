@@ -1,25 +1,22 @@
-using System.Reflection;
 using System.Text;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using RoadOfGroping.Common.Helper;
 using RoadOfGroping.Common.JWTHelpers;
 using RoadOfGroping.EntityFramework;
+using RoadOfGroping.Host.Extensions;
+
 //using RoadOfGroping.EntityFramework.Extensions;
 using RoadOfGroping.Host.Modules;
 using RoadOfGroping.Model.Extensions;
 using RoadOfGroping.Repository.Extensions;
 using RoadOfGroping.Utility.ApiResult;
-using RoadOfGroping.Utility.Autofac;
 using RoadOfGroping.Utility.ErrorHandler;
-using RoadOfGroping.Utility.Log;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -120,17 +117,7 @@ builder.Services.AddSwaggerGen(options =>
 
 #region 添加Autofac
 
-//替换内置的ServiceProviderFactory
-builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-
-builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
-{
-    containerBuilder.RegisterModule<AutofacModule>();
-    containerBuilder.RegisterBuildCallback(scope =>
-    {
-        IOCManager.Current = (IContainer)scope;
-    });
-});
+builder.Host.UserAutoFac();
 
 #endregion 添加Autofac
 
