@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>D:\Lie-Private\MyProject\TheRoadOfGroping\RoadOfGroping.Host\bin\Debug\net6.0\ApiDoc.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\RoadOfGroping.Model\RoadOfGroping.Model.csproj" />
+    <ProjectReference Include="..\Common\RoadOfGroping.Repository\RoadOfGroping.Repository.csproj" />
+    <ProjectReference Include="..\Common\RoadOfGroping.Utility\RoadOfGroping.Utility.csproj" />
+    <ProjectReference Include="..\RoadOfGroping.Core\RoadOfGroping.Core.csproj" />
+    <ProjectReference Include="..\RoadOfGroping.EntityFramework\RoadOfGroping.EntityFramework.csproj" />
+  </ItemGroup>
+
+</Project>

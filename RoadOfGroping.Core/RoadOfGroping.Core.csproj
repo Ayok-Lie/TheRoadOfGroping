@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="7.1.0" />
+    <PackageReference Include="Castle.Core" Version="5.1.1" />
+    <PackageReference Include="log4net" Version="2.0.17" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\RoadOfGroping.Interface\RoadOfGroping.Interface.csproj" />
+    <ProjectReference Include="..\Common\RoadOfGroping.Model\RoadOfGroping.Model.csproj" />
+    <ProjectReference Include="..\Common\RoadOfGroping.Repository\RoadOfGroping.Repository.csproj" />
+  </ItemGroup>
+
+</Project>
