@@ -14,3 +14,16 @@
         }
     }
 }
+
+
+// 配置日志
+//builder.Host.UseSerilog((context, configuration) =>
+//{
+//    configuration
+//        .MinimumLevel.Debug()
+//        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+//        .MinimumLevel.Override("System", LogEventLevel.Warning)
+//        .Enrich.FromLogContext()
+//        .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+//        .WriteTo.File(new CompactJsonFormatter(), "logs/log.txt", rollingInterval: RollingInterval.Day);
+//});

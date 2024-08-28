@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -19,7 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\RoadOfGroping.Core\RoadOfGroping.Core.csproj" />
     <ProjectReference Include="..\RoadOfGroping.Common\RoadOfGroping.Common.csproj" />
-    <ProjectReference Include="..\RoadOfGroping.Interface\RoadOfGroping.Interface.csproj" />
   </ItemGroup>
 
 </Project>

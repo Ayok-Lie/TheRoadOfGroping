@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RoadOfGroping.Interface\RoadOfGroping.Interface.csproj" />
+    <ProjectReference Include="..\RoadOfGroping.Common\RoadOfGroping.Common.csproj" />
   </ItemGroup>
 
 </Project>

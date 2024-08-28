@@ -10,6 +10,8 @@ namespace RoadOfGroping.Model.Modules
         { }
 
         public ObjectAccessor(T value)
-        { Value = value; }
+        {
+            Value = value;
+        }
     }
 }

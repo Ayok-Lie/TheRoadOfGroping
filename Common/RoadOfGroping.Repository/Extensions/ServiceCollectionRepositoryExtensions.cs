@@ -16,7 +16,6 @@ namespace RoadOfGroping.Repository.Extensions
             where TDbContext : DbContext
         {
             var allTypes = assemblies.SelectMany(assembly => assembly.GetExportedTypes()).ToList();
-            var data = allTypes.Where(x => x.Name.Contains("Order"));
             var entityTypes = types ?? allTypes.Where(type => type.IsEntity());
             foreach (var entityType in entityTypes)
             {

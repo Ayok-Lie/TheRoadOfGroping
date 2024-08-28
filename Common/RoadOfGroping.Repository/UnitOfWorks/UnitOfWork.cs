@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using RoadOfGroping.Interface.DependencyInjection;
+using RoadOfGroping.Common.DependencyInjection;
 
 namespace RoadOfGroping.Repository.UnitOfWorks
 {

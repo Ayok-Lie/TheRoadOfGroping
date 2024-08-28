@@ -11,14 +11,11 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.7.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RoadOfGroping.Interface\RoadOfGroping.Interface.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Interface\" />
+    <ProjectReference Include="..\RoadOfGroping.Common\RoadOfGroping.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using RoadOfGroping.Interface.Dependency;
+﻿using RoadOfGroping.Common.Dependency;
 
 namespace RoadOfGroping.Utility.ApiResult.Modules
 {

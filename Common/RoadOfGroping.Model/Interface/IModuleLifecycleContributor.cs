@@ -1,4 +1,4 @@
-﻿using RoadOfGroping.Interface.DependencyInjection;
+﻿using RoadOfGroping.Common.DependencyInjection;
 
 namespace RoadOfGroping.Model.Interface
 {

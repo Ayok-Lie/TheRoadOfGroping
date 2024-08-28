@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using RoadOfGroping.Interface.Reflection;
+using RoadOfGroping.Common.Reflection;
 using RoadOfGroping.Model.Interface;
 using RoadOfGroping.Model.Modules;
 

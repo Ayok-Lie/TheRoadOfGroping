@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\RoadOfGroping.Interface\RoadOfGroping.Interface.csproj" />
     <ProjectReference Include="..\Common\RoadOfGroping.Model\RoadOfGroping.Model.csproj" />
     <ProjectReference Include="..\Common\RoadOfGroping.Repository\RoadOfGroping.Repository.csproj" />
   </ItemGroup>

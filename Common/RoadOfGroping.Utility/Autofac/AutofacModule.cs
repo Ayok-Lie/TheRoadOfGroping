@@ -1,12 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using Autofac;
-using Autofac.Core;
-using Microsoft.EntityFrameworkCore;
+using RoadOfGroping.Common.Dependency;
 using RoadOfGroping.Common.Helper;
-using RoadOfGroping.Core.OrderTest;
-using RoadOfGroping.Interface.Dependency;
-using RoadOfGroping.Repository.UnitOfWorks;
 using RoadOfGroping.Utility.ApiResult;
 using RoadOfGroping.Utility.AppModel;
 using RoadOfGroping.Utility.Token;
@@ -25,14 +21,14 @@ namespace RoadOfGroping.Utility.Autofac
             List<Component> components = AppsettingHelper.Get<Component>("Components");
             //foreach (var c in components)
             //{
-                //var iServiceDll = $"{basePath}{c.InterfaceName}";
-                //var ServiceDll = $"{basePath}{c.ServiceName}";
-                //Assembly iServiceAssembly = Assembly.LoadFile(iServiceDll);
-                //Assembly serviceAssembly = Assembly.LoadFile(ServiceDll);
-                var serviceAssembly = Assembly.Load("RoadOfGroping.Utility");
-                container.RegisterAssemblyTypes(serviceAssembly)
-                    .Where(b => !b.IsAbstract && baseType.IsAssignableFrom(b))
-                    .AsImplementedInterfaces();
+            //var iServiceDll = $"{basePath}{c.InterfaceName}";
+            //var ServiceDll = $"{basePath}{c.ServiceName}";
+            //Assembly iServiceAssembly = Assembly.LoadFile(iServiceDll);
+            //Assembly serviceAssembly = Assembly.LoadFile(ServiceDll);
+            var serviceAssembly = Assembly.Load("RoadOfGroping.Utility");
+            container.RegisterAssemblyTypes(serviceAssembly)
+                .Where(b => !b.IsAbstract && baseType.IsAssignableFrom(b))
+                .AsImplementedInterfaces();
             //}
 
             // 用于Jwt的各种操作
