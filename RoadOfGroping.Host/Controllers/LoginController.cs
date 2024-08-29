@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +13,12 @@ namespace RoadOfGroping.Host.Controllers
     public class LoginController : ControllerBase
     {
         private TokenHelper _tokenHelper;
+        private ILogger<LoginController> _logger;
 
-        public LoginController(TokenHelper tokenHelper)
+        public LoginController(TokenHelper tokenHelper, ILogger<LoginController> logger)
         {
             _tokenHelper = tokenHelper;
+            _logger = logger;
         }
 
         /// <summary>
@@ -23,17 +27,33 @@ namespace RoadOfGroping.Host.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Login(string name, string pwd)
+        public IActionResult Login(UserInfo user)
         {
-            var claims = new[]
+            if (user.username == "admin" && user.password == "123456")
             {
-                new Claim(ClaimTypes.Name, name),
-            };
-            var userIdentity = new ClaimsIdentity(claims, "login");
-            var userPrincipal = new ClaimsPrincipal(userIdentity);
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
-            HttpContext.Request.Headers["Authorization"] = "Bearer " + _tokenHelper.CreateJwtToken();
-            return Ok();
+                var token = _tokenHelper.CreateJwtToken();
+                Response.Cookies.Append(
+                    "access-token", token,
+                new CookieOptions()
+                {
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(
+                        30
+                    )
+                });
+                HttpClient httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                _logger.LogInformation("登录成功");
+                //var claims = new[]
+                //{
+                //    new Claim(ClaimTypes.Name, name),
+                //};
+                //var userIdentity = new ClaimsIdentity(claims, "login");
+                //var userPrincipal = new ClaimsPrincipal(userIdentity);
+                //HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
+                //HttpContext.Request.Headers["Authorization"] = "Bearer " + _tokenHelper.CreateJwtToken();
+                return Ok();
+            }
+            return BadRequest();
         }
 
         [HttpGet]
@@ -44,6 +64,13 @@ namespace RoadOfGroping.Host.Controllers
             var tokenClaim = identity?.Claims.FirstOrDefault();
             var token = tokenClaim?.Value;
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+
+        public class UserInfo
+        {
+            public string username { get; set; }
+
+            public string password { get; set; }
         }
     }
 }

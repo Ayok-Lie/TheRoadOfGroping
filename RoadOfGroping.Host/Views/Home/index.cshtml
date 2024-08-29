@@ -1,0 +1,170 @@
+﻿@page
+@model RoadOfGroping.Host.Views.Home.infoModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            background-image: linear-gradient(to bottom right, rgb(114, 135, 254), rgb(130, 88, 186));
+        }
+
+        .login-container {
+            width: 600px;
+           /*  height: 315px; */
+            margin: 0 auto;
+            margin-top: 10%;
+            border-radius: 15px;
+            box-shadow: 0 10px 50px 0px rbg(59, 45, 159);
+            background-color: rgb(95, 76, 194);
+        }
+
+        .left-container {
+            display: inline-block;
+            width: 330px;
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+            padding: 60px;
+            background-image: linear-gradient(to bottom right, rgb(118, 76, 163), rgb(92, 103, 211));
+        }
+
+        .title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 200;
+        }
+
+            .title span {
+                border-bottom: 3px solid rgb(237, 221, 22);
+            }
+
+        .input-container {
+            padding: 20px 0;
+        }
+
+        input {
+            border: 0;
+            background: none;
+            outline: none;
+            color: #fff;
+            margin: 20px 0;
+            display: block;
+            width: 100%;
+            padding: 5px 0;
+            transition: .2s;
+            border-bottom: 1px solid rgb(199, 191, 219);
+        }
+
+            input:hover {
+                border-bottom-color: #fff;
+            }
+
+        ::-webkit-input-placeholder {
+            color: rgb(199, 191, 219);
+        }
+
+        .right-container {
+            width: 145px;
+            display: inline-block;
+            height: calc(100% - 120px);
+            vertical-align: top;
+            padding: 60px 0;
+        }
+
+        .action-container {
+            font-size: 10px;
+            color: #fff;
+            text-align: center;
+            position: relative;
+            top: 200px;
+        }
+
+            .action-container .btn {
+                border: 1px solid rgb(237, 221, 22);
+                padding: 10px;
+                display: inline;
+                line-height: 20px;
+                border-radius: 20px;
+                position: absolute;
+                bottom: 10px;
+                left: calc(72px - 20px);
+                transition: .2s;
+                cursor: pointer;
+            }
+
+            .action-container .btn:hover {
+                    background-color: rgb(237, 221, 22);
+                    color: rgb(95, 76, 194);
+                }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="left-container">
+            <div class="title"><span>登录</span></div>
+            <div class="input-container">
+                <input type="text" id="username" name="username" placeholder="用户名">
+                <input type="password" id="password" name="password" placeholder="密码">
+            </div>
+        </div>
+        <div class="right-container">
+            <div class="action-container">
+                <button type="submit" id="login-btn" class="btn btn-primary">登录</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // 当表单提交时
+        $('#login-btn').click(function (event) {
+            event.preventDefault(); // 防止页面刷新
+            //$('.error').remove(); // 移除已有的错误信息
+            var username = $('#username').val();
+            var password = $('#password').val();
+            // 发起 AJAX 请求
+            $.ajax({
+                type: 'post',
+                contentType: "application/json",
+                url: '@ViewBag.Url/api/Login/Login',
+                data: JSON.stringify({
+                    username: username,
+                    password: password
+                }),
+                success: function (response) {
+                    console.info(response)
+                    window.location.href = '/swagger';
+                },
+                error: function (response) {
+                    // 如果返回错误信息，则显示在页面上
+                    const exampleModal = document.getElementById('exampleModal')
+                    exampleModal.addEventListener('show.bs.modal', event => {
+                        // Update the modal's content.
+                        const modalTitle = exampleModal.querySelector('.modal-title');
+                        const modalBodyInput = exampleModal.querySelector('.modal-body');
+
+                        modalBodyInput.textContent = response?.responseJSON?.result?.error ?? '服务器异常';
+                    })
+                    $('#whatever').trigger('click');
+
+                }
+            });
+        });
+    });
+
+</script>
+

@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Swagger UI</title>
+    <!-- 使用 Swagger UI 默认的 CSS 样式 -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css">
+    <style>
+        body {
+            margin: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <!-- 加载 Swagger UI 的 JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-standalone-preset.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+    <script>
+        window.onload = function () {
+            var configObject = JSON.parse('%(ConfigObject)');
+
+            const cookie = Cookies.get('access-token');
+
+            if (!cookie) {
+                window.location.href = '/home/index';
+            }
+
+            // 配置 SwaggerUI
+            configObject.dom_id = "#swagger-ui";
+            configObject.presets = [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset];
+            configObject.layout = "StandaloneLayout";
+            configObject.requestInterceptor = function (request) {
+                // 添加 Authorization 头
+                request.headers['Authorization'] = 'Bearer ' + cookie;
+                return request;
+            };
+
+            // 设置 OAuth2 重定向 URL
+            if (!configObject.hasOwnProperty("oauth2RedirectUrl")) {
+                configObject.oauth2RedirectUrl = window.location + "oauth2-redirect.html";
+            }
+
+            configObject.plugins = [
+                function (system) {
+                    return {
+                        components: {
+                            authorizeBtn: function () {
+                                return null;
+                            }
+                        }
+                    };
+                }
+            ];
+
+            // 初始化 Swagger UI
+            SwaggerUIBundle(configObject);
+        }
+    </script>
+</body>
+</html>

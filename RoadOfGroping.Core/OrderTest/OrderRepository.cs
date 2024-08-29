@@ -17,9 +17,9 @@ namespace RoadOfGroping.Core.OrderTest
         {
             var order = new Order()
             {
-                Id = 2,
+                Id = 5,
                 DateTime = DateTime.UtcNow,
-                Name = "Test",
+                Name = "Sup",
             };
             await CreateAsync(order);
         }

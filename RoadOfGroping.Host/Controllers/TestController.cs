@@ -1,3 +1,5 @@
+using log4net;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoadOfGroping.Core.OrderTest;
@@ -28,6 +30,34 @@ namespace RoadOfGroping.Host.Controllers
         {
             _logger = logger;
             this.orderRepository = orderRepository;
+        }
+
+        /// <summary>
+        /// 测试赋值请求头
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<string> HttpClient()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                // 创建HttpRequestMessage
+                var request = new HttpRequestMessage(HttpMethod.Get, "http://example.com");
+
+                // 添加自定义请求头
+                request.Headers.Add("Authorization", "49546546435464343434343");
+
+                // 发送请求
+                var response = await httpClient.SendAsync(request);
+
+                // 输出响应内容
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+          
+                throw new KeyNotFoundException("Get User failed");
+            }
+
+            throw new KeyNotFoundException("Get User failed");
         }
 
         //[Authorize]

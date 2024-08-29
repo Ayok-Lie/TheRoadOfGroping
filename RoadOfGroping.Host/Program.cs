@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
@@ -19,19 +20,17 @@ using RoadOfGroping.Repository.UnitOfWorks;
 using RoadOfGroping.Utility.ApiResult;
 using RoadOfGroping.Utility.ErrorHandler;
 using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // 配置文件读取
 var basePath = AppContext.BaseDirectory;
 var config = new ConfigurationBuilder()
                 .SetBasePath(basePath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
-
 // 配置AppsettingHelper
 builder.Services.AddSingleton(new AppsettingHelper(config));
-
 // 添加Controllers服务
 builder.Services.AddControllers();
 
@@ -43,7 +42,7 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<AddResponseHeadersFilter>();
     options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
     options.OperationFilter<SecurityRequirementsOperationFilter>();
-    //options.DocumentFilter<RemoveAppSuffixFilter>();
+    options.DocumentFilter<RemoveAppSuffixFilter>();
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "TheRoadOfGroping API",
@@ -186,11 +185,15 @@ builder.Services.AddAuthentication(opts =>
 
 #endregion 添加JWT身份验证
 
-// 统一返回值
+builder.Services.AddRazorPages();
+//统一返回值
 builder.Services.AddMvc(options =>
 {
-    options.Filters.Add<ApiResultFilterAttribute>();
-}).AddDynamicWebApi();
+    //options.Filters.Add<ApiResultFilterAttribute>();
+}).AddRazorPagesOptions((options) =>
+{
+}).AddRazorRuntimeCompilation()
+.AddDynamicWebApi();
 
 // 添加应用程序模块
 builder.Services.AddApplication<RoadOfGropingHostModule>();
@@ -212,6 +215,11 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
+builder.Services.AddControllers(c =>
+{
+     c.Filters.Add<ApiResultFilterAttribute>();
+    //c.Filters.Add<ModelValidateActionFilterAttribute>();
+});
 
 var app = builder.Build();
 
@@ -219,19 +227,30 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    app.UseSwaggerUI(options =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1 Docs");
-        c.RoutePrefix = String.Empty;
-        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
-        c.DefaultModelExpandDepth(-1);
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1 Docs");
+        //options.RoutePrefix = String.Empty;
+        //options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
+        //options.DefaultModelExpandDepth(-1);
+        //options.EnableDeepLinking(); //深链接功能
+        options.DocExpansion(DocExpansion.None); //swagger文档是否打开
+        options.IndexStream = () =>
+        {
+            var path = Path.Join(builder.Environment.WebRootPath, "pages", "swagger.html");
+            return new FileInfo(path).OpenRead();
+        };
     });
 }
 
-app.UseHttpsRedirection();
+//app.UseStaticFiles();
+
+//app.UseHttpsRedirection();
 
 // 添加异常处理中间件
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseRouting();
 
 // 启用身份验证
 app.UseAuthentication();
@@ -243,6 +262,13 @@ app.UseMiddleware<UnitOfWorkMiddleware>();
 // 启用CORS策略
 app.UseCors("DefaultCorsPolicy");
 
-app.MapControllers();
-
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapDefaultControllerRoute();
+    //endpoints.MapControllerRoute(
+    //name: "default",
+    //pattern: "{controller=Home}/{action=Privacy}/{id?}");
+    endpoints.MapRazorPages();
+});
+//app.MapControllers();
 app.Run();

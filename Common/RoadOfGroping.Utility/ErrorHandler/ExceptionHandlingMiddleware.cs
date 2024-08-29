@@ -26,7 +26,7 @@ namespace RoadOfGroping.Utility.ErrorHandler
         {
             try
             {
-                await _next(httpContext); //要么在中间件中处理，要么被传递到下一个中间件中去
+                await _next(httpContext);
             }
             catch (Exception ex)
             {

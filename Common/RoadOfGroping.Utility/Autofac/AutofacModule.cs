@@ -5,6 +5,7 @@ using RoadOfGroping.Common.Dependency;
 using RoadOfGroping.Common.Helper;
 using RoadOfGroping.Utility.ApiResult;
 using RoadOfGroping.Utility.AppModel;
+using RoadOfGroping.Utility.ResultResponse;
 using RoadOfGroping.Utility.Token;
 using Module = Autofac.Module;
 
@@ -39,6 +40,8 @@ namespace RoadOfGroping.Utility.Autofac
 
             //api返回值处理
             container.RegisterType<ResultHelper>().InstancePerLifetimeScope();
+
+            container.RegisterType<FilterActionResultWrapFactory>().As<IActionResultWrapFactory>().InstancePerLifetimeScope();
 
             //container.RegisterType<OrderRepository>().As<IOrderRepository>().InstancePerLifetimeScope();
         }
