@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoadOfGroping.Core.OrderTest;
 using RoadOfGroping.Core.OrderTest.Entity;
+using RoadOfGroping.Utility.RedisModule;
+using System.Diagnostics;
+using System.Text;
 
 namespace RoadOfGroping.Host.Controllers
 {
@@ -23,13 +26,16 @@ namespace RoadOfGroping.Host.Controllers
 
         private readonly IOrderRepository orderRepository;
 
+        private readonly ICacheTool cacheTool;
+
         /// <summary>
         /// ²âÊÔ¿ØÖÆÆ÷
         /// </summary>
-        public TestController(ILogger<TestController> logger, IOrderRepository orderRepository)
+        public TestController(ILogger<TestController> logger, IOrderRepository orderRepository, ICacheTool cacheTool)
         {
             _logger = logger;
             this.orderRepository = orderRepository;
+            this.cacheTool = cacheTool;
         }
 
         /// <summary>
@@ -56,8 +62,6 @@ namespace RoadOfGroping.Host.Controllers
           
                 throw new KeyNotFoundException("Get User failed");
             }
-
-            throw new KeyNotFoundException("Get User failed");
         }
 
         //[Authorize]

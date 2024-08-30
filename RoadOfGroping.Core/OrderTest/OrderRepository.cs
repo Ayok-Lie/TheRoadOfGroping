@@ -17,7 +17,7 @@ namespace RoadOfGroping.Core.OrderTest
         {
             var order = new Order()
             {
-                Id = 5,
+                Id = new Random().Next(),
                 DateTime = DateTime.UtcNow,
                 Name = "Sup",
             };

@@ -72,7 +72,9 @@ namespace RoadOfGroping.Utility.ErrorHandler
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             var requestPath = context.Request.Path;
             var exception = edi.SourceException;
-            var logMsg = $"SourseRoute {requestPath}{exception.Source}错误信息：{exception.Message} {exception.StackTrace} ";
+            //var logMsg = $"SourseRoute {requestPath}{exception.Source}错误信息：{exception.Message} {exception.StackTrace} ";
+
+            var logMsg = $"错误信息：{exception.Message}";
             _logger.LogError(logMsg);
             EngineResponse response = new EngineResponse(new ErrorInfo()
             {

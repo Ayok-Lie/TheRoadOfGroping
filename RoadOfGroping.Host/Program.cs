@@ -56,7 +56,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
-    var xmlPath = Path.Combine($"{basePath}/ApiDoc", "ApiDoc.xml");
+    var xmlPath = Path.Combine($"{basePath}", "ApiDoc.xml");
     options.IncludeXmlComments(xmlPath, true);
     //开启Authorize权限按钮——方式一
     options.AddSecurityDefinition("JWTBearer", new OpenApiSecurityScheme()
@@ -187,12 +187,9 @@ builder.Services.AddAuthentication(opts =>
 
 builder.Services.AddRazorPages();
 //统一返回值
-builder.Services.AddMvc(options =>
-{
-    //options.Filters.Add<ApiResultFilterAttribute>();
-}).AddRazorPagesOptions((options) =>
-{
-}).AddRazorRuntimeCompilation()
+builder.Services.AddMvc(options =>{})
+.AddRazorPagesOptions((options) =>{})
+.AddRazorRuntimeCompilation()
 .AddDynamicWebApi();
 
 // 添加应用程序模块
@@ -218,8 +215,10 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers(c =>
 {
      c.Filters.Add<ApiResultFilterAttribute>();
-    //c.Filters.Add<ModelValidateActionFilterAttribute>();
 });
+
+//注入Redis
+builder.Services.UseRedis(config);
 
 var app = builder.Build();
 

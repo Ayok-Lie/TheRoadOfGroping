@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using RoadOfGroping.Common.Converts;
+using RoadOfGroping.Common.Extensions;
 
 namespace RoadOfGroping.Common.JWTHelpers
 {
@@ -21,7 +21,7 @@ namespace RoadOfGroping.Common.JWTHelpers
         /// <returns></returns>
         public static string CreateJwtToken<T, U>(in T user, in U jwt, SymmetricSecurityKey secretKey)
         {
-            IJwtModel jwtModel = ConvertTo.ConvertModel<U, JwtModel>(jwt);
+            IJwtModel jwtModel = ObjectExtensions.ConvertModel<U, JwtModel>(jwt);
             var claimList = CreateClaimList<T>(user);
             var claim = new List<Claim>() {
                 new Claim(JwtRegisteredClaimNames.Exp, $"{new DateTimeOffset(DateTime.Now.AddMinutes(jwtModel.AccessTokenExpiresMinutes)).ToUnixTimeSeconds()}")

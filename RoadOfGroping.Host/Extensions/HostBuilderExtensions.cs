@@ -3,6 +3,13 @@ using Autofac;
 using RoadOfGroping.Core.Services;
 using System.Reflection;
 using RoadOfGroping.Utility.Autofac;
+using Autofac.Core;
+using FreeRedis;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Identity.Client;
+using Newtonsoft.Json;
+using RoadOfGroping.Utility.RedisModule;
+using System.Security.AccessControl;
 
 namespace RoadOfGroping.Host.Extensions
 {
@@ -20,6 +27,52 @@ namespace RoadOfGroping.Host.Extensions
                             IOCManager.Current = (IContainer)scope;
                         });
                     });
+        }
+
+        /// <summary>
+        /// Redis 注册
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        public static IServiceCollection UseRedis(this IServiceCollection services, IConfiguration configuration)
+        {
+            // 缓存操作类相关注册
+            var cacheConfig = configuration.GetSection("CacheConfig").Get<RedisCacheOptions>(); // 获取缓存相关配置
+
+            services.AddMemoryCache();
+
+            if (cacheConfig.EnableRedis)
+            {
+                var connectionStringBuilder = new ConnectionStringBuilder()
+                {
+                    Host = cacheConfig.Redis.Host,
+                    Password = cacheConfig.Redis.Password,
+                    Database = cacheConfig.Redis.Database,
+                    Ssl = cacheConfig.Redis.Ssl
+                };
+                var redis = new RedisClient(connectionStringBuilder)
+                {
+                    Serialize = JsonConvert.SerializeObject,
+                    Deserialize = JsonConvert.DeserializeObject,
+                };
+                services.AddSingleton(redis);
+                services.AddSingleton<IRedisClient>(redis);
+                // Redis 缓存
+                services.AddSingleton<ICacheTool, RedisCacheTool>();
+
+                var options = new ClientSideCachingOptions();
+                redis.UseClientSideCaching(options);
+            }
+            else
+            {
+                // 内存缓存
+                services.AddSingleton<ICacheTool, MemoryCacheTool>();
+                // 分布式内存缓存
+                services.AddDistributedMemoryCache();
+            }
+
+            return services;
         }
     }
 

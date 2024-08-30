@@ -41,6 +41,7 @@ namespace RoadOfGroping.Repository.Middlewares
                 {
                     await d.RollbackTransactionAsync();
                 }
+                throw new Exception(ex.Message);
             }
         }
     }
