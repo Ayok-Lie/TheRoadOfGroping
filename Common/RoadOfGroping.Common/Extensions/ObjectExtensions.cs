@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using Newtonsoft.Json;
 
 namespace RoadOfGroping.Common.Extensions
 {
     public static class ObjectExtensions
     {
-
         /// <summary>
         /// 实体类转换，要求两个类中的成员一致
         /// </summary>
@@ -68,7 +62,6 @@ namespace RoadOfGroping.Common.Extensions
         {
             return JsonConvert.SerializeObject(data);
         }
-
 
         public static bool ObjToBool(this object thisValue)
         {
@@ -164,6 +157,5 @@ namespace RoadOfGroping.Common.Extensions
         /// <param name="value"> 要转化的源对象 </param>
         /// <returns> 转化后的指定类型的对象，转化失败引发异常。 </returns>
         public static T CastTo<T>(this object value) => value.CastTo<T>(default);
-
     }
 }

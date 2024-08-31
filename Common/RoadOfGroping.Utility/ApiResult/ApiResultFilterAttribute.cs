@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using RoadOfGroping.Common.Attributes;
 using RoadOfGroping.Utility.ResultResponse;
@@ -51,6 +49,5 @@ namespace RoadOfGroping.Utility.ApiResult
                 _actionResultWrapFactory.CreateContext(context).Wrap(context);
             }
         }
-
     }
 }

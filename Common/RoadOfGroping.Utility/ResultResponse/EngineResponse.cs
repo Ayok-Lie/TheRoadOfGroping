@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RoadOfGroping.Utility.ResultResponse
+﻿namespace RoadOfGroping.Utility.ResultResponse
 {
     [Serializable]
     public class EngineResponse<TResult> : ResponseBase
@@ -46,9 +40,9 @@ namespace RoadOfGroping.Utility.ResultResponse
         public EngineResponse(int code, bool isSuccess) : base(code, isSuccess)
         {
         }
+
         public EngineResponse(ErrorInfo error, bool unAuthorizedRequest) : base(error, unAuthorizedRequest)
         {
-
         }
 
         public EngineResponse(object result, bool _unAuthorizedRequest) : base(result)
@@ -56,7 +50,8 @@ namespace RoadOfGroping.Utility.ResultResponse
             UnAuthorizedRequest = _unAuthorizedRequest;
         }
 
-
-        public EngineResponse() : base() { }
+        public EngineResponse() : base()
+        {
+        }
     }
 }

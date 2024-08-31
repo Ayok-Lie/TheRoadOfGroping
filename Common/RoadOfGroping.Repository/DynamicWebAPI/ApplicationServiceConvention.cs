@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.Text;
-using Microsoft.AspNetCore.Http;
 using RoadOfGroping.Repository.DomainService;
+
 namespace RoadOfGroping.Repository.DynamicWebAPI
 {
     /// <summary>
@@ -196,7 +197,6 @@ namespace RoadOfGroping.Repository.DynamicWebAPI
                 }
             }
         }
-
 
         /// <summary>
         /// 计算路由模板。

@@ -27,7 +27,6 @@
 //            SetIsDeleter(targetObject, true);
 //        }
 
-
 //        protected virtual void SetCreationTime(object targetObject)
 //        {
 //            if (!(targetObject is IHasCreationTime objectCreationTime))
@@ -58,7 +57,6 @@
 //                ObjectPropertyHelper.TrySetProperty(mayHaveCreatorObject, x => x.CreatorId, () => _userSession.UserId);
 //            }
 //        }
-
 
 //        protected virtual void SetDeletionTime(object targetObject)
 //        {

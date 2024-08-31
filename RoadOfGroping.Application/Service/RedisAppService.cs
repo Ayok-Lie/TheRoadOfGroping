@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Text;
+﻿using RoadOfGroping.Common.Attributes;
 using RoadOfGroping.Repository.DomainService;
 
-namespace RoadOfGroping.Application.UserAppService
+namespace RoadOfGroping.Application.Service
 {
+    /// <summary>
+    /// redis测试服务
+    /// </summary>
+    [DisabledUnitOfWork(true)]
     public class RedisAppService : ApplicationService
     {
         private readonly ICacheTool cacheTool;
@@ -14,7 +16,7 @@ namespace RoadOfGroping.Application.UserAppService
             this.cacheTool = cacheTool;
         }
 
-        public async Task SetRedis(string key ,string val)
+        public async Task SetRedis(string key, string val)
         {
             await cacheTool.SetAsync(key, val);
         }

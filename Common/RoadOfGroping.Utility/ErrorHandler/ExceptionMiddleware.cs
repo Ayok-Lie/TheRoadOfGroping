@@ -2,10 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RoadOfGroping.Core.OrderTest;
-using RoadOfGroping.Core.OrderTest.Entity;
-using RoadOfGroping.Repository.Repository;
-using RoadOfGroping.Utility.Autofac;
 using RoadOfGroping.Utility.ResultResponse;
 
 namespace RoadOfGroping.Utility.ErrorHandler

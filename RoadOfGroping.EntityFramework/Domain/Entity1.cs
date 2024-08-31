@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RoadOfGroping.EntityFramework.Domain
 {
@@ -37,7 +37,7 @@ namespace RoadOfGroping.EntityFramework.Domain
     }
 
     public abstract class Entity1<Tkey>
-    : Entity1,IEntity1<Tkey>
+    : Entity1, IEntity1<Tkey>
     {
         protected Entity1()
         {
@@ -47,6 +47,7 @@ namespace RoadOfGroping.EntityFramework.Domain
         {
             return new object[] { Id };
         }
+
         /// <summary>
         /// ID
         /// </summary>

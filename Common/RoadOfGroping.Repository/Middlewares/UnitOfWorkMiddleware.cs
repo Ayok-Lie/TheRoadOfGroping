@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using RoadOfGroping.Common.Attributes;
 using RoadOfGroping.Repository.UnitOfWorks;
 
 namespace RoadOfGroping.Repository.Middlewares
@@ -19,29 +14,39 @@ namespace RoadOfGroping.Repository.Middlewares
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            // 获取服务中多个DbContext
-            var unitOfWorks = context.RequestServices.GetServices<IUnitOfWork>();
-            foreach (var unitOfWork in unitOfWorks)
+            var options = context.Features.Get<IEndpointFeature>()?.Endpoint;
+            var unitOfWorkAttribute = context.Features.Get<IEndpointFeature>()?.Endpoint?.Metadata.GetMetadata<DisabledUnitOfWorkAttribute>();
+
+            if (unitOfWorkAttribute?.Disabled == true)
             {
-                // 开启事务
-                await unitOfWork.BeginTransactionAsync();
+                await next.Invoke(context).ConfigureAwait(false);
             }
-            try
+            else
             {
-                await next.Invoke(context);
+                // 获取服务中多个DbContext
+                var unitOfWorks = context.RequestServices.GetServices<IUnitOfWork>();
                 foreach (var unitOfWork in unitOfWorks)
                 {
-                    // 提交事务
-                    await unitOfWork.CommitTransactionAsync();
+                    // 开启事务
+                    await unitOfWork.BeginTransactionAsync();
                 }
-            }
-            catch (Exception ex)
-            {
-                foreach (var d in unitOfWorks)
+                try
                 {
-                    await d.RollbackTransactionAsync();
+                    await next.Invoke(context);
+                    foreach (var unitOfWork in unitOfWorks)
+                    {
+                        // 提交事务
+                        await unitOfWork.CommitTransactionAsync();
+                    }
                 }
-                throw new Exception(ex.Message);
+                catch (Exception ex)
+                {
+                    foreach (var d in unitOfWorks)
+                    {
+                        await d.RollbackTransactionAsync();
+                    }
+                    throw new Exception(ex.Message);
+                }
             }
         }
     }

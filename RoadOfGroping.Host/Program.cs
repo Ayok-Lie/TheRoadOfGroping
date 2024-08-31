@@ -1,12 +1,12 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using RoadOfGroping.Application.Service.Handler;
 using RoadOfGroping.Common.Helper;
 using RoadOfGroping.Common.JWTHelpers;
 using RoadOfGroping.EntityFramework;
@@ -19,6 +19,7 @@ using RoadOfGroping.Repository.Middlewares;
 using RoadOfGroping.Repository.UnitOfWorks;
 using RoadOfGroping.Utility.ApiResult;
 using RoadOfGroping.Utility.ErrorHandler;
+using RoadOfGroping.Utility.EventBus.Extensions;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -187,8 +188,8 @@ builder.Services.AddAuthentication(opts =>
 
 builder.Services.AddRazorPages();
 //统一返回值
-builder.Services.AddMvc(options =>{})
-.AddRazorPagesOptions((options) =>{})
+builder.Services.AddMvc(options => { })
+.AddRazorPagesOptions((options) => { })
 .AddRazorRuntimeCompilation()
 .AddDynamicWebApi();
 
@@ -214,11 +215,15 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddControllers(c =>
 {
-     c.Filters.Add<ApiResultFilterAttribute>();
+    c.Filters.Add<ApiResultFilterAttribute>();
 });
 
 //注入Redis
 builder.Services.UseRedis(config);
+builder.Services.AddEventBusAndSubscribes(c =>
+{
+    c.Subscribe<TestDto, TestEventHandler>();
+});
 
 var app = builder.Build();
 

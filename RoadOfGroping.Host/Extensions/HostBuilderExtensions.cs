@@ -1,15 +1,9 @@
-﻿using Autofac.Extensions.DependencyInjection;
-using Autofac;
-using RoadOfGroping.Core.Services;
-using System.Reflection;
-using RoadOfGroping.Utility.Autofac;
-using Autofac.Core;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using FreeRedis;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Identity.Client;
 using Newtonsoft.Json;
+using RoadOfGroping.Utility.Autofac;
 using RoadOfGroping.Utility.RedisModule;
-using System.Security.AccessControl;
 
 namespace RoadOfGroping.Host.Extensions
 {

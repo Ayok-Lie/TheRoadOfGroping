@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RoadOfGroping.Common.Attributes;
-using System.Diagnostics;
 
 namespace RoadOfGroping.Host.Controllers
 {
     [SkipActionFilter]
+    [DisabledUnitOfWork(true)]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

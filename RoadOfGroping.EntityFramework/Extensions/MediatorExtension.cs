@@ -1,8 +1,4 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using RoadOfGroping.EntityFramework.Domain;
-
-namespace RoadOfGroping.EntityFramework.Extensions
+﻿namespace RoadOfGroping.EntityFramework.Extensions
 {
     internal static class MediatorExtension
     {

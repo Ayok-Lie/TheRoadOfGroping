@@ -1,12 +1,7 @@
-using log4net;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoadOfGroping.Core.OrderTest;
 using RoadOfGroping.Core.OrderTest.Entity;
-using RoadOfGroping.Utility.RedisModule;
-using System.Diagnostics;
-using System.Text;
 
 namespace RoadOfGroping.Host.Controllers
 {
@@ -59,7 +54,6 @@ namespace RoadOfGroping.Host.Controllers
                 // Êä³öÏìÓ¦ÄÚÈÝ
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-          
                 throw new KeyNotFoundException("Get User failed");
             }
         }

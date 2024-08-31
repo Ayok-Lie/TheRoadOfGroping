@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 
 namespace RoadOfGroping.Repository.UnitOfWorks
 {
@@ -44,19 +39,18 @@ namespace RoadOfGroping.Repository.UnitOfWorks
         /// <returns></returns>
         Task CommitTransactionAsync(CancellationToken cancellationToken = default);
 
-
         /// <summary>
         /// 回滚事务
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         void RollbackTransaction();
+
         /// <summary>
         /// 回滚事务
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
-
     }
 }
