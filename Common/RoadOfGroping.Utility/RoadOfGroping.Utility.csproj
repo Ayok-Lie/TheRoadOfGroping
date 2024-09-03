@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AlibabaCloud.SDK.Dysmsapi20170525" Version="3.0.0" />
     <PackageReference Include="Autofac" Version="8.0.0" />
     <PackageReference Include="FreeRedis" Version="1.2.15" />
+    <PackageReference Include="MailKit" Version="4.7.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
@@ -16,11 +18,20 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />
     <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+    <PackageReference Include="RestSharp" Version="112.0.0" />
+    <PackageReference Include="TencentCloudSDK" Version="3.0.1079" />
+    <PackageReference Include="WebApiClientCore" Version="2.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\RoadOfGroping.Core\RoadOfGroping.Core.csproj" />
     <ProjectReference Include="..\RoadOfGroping.Common\RoadOfGroping.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="TopSdk">
+      <HintPath>bin\Debug\net6.0\TopSdk.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

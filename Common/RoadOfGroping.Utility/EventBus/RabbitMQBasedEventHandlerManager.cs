@@ -3,18 +3,26 @@ using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using RoadOfGroping.Utility.RabbitMQ;
 
 namespace RoadOfGroping.Utility.EventBus
 {
-    public class RabbitMQBasedEventHandlerManager : RabbitMQConfigs, IRabbitMQBasedEventHandlerManager
+    public class RabbitMQBasedEventHandlerManager : IRabbitMQBasedEventHandlerManager
     {
         private readonly IConnection _connection;
         private readonly IModel _channel;
+        private readonly IConfiguration _configuration;
 
         public RabbitMQBasedEventHandlerManager(IConfiguration configuration)
         {
-            var factory = GreateConnectionFactory(configuration);
+            _configuration = configuration;
+            var factory = new ConnectionFactory
+            {
+                // 设置连接属性
+                HostName = configuration["RabbitMQ:HostName"],
+                Port = int.Parse(configuration["RabbitMQ:Port"]),
+                UserName = configuration["RabbitMQ:UserName"],
+                Password = configuration["RabbitMQ:Password"]
+            };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
         }
