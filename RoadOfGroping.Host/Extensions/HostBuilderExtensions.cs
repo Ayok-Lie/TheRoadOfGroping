@@ -31,38 +31,48 @@ namespace RoadOfGroping.Host.Extensions
         /// <returns></returns>
         public static IServiceCollection UseRedis(this IServiceCollection services, IConfiguration configuration)
         {
-            // 缓存操作类相关注册
-            var cacheConfig = configuration.GetSection("CacheConfig").Get<RedisCacheOptions>(); // 获取缓存相关配置
+            // 获取缓存相关配置
+            var cacheConfig = configuration.GetSection("CacheConfig").Get<RedisCacheOptions>();
 
+            // 注册内存缓存服务
             services.AddMemoryCache();
 
+            // 判断是否启用Redis缓存
             if (cacheConfig.EnableRedis)
             {
+                // 创建Redis连接字符串构建器
                 var connectionStringBuilder = new ConnectionStringBuilder()
                 {
-                    Host = cacheConfig.Redis.Host,
-                    Password = cacheConfig.Redis.Password,
-                    Database = cacheConfig.Redis.Database,
-                    Ssl = cacheConfig.Redis.Ssl
+                    Host = cacheConfig.Redis.Host, // Redis主机地址
+                    Password = cacheConfig.Redis.Password, // Redis密码
+                    Database = cacheConfig.Redis.Database, // 选择的数据库
+                    Ssl = cacheConfig.Redis.Ssl // 是否启用SSL
                 };
+
+                // 创建Redis客户端实例
                 var redis = new RedisClient(connectionStringBuilder)
                 {
-                    Serialize = JsonConvert.SerializeObject,
-                    Deserialize = JsonConvert.DeserializeObject,
+                    Serialize = JsonConvert.SerializeObject, // 序列化函数
+                    Deserialize = JsonConvert.DeserializeObject, // 反序列化函数
                 };
+
+                // 注册Redis客户端实例为单例服务
                 services.AddSingleton(redis);
                 services.AddSingleton<IRedisClient>(redis);
-                // Redis 缓存
+
+                // 注册Redis缓存工具为单例服务
                 services.AddSingleton<ICacheTool, RedisCacheTool>();
 
+                // 配置客户端缓存选项
                 var options = new ClientSideCachingOptions();
                 redis.UseClientSideCaching(options);
             }
             else
             {
-                // 内存缓存
+                // 注册内存缓存工具为单例服务
                 services.AddSingleton<ICacheTool, MemoryCacheTool>();
-                // 分布式内存缓存
+
+                // 注册分布式内存缓存服务
                 services.AddDistributedMemoryCache();
             }
 

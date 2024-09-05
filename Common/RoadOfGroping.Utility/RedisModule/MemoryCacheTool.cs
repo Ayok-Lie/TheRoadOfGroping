@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using FreeRedis;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace RoadOfGroping.Utility.RedisModule
 {
@@ -142,6 +143,316 @@ namespace RoadOfGroping.Utility.RedisModule
 
         // 异步删除前缀匹配的缓存项
         public Task RemoveByPrefixAsync(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string BLPop(string key, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T BLPop<T>(string key, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public KeyValue<string> BLPop(string[] keys, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public KeyValue<T> BLPop<T>(string[] keys, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string BRPop(string key, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T BRPop<T>(string key, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public KeyValue<string> BRPop(string[] keys, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public KeyValue<T> BRPop<T>(string[] keys, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string BRPopLPush(string source, string destination, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T BRPopLPush<T>(string source, string destination, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string LIndex(string key, long index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T LIndex<T>(string key, long index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public long LInsert(string key, InsertDirection direction, object pivot, object element)
+        {
+            throw new NotImplementedException();
+        }
+
+        public long LLen(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string LPop(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T LPop<T>(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public long LPos<T>(string key, T element, int rank = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public long[] LPos<T>(string key, T element, int rank, int count, int maxLen)
+        {
+            throw new NotImplementedException();
+        }
+
+        public long LPush(string key, params object[] elements)
+        {
+            throw new NotImplementedException();
+        }
+
+        public long LPushX(string key, params object[] elements)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string[] LRange(string key, long start, long stop)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T[] LRange<T>(string key, long start, long stop)
+        {
+            throw new NotImplementedException();
+        }
+
+        public long LRem<T>(string key, long count, T element)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LSet<T>(string key, long index, T element)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LTrim(string key, long start, long stop)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string RPop(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T RPop<T>(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string RPopLPush(string source, string destination)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T RPopLPush<T>(string source, string destination)
+        {
+            throw new NotImplementedException();
+        }
+
+        public long RPush(string key, params object[] elements)
+        {
+            throw new NotImplementedException();
+        }
+
+        public long RPushX(string key, params object[] elements)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> BLPopAsync(string key, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T> BLPopAsync<T>(string key, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<KeyValue<string>> BLPopAsync(string[] keys, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<KeyValue<T>> BLPopAsync<T>(string[] keys, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> BRPopAsync(string key, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T> BRPopAsync<T>(string key, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<KeyValue<string>> BRPopAsync(string[] keys, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<KeyValue<T>> BRPopAsync<T>(string[] keys, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> BRPopLPushAsync(string source, string destination, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T> BRPopLPushAsync<T>(string source, string destination, int timeoutSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> LIndexAsync(string key, long index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T> LIndexAsync<T>(string key, long index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long> LInsertAsync(string key, InsertDirection direction, object pivot, object element)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long> LLenAsync(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> LPopAsync(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T> LPopAsync<T>(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long> LPosAsync<T>(string key, T element, int rank = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long[]> LPosAsync<T>(string key, T element, int rank, int count, int maxLen)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long> LPushAsync(string key, params object[] elements)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long> LPushXAsync(string key, params object[] elements)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string[]> LRangeAsync(string key, long start, long stop)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T[]> LRangeAsync<T>(string key, long start, long stop)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long> LRemAsync<T>(string key, long count, T element)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LSetAsync<T>(string key, long index, T element)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LTrimAsync(string key, long start, long stop)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> RPopAsync(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T> RPopAsync<T>(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> RPopLPushAsync(string source, string destination)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<T> RPopLPushAsync<T>(string source, string destination)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long> RPushAsync(string key, params object[] elements)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<long> RPushXAsync(string key, params object[] elements)
         {
             throw new NotImplementedException();
         }
