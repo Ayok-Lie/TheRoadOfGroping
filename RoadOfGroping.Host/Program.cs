@@ -21,6 +21,7 @@ using RoadOfGroping.Utility.ApiResult;
 using RoadOfGroping.Utility.ErrorHandler;
 using RoadOfGroping.Utility.EventBus.Extensions;
 using RoadOfGroping.Utility.MessageCenter.SignalR;
+using RoadOfGroping.Utility.Minio;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -229,6 +230,8 @@ builder.Services.AddEventBusAndSubscribes(c =>
 });
 //×¢ÈëSignalR
 builder.Services.AddSignalR();
+//×¢ÈëMinio
+builder.Services.AddMinio(config);
 
 var app = builder.Build();
 

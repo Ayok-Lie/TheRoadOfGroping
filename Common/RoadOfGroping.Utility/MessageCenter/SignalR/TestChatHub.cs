@@ -17,6 +17,7 @@ namespace RoadOfGroping.Utility.MessageCenter.SignalR
 
     /// <summary>
     /// https://docs.microsoft.com/zh-cn/aspnet/core/signalr/hubs?view=aspnetcore-6.0
+    /// https://blog.csdn.net/m0_37894611/article/details/125932989
     /// </summary>
     public class TestChatHub : Hub<IChatClient>
     {
