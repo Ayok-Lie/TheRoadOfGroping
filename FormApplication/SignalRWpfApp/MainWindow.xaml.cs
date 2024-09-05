@@ -1,13 +1,4 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace SignalRWpfApp
@@ -25,7 +16,7 @@ namespace SignalRWpfApp
             hubConnection = new HubConnectionBuilder()
                .WithUrl("https://localhost:7285/testHub")
                .Build();
-            hubConnection.On<string>("ReceiveMessage", (message) =>
+            hubConnection.On<TransData>("ReceiveMessage", (message) =>
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -33,6 +24,7 @@ namespace SignalRWpfApp
                 });
             });
 
+            hubConnection.SendAsync("AddUser", "admin");
             Task.Run(() =>
             {
                 Dispatcher.Invoke(() =>
@@ -42,11 +34,12 @@ namespace SignalRWpfApp
             });
         }
 
-        public void Button_Click(object sender, RoutedEventArgs e)
+        public async void Button_Click(object sender, RoutedEventArgs e)
         {
-            hubConnection.SendAsync("SendMessage", new string[] { txtInput.Text });
-
+            await hubConnection.SendAsync("SendToAll", txtInput.Text);
             txtInput.Text = string.Empty;
         }
+
+        public record TransData(string Id, string User, string Message);
     }
 }
