@@ -20,6 +20,7 @@ using RoadOfGroping.Repository.UnitOfWorks;
 using RoadOfGroping.Utility.ApiResult;
 using RoadOfGroping.Utility.ErrorHandler;
 using RoadOfGroping.Utility.EventBus.Extensions;
+using RoadOfGroping.Utility.MessageCenter.SignalR;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -220,10 +221,14 @@ builder.Services.AddControllers(c =>
 
 //注入Redis
 builder.Services.UseRedis(config);
+
+// 注册EventBus服务
 builder.Services.AddEventBusAndSubscribes(c =>
 {
     c.Subscribe<TestDto, TestEventHandler>();
 });
+//注入SignalR
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -249,7 +254,11 @@ if (app.Environment.IsDevelopment())
 
 //app.UseStaticFiles();
 
+//HTTPS重定向功能
 //app.UseHttpsRedirection();
+
+// 启用CORS策略
+app.UseCors("DefaultCorsPolicy");
 
 // 添加异常处理中间件
 app.UseMiddleware<ExceptionMiddleware>();
@@ -260,11 +269,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHub<TestChatHub>("/testHub");
 // 添加UnitOfWork中间件
 app.UseMiddleware<UnitOfWorkMiddleware>();
-
-// 启用CORS策略
-app.UseCors("DefaultCorsPolicy");
 
 app.UseEndpoints(endpoints =>
 {
