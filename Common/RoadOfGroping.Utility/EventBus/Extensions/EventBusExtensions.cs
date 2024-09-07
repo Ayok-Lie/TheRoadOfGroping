@@ -6,6 +6,7 @@ namespace RoadOfGroping.Utility.EventBus.Extensions
     {
         public static IServiceCollection AddEventBus(this IServiceCollection services)
         {
+            services.AddSingleton<IRabbitMQConnectionFactory, RabbitMQConnectionFactory>();
             services.AddSingleton<IRabbitMQBasedEventHandlerManager, RabbitMQBasedEventHandlerManager>();
 
             var serviceProvider = services.BuildServiceProvider();

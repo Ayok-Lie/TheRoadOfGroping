@@ -6,48 +6,64 @@ using RabbitMQ.Client.Events;
 
 namespace RoadOfGroping.Utility.EventBus
 {
-    public class RabbitMQBasedEventHandlerManager : IRabbitMQBasedEventHandlerManager
+    public class RabbitMQBasedEventHandlerManager : IRabbitMQBasedEventHandlerManager, IDisposable
     {
-        private readonly IConnection _connection;
-        private readonly IModel _channel;
+        private readonly IConnection? _connection;
+        private readonly IModel? _channel;
         private readonly IConfiguration _configuration;
+        private readonly bool _isEnabled;
 
-        public RabbitMQBasedEventHandlerManager(IConfiguration configuration)
+        public RabbitMQBasedEventHandlerManager(IConfiguration configuration, IRabbitMQConnectionFactory connectionFactory)
         {
-            _configuration = configuration;
-            var factory = new ConnectionFactory
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _isEnabled = bool.Parse(configuration["RabbitMQ:Enable"] ?? "false");
+
+            if (_isEnabled)
             {
-                // 设置连接属性
-                HostName = configuration["RabbitMQ:HostName"],
-                Port = int.Parse(configuration["RabbitMQ:Port"]),
-                UserName = configuration["RabbitMQ:UserName"],
-                Password = configuration["RabbitMQ:Password"]
-            };
-            _connection = factory.CreateConnection();
-            _channel = _connection.CreateModel();
+                _connection = connectionFactory.CreateConnection();
+                _channel = connectionFactory.CreateModel(_connection);
+            }
+            else
+            {
+                _connection = null;
+                _channel = null;
+            }
         }
 
         public void Publish<TEvent>(TEvent @event) where TEvent : IntegrationEvent
         {
+            if (!_isEnabled)
+            {
+                throw new InvalidOperationException("RabbitMQ is not enabled.");
+            }
+
             var eventName = @event.GetType().Name;
             var message = JsonSerializer.Serialize(@event);
             var body = Encoding.UTF8.GetBytes(message);
             _channel.ExchangeDeclare(exchange: "events", type: ExchangeType.Direct);
-            //var properties = _channel.CreateBasicProperties();
-            //properties.Headers = new Dictionary<string, object>
-            //{
-            //    { "x-delay", 5000 } // 延迟 5000 毫秒（5 秒）
-            //};
-            _channel.BasicPublish(exchange: "events",
-                                  routingKey: eventName,
-                                  basicProperties: null,
-                                  body: body);
+            try
+            {
+                _channel.BasicPublish(exchange: "events",
+                                      routingKey: eventName,
+                                      basicProperties: null,
+                                      body: body);
+            }
+            catch (Exception ex)
+            {
+                // 记录日志或抛出自定义异常
+                throw new ApplicationException($"Failed to publish event {eventName}", ex);
+            }
         }
 
         public void Subscribe<TEvent, TEventHandler>()
             where TEvent : IntegrationEvent
             where TEventHandler : IntegrationEventHandle<TEvent>
         {
+            if (!_isEnabled)
+            {
+                throw new InvalidOperationException("RabbitMQ is not enabled.");
+            }
+
             var eventName = typeof(TEvent).Name;
             _channel.ExchangeDeclare(exchange: "events", type: ExchangeType.Direct);
             _channel.QueueDeclare(queue: eventName, durable: true, exclusive: false, autoDelete: false, arguments: null);
@@ -56,12 +72,20 @@ namespace RoadOfGroping.Utility.EventBus
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += async (model, ea) =>
             {
-                var message = Encoding.UTF8.GetString(ea.Body.ToArray());
-                var @event = JsonSerializer.Deserialize<TEvent>(message);
-                var handler = Activator.CreateInstance<TEventHandler>();
-                if (@event != null)
+                try
                 {
-                    await handler.Handle(@event);
+                    var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+                    var @event = JsonSerializer.Deserialize<TEvent>(message);
+                    var handler = Activator.CreateInstance<TEventHandler>();
+                    if (@event != null)
+                    {
+                        await handler.Handle(@event);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 记录日志或抛出自定义异常
+                    throw new ApplicationException($"Failed to handle event {eventName}", ex);
                 }
             };
 
@@ -72,14 +96,22 @@ namespace RoadOfGroping.Utility.EventBus
             where TEvent : IntegrationEvent
             where TEventHandler : IntegrationEventHandle<TEvent>
         {
+            if (!_isEnabled)
+            {
+                throw new InvalidOperationException("RabbitMQ is not enabled.");
+            }
+
             var eventName = typeof(TEvent).Name;
             _channel.QueueUnbind(queue: eventName, exchange: "events", routingKey: eventName);
         }
 
         public void Dispose()
         {
-            _channel?.Dispose();
-            _connection?.Dispose();
+            if (_isEnabled)
+            {
+                _channel?.Dispose();
+                _connection?.Dispose();
+            }
         }
     }
 }
