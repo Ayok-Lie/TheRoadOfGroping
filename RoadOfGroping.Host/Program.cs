@@ -13,10 +13,12 @@ using RoadOfGroping.EntityFramework;
 using RoadOfGroping.Host.Extensions;
 using RoadOfGroping.Host.Modules;
 using RoadOfGroping.Model.Extensions;
+using RoadOfGroping.Repository.Auditing;
 using RoadOfGroping.Repository.DynamicWebAPI;
 using RoadOfGroping.Repository.Extensions;
 using RoadOfGroping.Repository.Middlewares;
 using RoadOfGroping.Repository.UnitOfWorks;
+using RoadOfGroping.Repository.UserSession;
 using RoadOfGroping.Utility.ApiResult;
 using RoadOfGroping.Utility.ErrorHandler;
 using RoadOfGroping.Utility.EventBus.Extensions;
@@ -195,7 +197,8 @@ builder.Services.AddMvc(options => { })
 .AddRazorRuntimeCompilation()
 .AddDynamicWebApi();
 
-// 添加应用程序模块
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+//// 添加应用程序模块
 builder.Services.AddApplication<RoadOfGropingHostModule>();
 
 // 注册仓储服务
@@ -232,6 +235,9 @@ builder.Services.AddEventBusAndSubscribes(c =>
 builder.Services.AddSignalR();
 //注入Minio
 builder.Services.AddMinio(config);
+//注入
+builder.Services.AddTransient<IUserSession, CurrentUserSession>();
+builder.Services.AddTransient<IAuditPropertySetter, AuditPropertySetter>();
 
 var app = builder.Build();
 

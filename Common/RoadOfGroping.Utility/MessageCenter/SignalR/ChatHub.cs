@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using RoadOfGroping.Common.Consts;
-using RoadOfGroping.Utility.MessageCenter.SignalR.Dtos;
 
 namespace RoadOfGroping.Utility.MessageCenter.SignalR
 {
@@ -16,6 +9,7 @@ namespace RoadOfGroping.Utility.MessageCenter.SignalR
         private readonly ILogger<ChatHub> _logger;
         private readonly ICacheTool _cacheManager;
         private readonly IChatHubManager chatHubManager;
+
         public ChatHub(ICacheTool cacheManager, ILogger<ChatHub> logger, IChatHubManager chatHubManager)
         {
             _cacheManager = cacheManager;
@@ -80,7 +74,6 @@ namespace RoadOfGroping.Utility.MessageCenter.SignalR
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
-
 
         public async Task AddCacheClient(string groupName)
         {

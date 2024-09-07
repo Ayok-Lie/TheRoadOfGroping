@@ -15,7 +15,7 @@ namespace RoadOfGroping.Repository.Extensions
             IEnumerable<Type>? types)
             where TDbContext : DbContext
         {
-            var allTypes = assemblies.SelectMany(assembly => assembly.GetExportedTypes()).ToList();
+            var allTypes = assemblies.Where(assembly => !assembly.IsDynamic).SelectMany(assembly => assembly.GetExportedTypes()).ToList();
             var entityTypes = types ?? allTypes.Where(type => type.IsEntity());
             foreach (var entityType in entityTypes)
             {

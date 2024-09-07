@@ -2,16 +2,22 @@
 
 public class BucketExistsException : Exception
 {
-    public BucketExistsException() { }
+    public BucketExistsException()
+    { }
 
-    public BucketExistsException(string message) : base(message) { }
+    public BucketExistsException(string message) : base(message)
+    {
+    }
 }
 
 public class BucketNotExistsException : Exception
 {
-    public BucketNotExistsException() { }
+    public BucketNotExistsException()
+    { }
 
-    public BucketNotExistsException(string message) : base(message) { }
+    public BucketNotExistsException(string message) : base(message)
+    {
+    }
 }
 
 public static class ThrowBucketNotExistisException

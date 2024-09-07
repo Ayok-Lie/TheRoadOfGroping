@@ -1,8 +1,8 @@
-﻿using TencentCloud.Common.Profile;
+﻿using Microsoft.Extensions.Logging;
 using TencentCloud.Common;
+using TencentCloud.Common.Profile;
 using TencentCloud.Sms.V20210111;
 using TencentCloud.Sms.V20210111.Models;
-using Microsoft.Extensions.Logging;
 
 namespace RoadOfGroping.Utility.MessageCenter.TencentSms
 {
@@ -13,6 +13,7 @@ namespace RoadOfGroping.Utility.MessageCenter.TencentSms
     {
         Task<SendSmsResponse> SendMessage(TencentSmsMessagePushData data);
     }
+
     /// <summary>
     /// 腾讯云短信服务服务
     /// </summary>

@@ -7,5 +7,7 @@ namespace RoadOfGroping.Repository.Auditing
         void SetCreationProperties(object targetObject);
 
         void SetDeletionProperties(object targetObject);
+
+        void SetModificationProperties(object targetObject);
     }
 }

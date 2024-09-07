@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
+
 namespace RoadOfGroping.Utility.MessageCenter.SignalR
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="Id">连接ID</param>
     /// <param name="User">用户名</param>
@@ -22,12 +22,13 @@ namespace RoadOfGroping.Utility.MessageCenter.SignalR
     public class TestChatHub : Hub<IChatClient>
     {
         //用户集
-        private readonly static Dictionary<string, string> _connections = new();
+        private static readonly Dictionary<string, string> _connections = new();
 
         private readonly string systemid = "system";
         private readonly string systemname = "system";
 
         #region 发送消息
+
         /// <summary>
         /// 以个人名义向所有客户端发送消息
         /// </summary>
@@ -45,7 +46,6 @@ namespace RoadOfGroping.Utility.MessageCenter.SignalR
         /// <param name="message"></param>
         /// <returns></returns>
         public async Task SendSysToAll(string message) => await Clients.All.ReceiveMessage(new(systemid, systemname, message));
-
 
         /// <summary>
         /// 发送消息给指定用户(个人)
@@ -86,9 +86,11 @@ namespace RoadOfGroping.Utility.MessageCenter.SignalR
         /// <param name="message"></param>
         /// <returns></returns>
         public async Task SendSysToGroup(string group, string message) => await Clients.Group(group).ReceiveMessage(new(systemid, systemname, message));
-        #endregion
+
+        #endregion 发送消息
 
         #region SignalR用户
+
         /// <summary>
         /// 获取连接的唯一 ID（由 SignalR 分配）。 每个连接都有一个连接 ID
         /// </summary>
@@ -97,9 +99,11 @@ namespace RoadOfGroping.Utility.MessageCenter.SignalR
         {
             return Context.ConnectionId;
         }
-        #endregion
+
+        #endregion SignalR用户
 
         #region SignalR群组
+
         /// <summary>
         /// 主动加入群组
         /// </summary>
@@ -124,9 +128,11 @@ namespace RoadOfGroping.Utility.MessageCenter.SignalR
             await Groups.AddToGroupAsync(id, group);
             await SendSysToGroup(group, $@"欢迎{_connections[cid]}加入");
         }
-        #endregion
+
+        #endregion SignalR群组
 
         #region 临时用户操作
+
         /// <summary>
         /// 添加到在线用户集
         /// </summary>
@@ -151,9 +157,11 @@ namespace RoadOfGroping.Utility.MessageCenter.SignalR
             string cid = GetConnectionId();
             return _connections.Where(t => !t.Key.Equals(cid));
         }
-        #endregion
+
+        #endregion 临时用户操作
 
         #region 重写连接断开钩子
+
         /// <summary>
         /// 重写链接钩子
         /// </summary>
@@ -175,6 +183,7 @@ namespace RoadOfGroping.Utility.MessageCenter.SignalR
             await SendSysToAll("relst");
             await base.OnDisconnectedAsync(exception);
         }
-        #endregion
+
+        #endregion 重写连接断开钩子
     }
 }

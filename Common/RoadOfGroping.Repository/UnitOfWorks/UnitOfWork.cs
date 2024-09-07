@@ -1,6 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using RoadOfGroping.Common.DependencyInjection;
+using RoadOfGroping.Common.Extensions;
+using RoadOfGroping.Repository.Auditing;
+using RoadOfGroping.Repository.Entities;
+using RoadOfGroping.Repository.Entities.RoadOfGroping.Repository.Auditing;
 
 namespace RoadOfGroping.Repository.UnitOfWorks
 {
@@ -13,11 +18,12 @@ namespace RoadOfGroping.Repository.UnitOfWorks
 
         private readonly TDbContext _dbContext;
         private readonly IServiceProvider _serviceProvider;
-        //private readonly IAuditPropertySetter _auditPropertySetter;
+        private readonly IAuditPropertySetter _auditPropertySetter;
 
-        public UnitOfWork(TDbContext dbContext)
+        public UnitOfWork(TDbContext dbContext, IAuditPropertySetter auditPropertySetter)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException($"db context nameof{nameof(dbContext)} is null");
+            _auditPropertySetter = auditPropertySetter;
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
@@ -107,102 +113,112 @@ namespace RoadOfGroping.Repository.UnitOfWorks
         private void ApplyChangeConventions()
         {
             _dbContext.ChangeTracker.DetectChanges();
-            //foreach (var entry in _dbContext.ChangeTracker.Entries())
-            //{
-            //    PublishEventsForTrackedEntity(entry);
-            //}
+            foreach (var entry in _dbContext.ChangeTracker.Entries())
+            {
+                PublishEventsForTrackedEntity(entry);
+            }
         }
 
-        //private void PublishEventsForTrackedEntity(EntityEntry entry)
-        //{
-        //    switch (entry.State)
-        //    {
-        //        case EntityState.Added:
-        //            ApplyAbpConceptsForAddedEntity(entry);
-        //            break;
+        private void PublishEventsForTrackedEntity(EntityEntry entry)
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    ApplyAbpConceptsForAddedEntity(entry);
+                    break;
 
-        //        case EntityState.Modified:
+                case EntityState.Modified:
+                    ApplyAbpConceptsForModifiedEntity(entry);
+                    break;
 
-        //            break;
+                case EntityState.Deleted:
+                    ApplyAbpConceptsForDeletedEntity(entry);
+                    break;
+            }
+        }
 
-        //        case EntityState.Deleted:
-        //            ApplyAbpConceptsForDeletedEntity(entry);
-        //            break;
-        //    }
-        //}
+        private void ApplyAbpConceptsForAddedEntity(EntityEntry entry)
+        {
+            CheckAndSetId(entry);
+            SetCreationAuditProperties(entry);
+        }
 
-        //private void ApplyAbpConceptsForAddedEntity(EntityEntry entry)
-        //{
-        //    CheckAndSetId(entry);
-        //    SetCreationAuditProperties(entry);
-        //}
+        private void ApplyAbpConceptsForDeletedEntity(EntityEntry entry)
+        {
+            if (!(entry.Entity is IDeletionAuditedEntity))
+            {
+                return;
+            }
 
-        //private void ApplyAbpConceptsForDeletedEntity(EntityEntry entry)
-        //{
-        //    if (!(entry.Entity is ISoftDelete))
-        //    {
-        //        return;
-        //    }
+            entry.Reload();
+            ObjectPropertyHelper.TrySetProperty(entry.Entity.As<IDeletionAuditedEntity>(), x => x.IsDeleted, () => true);
+            SetDeletionAuditProperties(entry);
+        }
 
-        //    entry.Reload();
-        //    ObjectPropertyHelper.TrySetProperty(entry.Entity.As<ISoftDelete>(), x => x.IsDeleted, () => true);
-        //    SetDeletionAuditProperties(entry);
-        //}
+        private void ApplyAbpConceptsForModifiedEntity(EntityEntry entry)
+        {
+            SetModificationAuditProperties(entry);
+        }
 
-        //private void SetCreationAuditProperties(EntityEntry entry)
-        //{
-        //    _auditPropertySetter?.SetCreationProperties(entry.Entity);
-        //}
+        private void SetCreationAuditProperties(EntityEntry entry)
+        {
+            _auditPropertySetter?.SetCreationProperties(entry.Entity);
+        }
 
-        //private void SetDeletionAuditProperties(EntityEntry entry)
-        //{
-        //    _auditPropertySetter?.SetDeletionProperties(entry.Entity);
-        //}
+        private void SetDeletionAuditProperties(EntityEntry entry)
+        {
+            _auditPropertySetter?.SetDeletionProperties(entry.Entity);
+        }
 
-        //private void CheckAndSetId(EntityEntry entry)
-        //{
-        //    if (entry.Entity is IEntity<Guid> entityWithGuidId)
-        //    {
-        //        TrySetGuidId(entry, entityWithGuidId);
-        //    }
+        private void SetModificationAuditProperties(EntityEntry entry)
+        {
+            _auditPropertySetter?.SetModificationProperties(entry.Entity);
+        }
 
-        //    if (entry.Entity is IEntity<string> entityWithStringId)
-        //    {
-        //        TrySetStringId(entry, entityWithStringId);
-        //    }
-        //}
+        private void CheckAndSetId(EntityEntry entry)
+        {
+            if (entry.Entity is IEntity<Guid> entityWithGuidId)
+            {
+                TrySetGuidId(entry, entityWithGuidId);
+            }
 
-        //private void TrySetGuidId(EntityEntry entry, IEntity<Guid> entity)
-        //{
-        //    if (entity.Id != default)
-        //    {
-        //        return;
-        //    }
+            if (entry.Entity is IEntity<string> entityWithStringId)
+            {
+                TrySetStringId(entry, entityWithStringId);
+            }
+        }
 
-        //    var idProperty = entry.Property("Id").Metadata.PropertyInfo;
+        private void TrySetGuidId(EntityEntry entry, IEntity<Guid> entity)
+        {
+            if (entity.Id != default)
+            {
+                return;
+            }
 
-        //    EntityHelper.TrySetId(
-        //        entity,
-        //        () => Guid.NewGuid(),
-        //        true
-        //    );
-        //}
+            var idProperty = entry.Property("Id").Metadata.PropertyInfo;
 
-        //private void TrySetStringId(EntityEntry entry, IEntity<string> entity)
-        //{
-        //    if (!string.IsNullOrWhiteSpace(entity.Id) && entity.Id?.Length <= 32)
-        //    {
-        //        return;
-        //    }
+            EntityHelper.TrySetId(
+                entity,
+                () => Guid.NewGuid(),
+                true
+            );
+        }
 
-        //    var idProperty = entry.Property("Id").Metadata.PropertyInfo;
+        private void TrySetStringId(EntityEntry entry, IEntity<string> entity)
+        {
+            if (!string.IsNullOrWhiteSpace(entity.Id) && entity.Id?.Length <= 32)
+            {
+                return;
+            }
 
-        //    EntityHelper.TrySetId(
-        //        entity,
-        //        () => Guid.NewGuid().ToString("N"),
-        //        true
-        //    );
-        //}
+            var idProperty = entry.Property("Id").Metadata.PropertyInfo;
+
+            EntityHelper.TrySetId(
+                entity,
+                () => Guid.NewGuid().ToString("N"),
+                true
+            );
+        }
 
         public void Dispose()
         {

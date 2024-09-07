@@ -1,102 +1,101 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using RoadOfGroping.Interface.DependencyInjection;
+﻿using RoadOfGroping.Common.DependencyInjection;
+using RoadOfGroping.Common.Extensions;
+using RoadOfGroping.Repository.UserSession;
 
-//namespace RoadOfGroping.Repository.Auditing
-//{
-//    public class AuditPropertySetter : IAuditPropertySetter, ITransientDependency
-//    {
-//        //private readonly IUserSession _userSession;
-//        public AuditPropertySetter()
-//        {
-//        }
-//        public virtual void SetCreationProperties(object targetObject)
-//        {
-//            SetCreationTime(targetObject);
-//            SetCreatorId(targetObject);
-//            SetIsDeleter(targetObject);
-//        }
+namespace RoadOfGroping.Repository.Auditing
+{
+    public class AuditPropertySetter : IAuditPropertySetter, ITransientDependency
+    {
+        private readonly IUserSession _userSession;
 
-//        public virtual void SetDeletionProperties(object targetObject)
-//        {
-//            SetDeletionTime(targetObject);
-//            SetDeleterId(targetObject);
-//            SetIsDeleter(targetObject, true);
-//        }
+        public AuditPropertySetter(IUserSession userSession)
+        {
+            _userSession = userSession;
+        }
 
-//        protected virtual void SetCreationTime(object targetObject)
-//        {
-//            if (!(targetObject is IHasCreationTime objectCreationTime))
-//            {
-//                return;
-//            }
+        public virtual void SetCreationProperties(object targetObject)
+        {
+            SetCreationInfo(targetObject);
+            SetIsDeleter(targetObject);
+        }
 
-//            if (objectCreationTime.CreationTime == default)
-//            {
-//                ObjectPropertyHelper.TrySetProperty(objectCreationTime, x => x.CreationTime, () => DateTime.Now);
-//            }
-//        }
+        public virtual void SetDeletionProperties(object targetObject)
+        {
+            SetDeletionInto(targetObject);
+            SetIsDeleter(targetObject, true);
+        }
 
-//        protected virtual void SetCreatorId(object targetObject)
-//        {
-//            if (_userSession.UserId.IsNullEmpty())
-//            {
-//                return;
-//            }
+        public virtual void SetModificationProperties(object targetObject)
+        {
+            SetModificationInfo(targetObject);
+        }
 
-//            if (targetObject is IMayHaveCreator mayHaveCreatorObject)
-//            {
-//                if (!mayHaveCreatorObject.CreatorId.IsNullEmpty() && mayHaveCreatorObject.CreatorId != default)
-//                {
-//                    return;
-//                }
+        protected virtual void SetCreationInfo(object targetObject)
+        {
+            if (!(targetObject is ICreationAuditedEntity mayHaveCreatorObject))
+            {
+                return;
+            }
 
-//                ObjectPropertyHelper.TrySetProperty(mayHaveCreatorObject, x => x.CreatorId, () => _userSession.UserId);
-//            }
-//        }
+            if (mayHaveCreatorObject.CreationTime == default)
+            {
+                ObjectPropertyHelper.TrySetProperty(mayHaveCreatorObject, x => x.CreationTime, () => DateTime.Now);
+            }
 
-//        protected virtual void SetDeletionTime(object targetObject)
-//        {
-//            if (targetObject is IHasDeletionTime objectWithDeletionTime)
-//            {
-//                if (objectWithDeletionTime.DeletionTime == null)
-//                {
-//                    ObjectPropertyHelper.TrySetProperty(objectWithDeletionTime, x => x.DeletionTime, () => DateTime.Now);
-//                }
-//            }
-//        }
+            if ((!mayHaveCreatorObject.CreatorId.IsNullEmpty() && mayHaveCreatorObject.CreatorId != default) || _userSession.UserId.IsNullEmpty())
+            {
+                return;
+            }
 
-//        protected virtual void SetDeleterId(object targetObject)
-//        {
-//            if (!(targetObject is IDeletionAuditedObject deletionAuditedObject))
-//            {
-//                return;
-//            }
+            ObjectPropertyHelper.TrySetProperty(mayHaveCreatorObject, x => x.CreatorId, () => _userSession.UserId);
+        }
 
-//            if (deletionAuditedObject.DeleterId != null)
-//            {
-//                return;
-//            }
+        protected virtual void SetDeletionInto(object targetObject)
+        {
+            if (!(targetObject is IDeletionAuditedEntity deletionAuditedObject))
+            {
+                return;
+            }
 
-//            if (_userSession.UserId.IsNullEmpty())
-//            {
-//                ObjectPropertyHelper.TrySetProperty(deletionAuditedObject, x => x.DeleterId, () => null);
-//                return;
-//            }
-//            ObjectPropertyHelper.TrySetProperty(deletionAuditedObject, x => x.DeleterId, () => _userSession.UserId);
-//        }
+            if (deletionAuditedObject.DeletionTime == null)
+            {
+                ObjectPropertyHelper.TrySetProperty(deletionAuditedObject, x => x.DeletionTime, () => DateTime.Now);
+            }
 
-//        protected virtual void SetIsDeleter(object targetObject, bool isDelete = false)
-//        {
-//            if (!(targetObject is ISoftDelete softDelete))
-//            {
-//                return;
-//            }
+            if (deletionAuditedObject.DeleterId != null || _userSession.UserId.IsNullEmpty())
+            {
+                return;
+            }
+            ObjectPropertyHelper.TrySetProperty(deletionAuditedObject, x => x.DeleterId, () => _userSession.UserId);
+        }
 
-//            ObjectPropertyHelper.TrySetProperty(softDelete, x => x.IsDeleted, () => isDelete);
-//        }
-//    }
-//}
+        protected virtual void SetModificationInfo(object targetObject)
+        {
+            if (!(targetObject is IModificationAuditedEntity mayHaveModifierObject))
+            {
+                return;
+            }
+
+            if (mayHaveModifierObject.ModificationTime == null)
+            {
+                ObjectPropertyHelper.TrySetProperty(mayHaveModifierObject, x => x.ModificationTime, () => DateTime.Now);
+            }
+
+            if (mayHaveModifierObject.ModifierId != null || _userSession.UserId.IsNullEmpty())
+            {
+                return;
+            }
+            ObjectPropertyHelper.TrySetProperty(mayHaveModifierObject, x => x.ModifierId, () => _userSession.UserId);
+        }
+
+        protected virtual void SetIsDeleter(object targetObject, bool isDelete = false)
+        {
+            if (!(targetObject is IDeletionAuditedEntity softDelete))
+            {
+                return;
+            }
+
+            ObjectPropertyHelper.TrySetProperty(softDelete, x => x.IsDeleted, () => isDelete);
+        }
+    }
+}

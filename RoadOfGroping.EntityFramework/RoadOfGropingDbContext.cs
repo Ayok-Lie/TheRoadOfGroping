@@ -1,102 +1,113 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using System.Linq.Expressions;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using RoadOfGroping.Core.OrderTest.Entity;
-using RoadOfGroping.EntityFramework.Domain;
-using RoadOfGroping.EntityFramework.UnitOfWorks;
+using RoadOfGroping.Core.Users.Entity;
+using RoadOfGroping.EntityFramework.Extensions;
+using RoadOfGroping.Repository.Auditing;
 
 namespace RoadOfGroping.EntityFramework
 {
-    public class RoadOfGropingDbContext : DbContext, IUnitOfWork, ITransaction
+    /// <summary>
+    /// RoadOfGroping 数据库上下文类。
+    /// </summary>
+    public class RoadOfGropingDbContext : DbContext
     {
-        public virtual DbSet<Order> Order { get; set; }
-
+        /// <summary>
+        /// 初始化 RoadOfGropingDbContext 类的新实例。
+        /// </summary>
+        /// <param name="options">数据库上下文选项</param>
         public RoadOfGropingDbContext(DbContextOptions options) : base(options)
         {
         }
 
+        /// <summary>
+        /// 订单实体集。
+        /// </summary>
+        public virtual DbSet<Order> Order { get; set; }
+
+        /// <summary>
+        /// 用户实体集。
+        /// </summary>
+        public virtual DbSet<RoadOfGropingUsers> RoadOfGropingUsers { get; set; }
+
+        /// <summary>
+        /// 配置模型创建。
+        /// </summary>
+        /// <param name="modelBuilder">模型构建器</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            #region 注册领域模型与数据库的映射关系
-
-            //modelBuilder.ApplyConfiguration(new OrderEntityTypeConfiguration());
-            //modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
-
-            #endregion 注册领域模型与数据库的映射关系
-
             base.OnModelCreating(modelBuilder);
+            OnModelCreatingConfigureGlobalFilters(modelBuilder);
+            modelBuilder.ConfigureModel();
         }
 
+        /// <summary>
+        /// 异步保存更改。
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess">是否在成功保存更改后接受所有更改</param>
+        /// <param name="cancellationToken">取消令牌</param>
+        /// <returns>受影响的行数</returns>
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
-        #region IUnitOfWork
+        /// <summary>
+        /// 是否启用软删除过滤器。
+        /// </summary>
+        protected virtual bool IsSoftDeleteFilterEnabled => true;
 
-        public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+        /// 配置全局过滤器。
+        /// </summary>
+        /// <param name="modelBuilder">模型构建器</param>
+        protected virtual void OnModelCreatingConfigureGlobalFilters(ModelBuilder modelBuilder)
         {
-            var result = await base.SaveChangesAsync(cancellationToken);
-            return true;
-        }
+            var methodInfo = GetType().GetMethod(nameof(ConfigureGlobalFilters), BindingFlags.NonPublic | BindingFlags.Instance);
 
-        #endregion IUnitOfWork
-
-        #region ITransaction
-
-        private IDbContextTransaction _currentTransaction;
-
-        public IDbContextTransaction GetCurrentTransaction() => _currentTransaction;
-
-        public bool HasActiveTransaction => _currentTransaction != null;
-
-        public Task<IDbContextTransaction> BeginTransactionAsync()
-        {
-            if (_currentTransaction != null) return null;
-            _currentTransaction = Database.BeginTransaction();
-            return Task.FromResult(_currentTransaction);
-        }
-
-        public async Task CommitTransactionAsync(IDbContextTransaction transaction)
-        {
-            if (transaction == null) throw new ArgumentNullException(nameof(transaction));
-            if (transaction != _currentTransaction) throw new InvalidOperationException($"Transaction {transaction.TransactionId} is not current");
-
-            try
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                await SaveChangesAsync();
-                transaction.Commit();
-            }
-            catch
-            {
-                RollbackTransaction();
-                throw;
-            }
-            finally
-            {
-                if (_currentTransaction != null)
+                methodInfo!.MakeGenericMethod(entityType.ClrType).Invoke(this, new object?[]
                 {
-                    _currentTransaction.Dispose();
-                    _currentTransaction = null;
-                }
+                    modelBuilder, entityType
+                });
             }
         }
 
-        public void RollbackTransaction()
+        /// <summary>
+        /// 配置全局过滤器。
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="modelBuilder">模型构建器</param>
+        /// <param name="mutableEntityType">可变的实体类型</param>
+        protected virtual void ConfigureGlobalFilters<TEntity>(ModelBuilder modelBuilder, IMutableEntityType mutableEntityType)
+            where TEntity : class
         {
-            try
+            if (mutableEntityType.BaseType == null)
             {
-                _currentTransaction?.Rollback();
-            }
-            finally
-            {
-                if (_currentTransaction != null)
-                {
-                    _currentTransaction.Dispose();
-                    _currentTransaction = null;
-                }
+                var filterExpression = CreateFilterExpression<TEntity>();
+                if (filterExpression != null)
+                    modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
             }
         }
 
-        #endregion ITransaction
+        /// <summary>
+        /// 创建过滤表达式，用于软删除过滤。
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <returns>过滤表达式</returns>
+        protected virtual Expression<Func<TEntity, bool>>? CreateFilterExpression<TEntity>()
+            where TEntity : class
+        {
+            Expression<Func<TEntity, bool>>? expression = null;
+
+            if (typeof(IDeletionAuditedEntity).IsAssignableFrom(typeof(TEntity)))
+            {
+                expression = entity => !IsSoftDeleteFilterEnabled || !EF.Property<bool>(entity, nameof(IDeletionAuditedEntity.IsDeleted));
+            }
+            return expression;
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace RoadOfGroping.Core
 {
+    //[DependOn(typeof(RoadOfGropingRepositoryModule))]
     public class RoadOfGropingCoreModule : BaseModule
     {
     }

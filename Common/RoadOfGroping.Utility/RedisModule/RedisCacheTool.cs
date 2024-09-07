@@ -212,7 +212,6 @@ namespace RoadOfGroping.Utility.RedisModule
             }
         }
 
-
         #region 列表（List）
 
         /// <summary>
@@ -222,6 +221,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public string BLPop(string key, int timeoutSeconds) => _redisClient.BLPop(key, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -230,6 +230,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public T BLPop<T>(string key, int timeoutSeconds) => _redisClient.BLPop<T>(key, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -237,6 +238,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns><param name="timeoutSeconds">超时时间（秒）</param>
         public KeyValue<string> BLPop(string[] keys, int timeoutSeconds) => _redisClient.BLPop(keys, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -253,6 +255,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public string BRPop(string key, int timeoutSeconds) => _redisClient.BRPop(key, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -261,6 +264,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public T BRPop<T>(string key, int timeoutSeconds) => _redisClient.BRPop<T>(key, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -268,6 +272,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public KeyValue<string> BRPop(string[] keys, int timeoutSeconds) => _redisClient.BRPop(keys, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -285,6 +290,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public string BRPopLPush(string source, string destination, int timeoutSeconds) => _redisClient.BRPopLPush(source, destination, timeoutSeconds);
+
         /// <summary>
         /// 从列表中取出最后一个元素，并插入到另外一个列表的头部（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -302,6 +308,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="index">索引</param>
         /// <returns></returns>
         public string LIndex(string key, long index) => _redisClient.LIndex(key, index);
+
         /// <summary>
         /// 通过索引获取列表中的元素
         /// </summary>
@@ -334,6 +341,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="key"></param>
         /// <returns></returns>
         public string LPop(string key) => _redisClient.LPop(key);
+
         /// <summary>
         /// 从列表的头部弹出元素，默认为第一个元素
         /// </summary>
@@ -351,6 +359,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="rank">从第几个匹配开始计算</param>
         /// <returns></returns>
         public long LPos<T>(string key, T element, int rank = 0) => _redisClient.LPos<T>(key, element, rank);
+
         /// <summary>
         /// 获取列表 key 中匹配给定 element 元素的索引
         /// </summary>
@@ -387,6 +396,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="stop">结束偏移量</param>
         /// <returns></returns>
         public string[] LRange(string key, long start, long stop) => _redisClient.LRange(key, start, stop);
+
         /// <summary>
         /// 获取列表中指定区间内的元素
         /// </summary>
@@ -430,6 +440,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="key"></param>
         /// <returns></returns>
         public string RPop(string key) => _redisClient.RPop(key);
+
         /// <summary>
         /// 移除列表的最后一个元素
         /// </summary>
@@ -445,6 +456,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="destination">目标列表</param>
         /// <returns></returns>
         public string RPopLPush(string source, string destination) => _redisClient.RPopLPush(source, destination);
+
         /// <summary>
         /// 移除列表的最后一个元素，并将该元素添加到另一个列表并返回
         /// </summary>
@@ -470,8 +482,6 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <returns></returns>
         public long RPushX(string key, params object[] elements) => _redisClient.RPushX(key, elements);
 
-
-
         /// <summary>
         /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -479,6 +489,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public async Task<string> BLPopAsync(string key, int timeoutSeconds) => await _redisClient.BLPopAsync(key, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -487,6 +498,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public async Task<T> BLPopAsync<T>(string key, int timeoutSeconds) => await _redisClient.BLPopAsync<T>(key, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -494,6 +506,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns><param name="timeoutSeconds">超时时间（秒）</param>
         public async Task<KeyValue<string>> BLPopAsync(string[] keys, int timeoutSeconds) => await _redisClient.BLPopAsync(keys, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -510,6 +523,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public async Task<string> BRPopAsync(string key, int timeoutSeconds) => await _redisClient.BRPopAsync(key, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -518,6 +532,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public async Task<T> BRPopAsync<T>(string key, int timeoutSeconds) => await _redisClient.BRPopAsync<T>(key, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -525,6 +540,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public async Task<KeyValue<string>> BRPopAsync(string[] keys, int timeoutSeconds) => await _redisClient.BRPopAsync(keys, timeoutSeconds);
+
         /// <summary>
         /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -542,6 +558,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="timeoutSeconds">超时时间（秒）</param>
         /// <returns></returns>
         public async Task<string> BRPopLPushAsync(string source, string destination, int timeoutSeconds) => await _redisClient.BRPopLPushAsync(source, destination, timeoutSeconds);
+
         /// <summary>
         /// 从列表中取出最后一个元素，并插入到另外一个列表的头部（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
         /// </summary>
@@ -559,6 +576,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="index">索引</param>
         /// <returns></returns>
         public async Task<string> LIndexAsync(string key, long index) => await _redisClient.LIndexAsync(key, index);
+
         /// <summary>
         /// 通过索引获取列表中的元素
         /// </summary>
@@ -591,6 +609,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="key"></param>
         /// <returns></returns>
         public async Task<string> LPopAsync(string key) => await _redisClient.LPopAsync(key);
+
         /// <summary>
         /// 从列表的头部弹出元素，默认为第一个元素
         /// </summary>
@@ -608,6 +627,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="rank">从第几个匹配开始计算</param>
         /// <returns></returns>
         public async Task<long> LPosAsync<T>(string key, T element, int rank = 0) => await _redisClient.LPosAsync<T>(key, element, rank);
+
         /// <summary>
         /// 获取列表 key 中匹配给定 element 元素的索引
         /// </summary>
@@ -644,6 +664,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="stop">结束偏移量</param>
         /// <returns></returns>
         public async Task<string[]> LRangeAsync(string key, long start, long stop) => await _redisClient.LRangeAsync(key, start, stop);
+
         /// <summary>
         /// 获取列表中指定区间内的元素
         /// </summary>
@@ -687,6 +708,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="key"></param>
         /// <returns></returns>
         public async Task<string> RPopAsync(string key) => await _redisClient.RPopAsync(key);
+
         /// <summary>
         /// 移除列表的最后一个元素
         /// </summary>
@@ -702,6 +724,7 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <param name="destination">目标列表</param>
         /// <returns></returns>
         public async Task<string> RPopLPushAsync(string source, string destination) => await _redisClient.RPopLPushAsync(source, destination);
+
         /// <summary>
         /// 移除列表的最后一个元素，并将该元素添加到另一个列表并返回
         /// </summary>
@@ -727,6 +750,6 @@ namespace RoadOfGroping.Utility.RedisModule
         /// <returns></returns>
         public async Task<long> RPushXAsync(string key, params object[] elements) => await _redisClient.RPushXAsync(key, elements);
 
-        #endregion
+        #endregion 列表（List）
     }
 }

@@ -100,7 +100,6 @@ public interface ICacheTool
     /// <returns></returns>
     Task RemoveByPrefixAsync(string key);
 
-
     #region 列表（List）
 
     /// <summary>
@@ -110,6 +109,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     string BLPop(string key, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -118,6 +118,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     T BLPop<T>(string key, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -125,6 +126,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns><param name="timeoutSeconds">超时时间（秒）</param>
     KeyValue<string> BLPop(string[] keys, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -141,6 +143,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     string BRPop(string key, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -149,6 +152,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     T BRPop<T>(string key, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -156,6 +160,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     KeyValue<string> BRPop(string[] keys, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -173,6 +178,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     string BRPopLPush(string source, string destination, int timeoutSeconds);
+
     /// <summary>
     /// 从列表中取出最后一个元素，并插入到另外一个列表的头部（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -190,6 +196,7 @@ public interface ICacheTool
     /// <param name="index">索引</param>
     /// <returns></returns>
     string LIndex(string key, long index);
+
     /// <summary>
     /// 通过索引获取列表中的元素
     /// </summary>
@@ -222,6 +229,7 @@ public interface ICacheTool
     /// <param name="key"></param>
     /// <returns></returns>
     string LPop(string key);
+
     /// <summary>
     /// 从列表的头部弹出元素，默认为第一个元素
     /// </summary>
@@ -239,6 +247,7 @@ public interface ICacheTool
     /// <param name="rank">从第几个匹配开始计算</param>
     /// <returns></returns>
     long LPos<T>(string key, T element, int rank = 0);
+
     /// <summary>
     /// 获取列表 key 中匹配给定 element 成员的索引
     /// </summary>
@@ -275,6 +284,7 @@ public interface ICacheTool
     /// <param name="stop">结束偏移量</param>
     /// <returns></returns>
     string[] LRange(string key, long start, long stop);
+
     /// <summary>
     /// 获取列表中指定区间内的元素
     /// </summary>
@@ -318,6 +328,7 @@ public interface ICacheTool
     /// <param name="key"></param>
     /// <returns></returns>
     string RPop(string key);
+
     /// <summary>
     /// 移除列表的最后一个元素
     /// </summary>
@@ -333,6 +344,7 @@ public interface ICacheTool
     /// <param name="destination">目标列表</param>
     /// <returns></returns>
     string RPopLPush(string source, string destination);
+
     /// <summary>
     /// 移除列表的最后一个元素，并将该元素添加到另一个列表并返回
     /// </summary>
@@ -358,7 +370,6 @@ public interface ICacheTool
     /// <returns></returns>
     long RPushX(string key, params object[] elements);
 
-
     /// <summary>
     /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -366,6 +377,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     Task<string> BLPopAsync(string key, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -374,6 +386,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     Task<T> BLPopAsync<T>(string key, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -381,6 +394,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns><param name="timeoutSeconds">超时时间（秒）</param>
     Task<KeyValue<string>> BLPopAsync(string[] keys, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的第一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -397,6 +411,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     Task<string> BRPopAsync(string key, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -405,6 +420,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     Task<T> BRPopAsync<T>(string key, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -412,6 +428,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     Task<KeyValue<string>> BRPopAsync(string[] keys, int timeoutSeconds);
+
     /// <summary>
     /// 移出并获取列表的最后一个元素（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -429,6 +446,7 @@ public interface ICacheTool
     /// <param name="timeoutSeconds">超时时间（秒）</param>
     /// <returns></returns>
     Task<string> BRPopLPushAsync(string source, string destination, int timeoutSeconds);
+
     /// <summary>
     /// 从列表中取出最后一个元素，并插入到另外一个列表的头部（如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止）
     /// </summary>
@@ -446,6 +464,7 @@ public interface ICacheTool
     /// <param name="index">索引</param>
     /// <returns></returns>
     Task<string> LIndexAsync(string key, long index);
+
     /// <summary>
     /// 通过索引获取列表中的元素
     /// </summary>
@@ -478,6 +497,7 @@ public interface ICacheTool
     /// <param name="key"></param>
     /// <returns></returns>
     Task<string> LPopAsync(string key);
+
     /// <summary>
     /// 从列表的头部弹出元素，默认为第一个元素
     /// </summary>
@@ -495,6 +515,7 @@ public interface ICacheTool
     /// <param name="rank">从第几个匹配开始计算</param>
     /// <returns></returns>
     Task<long> LPosAsync<T>(string key, T element, int rank = 0);
+
     /// <summary>
     /// 获取列表 key 中匹配给定 element 成员的索引
     /// </summary>
@@ -531,6 +552,7 @@ public interface ICacheTool
     /// <param name="stop">结束偏移量</param>
     /// <returns></returns>
     Task<string[]> LRangeAsync(string key, long start, long stop);
+
     /// <summary>
     /// 获取列表中指定区间内的元素
     /// </summary>
@@ -574,6 +596,7 @@ public interface ICacheTool
     /// <param name="key"></param>
     /// <returns></returns>
     Task<string> RPopAsync(string key);
+
     /// <summary>
     /// 移除列表的最后一个元素
     /// </summary>
@@ -589,6 +612,7 @@ public interface ICacheTool
     /// <param name="destination">目标列表</param>
     /// <returns></returns>
     Task<string> RPopLPushAsync(string source, string destination);
+
     /// <summary>
     /// 移除列表的最后一个元素，并将该元素添加到另一个列表并返回
     /// </summary>
@@ -614,5 +638,5 @@ public interface ICacheTool
     /// <returns></returns>
     Task<long> RPushXAsync(string key, params object[] elements);
 
-    #endregion
+    #endregion 列表（List）
 }

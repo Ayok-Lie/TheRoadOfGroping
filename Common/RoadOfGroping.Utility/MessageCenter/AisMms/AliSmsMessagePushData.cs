@@ -14,26 +14,32 @@ namespace RoadOfGroping.Utility.MessageCenter.AisMms
         /// 访问密钥ID
         /// </summary>
         public string AccessKeyId { get; set; }
+
         /// <summary>
         /// 访问密钥Secret
         /// </summary>
         public string AccessKeySecret { get; set; }
+
         /// <summary>
         /// API网关地址
         /// </summary>
         public string Endpoint => "dysmsapi.aliyuncs.com";
+
         /// <summary>
         ///接收短信的手机号码，半角逗号（,）分隔。上限为1000个
         /// </summary>
         public string PhoneNumbers { get; set; }
+
         /// <summary>
         /// 接收短信的手机号码
         /// </summary>
         public string SignName { get; set; }
+
         /// <summary>
         /// 短信模板CODE
         /// </summary>
         public string TemplateCode { get; set; }
+
         /// <summary>
         ///短信模板变量对应的实际值，json格式 code:xxx，+模板上限500
         /// </summary>

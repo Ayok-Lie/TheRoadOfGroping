@@ -58,7 +58,7 @@ namespace RoadOfGroping.Utility.Token
         /// <typeparam name="T"></typeparam>
         /// <param name="user"></param>
         /// <returns></returns>
-        public string CreateToken<T>(T entity) where T : class
+        public string CreateFromObjectToken<T>(T entity) where T : class
         {
             //定义声明的集合
             List<Claim> claims = new List<Claim>();
@@ -85,16 +85,8 @@ namespace RoadOfGroping.Utility.Token
         /// </summary>
         /// <param name="keyValuePairs"></param>
         /// <returns></returns>
-        public string CreateToken(Dictionary<string, string> keyValuePairs)
+        public string CreateToken(List<Claim> claims)
         {
-            //定义声明的集合
-            List<Claim> claims = new List<Claim>();
-
-            foreach (var item in keyValuePairs)
-            {
-                claims.Add(new Claim(item.Key, item.Value));
-            }
-
             //根据声明 生成token字符串
             return CreateTokenString(claims);
         }

@@ -2,21 +2,23 @@
 
 public class MinioFileExistsException : Exception
 {
-    public MinioFileExistsException() { }
+    public MinioFileExistsException()
+    { }
 
     public MinioFileExistsException(string message) : base(message)
     {
-
     }
 }
 
 public class MinioFileNotExistsException : Exception
 {
-    public MinioFileNotExistsException() { }
+    public MinioFileNotExistsException()
+    { }
 
-    public MinioFileNotExistsException(string message) : base(message) { }
+    public MinioFileNotExistsException(string message) : base(message)
+    {
+    }
 }
-
 
 public static class ThrowMinioFileExistsException
 {

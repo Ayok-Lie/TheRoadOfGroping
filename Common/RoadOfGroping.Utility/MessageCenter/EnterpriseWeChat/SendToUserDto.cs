@@ -7,7 +7,6 @@ namespace RoadOfGroping.Utility.MessageCenter.EnterpriseWeChat
         public long agentid { get; set; }
         public SendToUserContent text { get; set; }
         public int safe { get; set; }
-
     }
 
     public class SendToUserContent

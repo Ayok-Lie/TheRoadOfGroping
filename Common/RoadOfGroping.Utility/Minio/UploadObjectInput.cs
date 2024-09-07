@@ -22,7 +22,8 @@ public class UploadObjectInput
     /// </summary>
     public Stream Stream { get; set; }
 
-    public UploadObjectInput() { }
+    public UploadObjectInput()
+    { }
 
     public UploadObjectInput(string bucketName, string objectName, string contentType, Stream stream)
     {
