@@ -11,7 +11,7 @@ namespace RoadOfGroping.Application.Service
     {
         private readonly ICacheTool cacheTool;
 
-        public RedisAppService(ICacheTool cacheTool)
+        public RedisAppService(IServiceProvider serviceProvider, ICacheTool cacheTool) : base(serviceProvider)
         {
             this.cacheTool = cacheTool;
         }

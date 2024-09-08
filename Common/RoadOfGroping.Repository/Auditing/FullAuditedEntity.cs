@@ -4,13 +4,13 @@ namespace RoadOfGroping.Repository.Auditing
 {
     public abstract class FullAuditedEntity : CreationAuditedEntity, IDeletionAuditedEntity, IModificationAuditedEntity
     {
-        [MaxLength(32)]
+        [MaxLength(64)]
         public virtual string? DeleterId { get; set; }
 
         public virtual DateTime? DeletionTime { get; set; }
 
         public virtual bool? IsDeleted { get; set; }
-
+        [MaxLength(64)]
         public string? ModifierId { get; set; }
 
         public DateTime? ModificationTime { get; set; }
@@ -27,13 +27,13 @@ namespace RoadOfGroping.Repository.Auditing
             Id = id;
         }
 
-        [MaxLength(32)]
+        [MaxLength(64)]
         public virtual string? DeleterId { get; set; }
 
         public virtual DateTime? DeletionTime { get; set; }
 
         public virtual bool? IsDeleted { get; set; }
-
+        [MaxLength(64)]
         public string? ModifierId { get; set; }
 
         public DateTime? ModificationTime { get; set; }

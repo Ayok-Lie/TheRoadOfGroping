@@ -9,7 +9,7 @@ namespace RoadOfGroping.Repository.Auditing
         /// <summary>
         /// 创建用户
         /// </summary>
-        [MaxLength(32)]
+        [MaxLength(64)]
         public virtual string? CreatorId { get; set; }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace RoadOfGroping.Repository.Auditing
         /// <summary>
         /// 创建用户
         /// </summary>
-        [MaxLength(32)]
+        [MaxLength(64)]
         public virtual string? CreatorId { get; set; }
 
         /// <summary>

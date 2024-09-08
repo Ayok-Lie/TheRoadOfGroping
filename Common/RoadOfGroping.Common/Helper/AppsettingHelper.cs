@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace RoadOfGroping.Common.Helper
 {
@@ -49,6 +50,27 @@ namespace RoadOfGroping.Common.Helper
             List<T> list = new List<T>();
             _config.Bind(string.Join(":", session), list);
             return list;
+        }
+
+
+        /// <summary>
+        /// 递归获取配置信息数组
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sections"></param>
+        /// <returns></returns>
+        public static T AppOption<T>(string sectionsPath)
+        {
+            T result;
+            try
+            {
+                result = _config.GetSection(sectionsPath).Get<T>()!;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

@@ -45,7 +45,7 @@ namespace RoadOfGroping.Repository.Middlewares
                     {
                         await d.RollbackTransactionAsync();
                     }
-                    throw new Exception(ex.Message);
+                    throw new Exception(ex.Message.ToString());
                 }
             }
         }
@@ -53,3 +53,4 @@ namespace RoadOfGroping.Repository.Middlewares
 }
 
 //有缺陷，暂时只做数据保存
+//报错，数据回滚的时候无法显示错误信息

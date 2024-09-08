@@ -19,12 +19,12 @@ namespace RoadOfGroping.EntityFramework.Migrations
                     UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatorId = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
+                    CreatorId = table.Column<string>(type: "nvarchar(64)", maxLength: 32, nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeleterId = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
+                    DeleterId = table.Column<string>(type: "nvarchar(64)", maxLength: 32, nullable: true),
                     DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: true),
-                    ModifierId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModifierId = table.Column<string>(type: "nvarchar(64)", nullable: true),
                     ModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>

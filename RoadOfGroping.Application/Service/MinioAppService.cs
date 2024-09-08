@@ -12,7 +12,7 @@ namespace RoadOfGroping.Application.Service
     {
         private readonly IMinioService minioService;
 
-        public MinioAppService(IMinioService minioService)
+        public MinioAppService(IServiceProvider serviceProvider,IMinioService minioService): base(serviceProvider)
         {
             this.minioService = minioService;
         }

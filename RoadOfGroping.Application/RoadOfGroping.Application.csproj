@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hangfire.Core" Version="1.8.14" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Common\RoadOfGroping.Repository\RoadOfGroping.Repository.csproj" />
     <ProjectReference Include="..\Common\RoadOfGroping.Utility\RoadOfGroping.Utility.csproj" />
   </ItemGroup>

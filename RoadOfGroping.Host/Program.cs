@@ -1,4 +1,6 @@
 using System.Text;
+using AutoMapper;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using RoadOfGroping.Application.Service.Handler;
+using RoadOfGroping.Application.Service.Mappers;
 using RoadOfGroping.Common.Helper;
 using RoadOfGroping.Common.JWTHelpers;
 using RoadOfGroping.EntityFramework;
@@ -20,6 +23,7 @@ using RoadOfGroping.Repository.Middlewares;
 using RoadOfGroping.Repository.UnitOfWorks;
 using RoadOfGroping.Repository.UserSession;
 using RoadOfGroping.Utility.ApiResult;
+using RoadOfGroping.Utility.AutoMapper;
 using RoadOfGroping.Utility.ErrorHandler;
 using RoadOfGroping.Utility.EventBus.Extensions;
 using RoadOfGroping.Utility.MessageCenter.SignalR;
@@ -221,6 +225,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers(c =>
 {
     c.Filters.Add<ApiResultFilterAttribute>();
+    c.Filters.Add<ModelValidateActionFilterAttribute>();
 });
 
 //注入Redis
@@ -238,7 +243,17 @@ builder.Services.AddMinio(config);
 //注入
 builder.Services.AddTransient<IUserSession, CurrentUserSession>();
 builder.Services.AddTransient<IAuditPropertySetter, AuditPropertySetter>();
-
+//注入AutoMapper
+builder.Services.AddSingleton(MapperHepler.CreateMappings);
+builder.Services.AddSingleton<IMapper>(provider => provider.GetRequiredService<Mapper>());
+builder.Services.Configure<AutoMapperOptions>(options =>
+{
+    options.Configurators.Add(ctx =>
+    {
+        AutoMappers.CreateMappings(ctx.MapperConfiguration);
+    });
+});
+builder.Services.ConfigureHangfireService();
 var app = builder.Build();
 
 // 配置HTTP请求管道
@@ -269,18 +284,18 @@ if (app.Environment.IsDevelopment())
 // 启用CORS策略
 app.UseCors("DefaultCorsPolicy");
 
+app.UseRouting();
+
 // 添加异常处理中间件
 app.UseMiddleware<ExceptionMiddleware>();
-
-app.UseRouting();
+// 添加UnitOfWork中间件
+app.UseMiddleware<UnitOfWorkMiddleware>();
 
 // 启用身份验证
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapHub<TestChatHub>("/testHub");
-// 添加UnitOfWork中间件
-app.UseMiddleware<UnitOfWorkMiddleware>();
 
 app.UseEndpoints(endpoints =>
 {
@@ -291,4 +306,12 @@ app.UseEndpoints(endpoints =>
     endpoints.MapRazorPages();
 });
 //app.MapControllers();
+//启用仪表盘
+
+#region 启用Hangfire仪表盘
+
+app.UseHangfireDashboard();
+
+#endregion 启用Hangfire仪表盘
+
 app.Run();

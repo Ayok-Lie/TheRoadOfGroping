@@ -7,12 +7,42 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css">
     <style>
         body {
-            margin: 0px;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
         }
+
+        .swagger-ui .scheme-container {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .button-container {
+            justify-content: center;
+            left: 15%;
+            top: 7%;
+            position: absolute
+        }
+
+            .button-container button {
+                margin: 0 10px;
+                padding: 10px 20px;
+                font-size: 14px;
+                border: none;
+                background-color: #1b1b1b;
+                color: #fff;
+                cursor: pointer;
+                border-radius: 4px;
+            }
     </style>
 </head>
 <body>
+    <div class="button-container">
+        <button id="hangfireButton">跳转到 Hangfire</button>
+        <button id="logoutButton">退出登录</button>
+    </div>
     <div id="swagger-ui"></div>
+
     <!-- 加载 Swagger UI 的 JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-standalone-preset.min.js"></script>
@@ -56,6 +86,17 @@
 
             // 初始化 Swagger UI
             SwaggerUIBundle(configObject);
+
+            // 跳转到 Hangfire 并打开新页面
+            document.getElementById("hangfireButton").addEventListener("click", function () {
+                window.open("/hangfire", "_blank"); // 替换 "/hangfire" 为正确的 Hangfire 页面 URL
+            });
+
+            // 退出登录并清除 cookie
+            document.getElementById("logoutButton").addEventListener("click", function () {
+                Cookies.remove("access-token"); // 清除名为 "access-token" 的 cookie
+                window.location.href = "/home/index"; // 替换 "/home/logout" 为正确的退出登录 URL
+            });
         }
     </script>
 </body>

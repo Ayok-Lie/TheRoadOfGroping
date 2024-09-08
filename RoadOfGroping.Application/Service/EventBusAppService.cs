@@ -13,7 +13,7 @@ namespace RoadOfGroping.Application.Service
     {
         private readonly ILocalEventBus _eventBusServices;
 
-        public EventBusAppService(ILocalEventBus eventBusServices)
+        public EventBusAppService(IServiceProvider serviceProvider, ILocalEventBus eventBusServices) : base(serviceProvider)
         {
             _eventBusServices = eventBusServices;
         }

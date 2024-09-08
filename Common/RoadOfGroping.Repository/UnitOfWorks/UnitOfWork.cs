@@ -53,11 +53,11 @@ namespace RoadOfGroping.Repository.UnitOfWorks
                 await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 await _dbContext.Database.CommitTransactionAsync(cancellationToken).ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // 发生异常回滚事务
                 await RollbackTransactionAsync(cancellationToken).ConfigureAwait(false);
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
