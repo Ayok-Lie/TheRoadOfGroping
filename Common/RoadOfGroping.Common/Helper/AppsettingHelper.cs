@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace RoadOfGroping.Common.Helper
 {
@@ -51,7 +50,6 @@ namespace RoadOfGroping.Common.Helper
             _config.Bind(string.Join(":", session), list);
             return list;
         }
-
 
         /// <summary>
         /// 递归获取配置信息数组

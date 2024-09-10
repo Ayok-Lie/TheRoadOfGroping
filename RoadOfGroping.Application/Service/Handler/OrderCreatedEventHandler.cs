@@ -1,4 +1,4 @@
-﻿using RoadOfGroping.Utility.EventBus;
+﻿using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus;
 
 namespace RoadOfGroping.Application.Service.Handler
 {

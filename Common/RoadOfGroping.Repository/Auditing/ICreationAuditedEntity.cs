@@ -1,4 +1,6 @@
-﻿namespace RoadOfGroping.Repository.Auditing
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RoadOfGroping.Repository.Auditing
 {
     public interface ICreationAuditedEntity
     {
@@ -10,6 +12,7 @@
         /// <summary>
         /// 创建人Id
         /// </summary>
+        [MaxLength(64)]
         string CreatorId { get; }
     }
 }

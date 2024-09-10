@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace RoadOfGroping.Application.Service.Dtos
 {
     public class UserDto
     {
         public Guid Id { get; set; }
+
         /// <summary>
         /// 用户名
         /// </summary>
@@ -32,9 +29,6 @@ namespace RoadOfGroping.Application.Service.Dtos
         /// </summary>
         public string UserPhone { get; set; }
 
-        /// <summary>
-        /// 头像
-        /// </summary>
-        public string? Avatar { get; set; }
+        public IFormFile File { get; set; }
     }
 }

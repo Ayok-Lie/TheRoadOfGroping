@@ -9,7 +9,8 @@ namespace RoadOfGroping.Repository.Auditing
 
         public virtual DateTime? DeletionTime { get; set; }
 
-        public virtual bool? IsDeleted { get; set; }
+        public virtual bool IsDeleted { get; set; }
+
         [MaxLength(64)]
         public string? ModifierId { get; set; }
 
@@ -32,7 +33,8 @@ namespace RoadOfGroping.Repository.Auditing
 
         public virtual DateTime? DeletionTime { get; set; }
 
-        public virtual bool? IsDeleted { get; set; }
+        public virtual bool IsDeleted { get; set; }
+
         [MaxLength(64)]
         public string? ModifierId { get; set; }
 

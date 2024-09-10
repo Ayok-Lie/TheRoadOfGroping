@@ -12,6 +12,14 @@ using RoadOfGroping.Application.Service.Handler;
 using RoadOfGroping.Application.Service.Mappers;
 using RoadOfGroping.Common.Helper;
 using RoadOfGroping.Common.JWTHelpers;
+using RoadOfGroping.Core.Files;
+using RoadOfGroping.Core.Files.Dtos;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.ApiResult;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.AutoMapper;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.ErrorHandler;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.Extensions;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Minio;
 using RoadOfGroping.EntityFramework;
 using RoadOfGroping.Host.Extensions;
 using RoadOfGroping.Host.Modules;
@@ -22,12 +30,6 @@ using RoadOfGroping.Repository.Extensions;
 using RoadOfGroping.Repository.Middlewares;
 using RoadOfGroping.Repository.UnitOfWorks;
 using RoadOfGroping.Repository.UserSession;
-using RoadOfGroping.Utility.ApiResult;
-using RoadOfGroping.Utility.AutoMapper;
-using RoadOfGroping.Utility.ErrorHandler;
-using RoadOfGroping.Utility.EventBus.Extensions;
-using RoadOfGroping.Utility.MessageCenter.SignalR;
-using RoadOfGroping.Utility.Minio;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -40,8 +42,8 @@ var config = new ConfigurationBuilder()
                 .Build();
 // 配置AppsettingHelper
 builder.Services.AddSingleton(new AppsettingHelper(config));
-// 添加Controllers服务
-builder.Services.AddControllers();
+// 添加HttpContextAccessor服务
+builder.Services.AddHttpContextAccessor();
 
 #region 添加Swagger文档服务
 
@@ -235,6 +237,7 @@ builder.Services.UseRedis(config);
 builder.Services.AddEventBusAndSubscribes(c =>
 {
     c.Subscribe<TestDto, TestEventHandler>();
+    c.Subscribe<FileEventDto, FileEventHandler>();
 });
 //注入SignalR
 builder.Services.AddSignalR();

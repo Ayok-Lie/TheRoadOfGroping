@@ -1,4 +1,4 @@
-﻿namespace RoadOfGroping.Utility.DependencyInjection
+﻿namespace RoadOfGroping.Common.DependencyInjection
 {
     /// <summary>
     /// 单例模式

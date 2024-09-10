@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using RoadOfGroping.Common.Attributes;
 using RoadOfGroping.Core.Users;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
 using RoadOfGroping.Repository.UserSession;
-using RoadOfGroping.Utility.Token;
 
 namespace RoadOfGroping.Host.Controllers
 {

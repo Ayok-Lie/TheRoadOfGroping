@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\RoadOfGroping.Repository\RoadOfGroping.Repository.csproj" />
-    <ProjectReference Include="..\Common\RoadOfGroping.Utility\RoadOfGroping.Utility.csproj" />
+    <ProjectReference Include="..\RoadOfGroping.Core\RoadOfGroping.Core.csproj" />
   </ItemGroup>
 
 </Project>

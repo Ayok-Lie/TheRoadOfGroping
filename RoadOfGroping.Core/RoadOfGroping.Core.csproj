@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -11,15 +11,40 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac.Extras.DynamicProxy" Version="7.1.0" />
+    <PackageReference Include="AlibabaCloud.SDK.Dysmsapi20170525" Version="3.0.0" />
+    <PackageReference Include="Autofac" Version="8.1.0" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Castle.Core" Version="5.1.1" />
+    <PackageReference Include="FreeRedis" Version="1.2.15" />
     <PackageReference Include="log4net" Version="2.0.17" />
+    <PackageReference Include="MailKit" Version="4.7.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="Minio" Version="6.0.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+    <PackageReference Include="RestSharp" Version="112.0.0" />
+    <PackageReference Include="TencentCloudSDK" Version="3.0.1084" />
+    <PackageReference Include="WebApiClientCore" Version="2.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common\RoadOfGroping.Model\RoadOfGroping.Model.csproj" />
     <ProjectReference Include="..\Common\RoadOfGroping.Repository\RoadOfGroping.Repository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ZRoadOfGropingUtility\DLLs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="TopSdk">
+      <HintPath>ZRoadOfGropingUtility\DLLs\TopSdk.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using RoadOfGroping.Core.Files.Entitys;
 using RoadOfGroping.Core.OrderTest.Entity;
 using RoadOfGroping.Core.Users.Entity;
 using RoadOfGroping.EntityFramework.Extensions;
@@ -31,6 +32,8 @@ namespace RoadOfGroping.EntityFramework
         /// 用户实体集。
         /// </summary>
         public virtual DbSet<RoadOfGropingUsers> RoadOfGropingUsers { get; set; }
+
+        public virtual DbSet<FileInfos> FileInfos { get; set; }
 
         /// <summary>
         /// 配置模型创建。

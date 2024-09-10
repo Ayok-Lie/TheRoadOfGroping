@@ -5,8 +5,8 @@ using Hangfire;
 using Hangfire.SqlServer;
 using Newtonsoft.Json;
 using RoadOfGroping.Common.Helper;
-using RoadOfGroping.Utility.Autofac;
-using RoadOfGroping.Utility.RedisModule;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.RedisModule;
 
 namespace RoadOfGroping.Host.Extensions
 {

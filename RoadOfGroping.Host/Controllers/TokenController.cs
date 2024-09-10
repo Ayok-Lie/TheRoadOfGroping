@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RoadOfGroping.Utility.Token;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
 
 namespace RoadOfGroping.Host.Controllers
 {

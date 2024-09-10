@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RoadOfGroping.Core.OrderTest;
-using RoadOfGroping.Core.OrderTest.Entity;
 
 namespace RoadOfGroping.Host.Controllers
 {
@@ -19,18 +17,12 @@ namespace RoadOfGroping.Host.Controllers
 
         private readonly ILogger<TestController> _logger;
 
-        private readonly IOrderRepository orderRepository;
-
-        private readonly ICacheTool cacheTool;
-
         /// <summary>
         /// ²âÊÔ¿ØÖÆÆ÷
         /// </summary>
-        public TestController(ILogger<TestController> logger, IOrderRepository orderRepository, ICacheTool cacheTool)
+        public TestController(ILogger<TestController> logger)
         {
             _logger = logger;
-            this.orderRepository = orderRepository;
-            this.cacheTool = cacheTool;
         }
 
         /// <summary>
@@ -56,25 +48,6 @@ namespace RoadOfGroping.Host.Controllers
 
                 throw new KeyNotFoundException("Get User failed");
             }
-        }
-
-        //[Authorize]
-        [HttpGet]
-        public async Task<ActionResult<List<Order>>> Get(CancellationToken cancellationToken)
-        {
-            return await orderRepository.Get();
-
-            //return Ok("Summaries");
-            //await orderRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
-            //return BadRequest();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create()
-        {
-            await orderRepository.Create();
-
-            return Ok();
         }
 
         [HttpGet]

@@ -6,7 +6,7 @@ namespace RoadOfGroping.Common.Extensions
 {
     public static class StringExtensions
     {
-        public static bool IsNullEmpty(this string source)
+        public static bool IsNullOrEmpty(this string source)
         {
             return string.IsNullOrEmpty(source);
         }
@@ -15,7 +15,7 @@ namespace RoadOfGroping.Common.Extensions
         /// 字符串是否为null或空“”或空白字符串“ ”
         /// </summary>
         /// <returns></returns>
-        public static bool IsNullWhiteSpace(this string str)
+        public static bool IsNullOrWhiteSpace(this string str)
         {
             return string.IsNullOrWhiteSpace(str);
         }

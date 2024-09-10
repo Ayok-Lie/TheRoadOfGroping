@@ -1,12 +1,9 @@
 ﻿using RoadOfGroping.EntityFramework.Domain;
-using RoadOfGroping.EntityFramework.UnitOfWorks;
 
 namespace RoadOfGroping.EntityFramework.Repositorys
 {
     public interface IRepository<TEntity> where TEntity : Entity1, IAggregateRoot
     {
-        IUnitOfWork UnitOfWork { get; }
-
         TEntity Add(TEntity entity);
 
         Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);

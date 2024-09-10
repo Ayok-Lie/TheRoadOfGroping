@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Minio.DataModel;
 using RoadOfGroping.Common.Attributes;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Minio;
 using RoadOfGroping.Repository.DomainService;
-using RoadOfGroping.Utility.Minio;
 
 namespace RoadOfGroping.Application.Service
 {
@@ -12,7 +12,7 @@ namespace RoadOfGroping.Application.Service
     {
         private readonly IMinioService minioService;
 
-        public MinioAppService(IServiceProvider serviceProvider,IMinioService minioService): base(serviceProvider)
+        public MinioAppService(IServiceProvider serviceProvider, IMinioService minioService) : base(serviceProvider)
         {
             this.minioService = minioService;
         }

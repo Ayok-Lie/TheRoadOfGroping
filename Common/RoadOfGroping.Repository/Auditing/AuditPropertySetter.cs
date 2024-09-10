@@ -42,7 +42,7 @@ namespace RoadOfGroping.Repository.Auditing
                 ObjectPropertyHelper.TrySetProperty(mayHaveCreatorObject, x => x.CreationTime, () => DateTime.Now);
             }
 
-            if ((!mayHaveCreatorObject.CreatorId.IsNullEmpty() && mayHaveCreatorObject.CreatorId != default) || _userSession.UserId.IsNullEmpty())
+            if ((!mayHaveCreatorObject.CreatorId.IsNullOrEmpty() && mayHaveCreatorObject.CreatorId != default) || _userSession.UserId.IsNullOrEmpty())
             {
                 return;
             }
@@ -62,7 +62,7 @@ namespace RoadOfGroping.Repository.Auditing
                 ObjectPropertyHelper.TrySetProperty(deletionAuditedObject, x => x.DeletionTime, () => DateTime.Now);
             }
 
-            if (deletionAuditedObject.DeleterId != null || _userSession.UserId.IsNullEmpty())
+            if (deletionAuditedObject.DeleterId != null || _userSession.UserId.IsNullOrEmpty())
             {
                 return;
             }
@@ -81,7 +81,7 @@ namespace RoadOfGroping.Repository.Auditing
                 ObjectPropertyHelper.TrySetProperty(mayHaveModifierObject, x => x.ModificationTime, () => DateTime.Now);
             }
 
-            if (mayHaveModifierObject.ModifierId != null || _userSession.UserId.IsNullEmpty())
+            if (mayHaveModifierObject.ModifierId != null || _userSession.UserId.IsNullOrEmpty())
             {
                 return;
             }

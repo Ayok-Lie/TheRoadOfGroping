@@ -1,7 +1,7 @@
 ﻿using RoadOfGroping.Application.Service.Handler;
 using RoadOfGroping.Common.Attributes;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus;
 using RoadOfGroping.Repository.DomainService;
-using RoadOfGroping.Utility.EventBus;
 
 namespace RoadOfGroping.Application.Service
 {
@@ -56,7 +56,7 @@ namespace RoadOfGroping.Application.Service
                 eto = new TestDto()
                 {
                     Name = "LocalEventBus" + i.ToString(),
-                    Description = "wyg" + i.ToString(),
+                    Description = "幸运值" + i.ToString(),
                 };
                 await _eventBusServices.PushAsync(eto);
             }
@@ -69,7 +69,7 @@ namespace RoadOfGroping.Application.Service
                 TestDto eto = new TestDto()
                 {
                     Name = "LocalEventBus" + i.ToString(),
-                    Description = "zzzz" + i.ToString(),
+                    Description = "幸运值" + i.ToString(),
                 };
                 await _eventBusServices.EnqueueAsync(eto);
             }
