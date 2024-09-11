@@ -6,6 +6,9 @@ using RoadOfGroping.Repository.DomainService;
 
 namespace RoadOfGroping.Application.Service
 {
+    /// <summary>
+    /// 不带基础参数的服务类
+    /// </summary>
     public class OrderAppService : ApplicationService
     {
         private readonly IOrderManager _orderManager;

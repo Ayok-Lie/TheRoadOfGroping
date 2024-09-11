@@ -14,32 +14,37 @@ using RoadOfGroping.Repository.DomainService;
 
 namespace RoadOfGroping.Application.Service
 {
+    /// <summary>
+    /// 文件应用服务
+    /// </summary>
+    /// <returns></returns>
     public class FileAppService : ApplicationService
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly MinioConfig _minioOptions;
         private readonly IFileInfoManager _fileInfoManager;
-        private readonly IMinioService _minioService;
+        private readonly IMinioFileManager _minioFileManager;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <param name="webHostEnvironment"></param>
-        /// <param name="minioFileManager"></param>
         /// <param name="minioOptions"></param>
         /// <param name="fileInfoManager"></param>
+        /// <param name="minioFileManager"></param>
         public FileAppService(
             IServiceProvider serviceProvider,
             IWebHostEnvironment webHostEnvironment,
             IOptions<MinioConfig> minioOptions,
-            IFileInfoManager fileInfoManager)
+            IFileInfoManager fileInfoManager,
+            IMinioFileManager minioFileManager)
             : base(serviceProvider)
         {
             _webHostEnvironment = webHostEnvironment;
             _minioOptions = minioOptions.Value;
             _fileInfoManager = fileInfoManager;
-            _minioService = _minioOptions.Enable ? serviceProvider.GetRequiredService<IMinioService>() : null;
+            _minioFileManager = minioFileManager;
         }
 
         /// <summary>
@@ -77,13 +82,8 @@ namespace RoadOfGroping.Application.Service
                 return new FileStreamResult(stream, contentType);
             }
             fileUrl = fileUrl.Replace(_minioOptions.DefaultBucket!.TrimEnd('/'), "");
-            var obj = new GetObjectInput()
-            {
-                ObjectName = fileUrl,
-                BucketName = _minioOptions.DefaultBucket
-            };
 
-            var output = await _minioService.GetObjectAsync(obj);
+            var output = await _minioFileManager.GetFile(fileUrl);
 
             return new FileStreamResult(output.Stream, output.ContentType);
         }
@@ -125,7 +125,7 @@ namespace RoadOfGroping.Application.Service
         {
             var entity = await _fileInfoManager.FindByIdAsync(id);
             await _fileInfoManager.DeleteAsync(entity);
-            await _minioService.RemoveObjectAsync(
+            await _minioFileManager.DeleteMinioFileAsync(
                 new RemoveObjectInput
                 {
                     BucketName = _minioOptions.DefaultBucket,

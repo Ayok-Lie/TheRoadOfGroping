@@ -81,6 +81,12 @@ namespace RoadOfGroping.Repository.DynamicWebAPI
             // 配置控制器中所有动作的选择器
             foreach (var action in controller.Actions)
             {
+                //去除路径中的AppService后缀
+                if (controller.ControllerName.EndsWith("AppService"))
+                {
+                    controller.ControllerName = controller.ControllerName.Substring(0, controller.ControllerName.Length - 10);
+                }
+                //处理Action中
                 ConfigureSelector(action);
             }
         }
@@ -173,7 +179,6 @@ namespace RoadOfGroping.Repository.DynamicWebAPI
             var selector = new SelectorModel();
             selector.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(CalculateRouteTemplate(action)));
             selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { GetHttpMethod(action) }));
-
             action.Selectors.Add(selector);
         }
 
@@ -231,7 +236,6 @@ namespace RoadOfGroping.Repository.DynamicWebAPI
             {
                 routeTemplate.Append($"/{actionName}");
             }
-
             return routeTemplate.ToString();
         }
 

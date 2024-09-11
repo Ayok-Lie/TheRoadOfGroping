@@ -16,6 +16,12 @@ namespace RoadOfGroping.Application.Service
             this.cacheTool = cacheTool;
         }
 
+        /// <summary>
+        /// 设置redis
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
         public async Task SetRedis(string key, string val)
         {
             await cacheTool.SetAsync(key, val);

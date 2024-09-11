@@ -27,10 +27,6 @@ public static class MinioExtensions
             p.Password = config.Password;
             p.UserName = config.UserName;
         });
-        if (!config.Enable)
-        {
-            return;
-        }
         var client = new MinioClient()
             .WithEndpoint(config.Host)
             .WithCredentials(config.AccessKey, config.SecretKey)

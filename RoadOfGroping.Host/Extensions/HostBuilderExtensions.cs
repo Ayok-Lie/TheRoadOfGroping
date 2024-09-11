@@ -1,17 +1,97 @@
-﻿using Autofac;
+﻿using System.Text;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FreeRedis;
 using Hangfire;
+using Hangfire.MySql;
 using Hangfire.SqlServer;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using RoadOfGroping.Common.Helper;
+using RoadOfGroping.Common.JWTHelpers;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.RedisModule;
+using RoadOfGroping.EntityFramework.Extensions;
+using Swashbuckle.AspNetCore.Filters;
+using RoadOfGroping.Repository.DynamicWebAPI;
+using AutoMapper;
+using RoadOfGroping.Application.Service.Mappers;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.AutoMapper;
+using RoadOfGroping.EntityFramework;
+using RoadOfGroping.Repository.Middlewares;
+using RoadOfGroping.Repository.UnitOfWorks;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace RoadOfGroping.Host.Extensions
 {
+    /// <summary>
+    /// 基础配置
+    /// </summary>
     public static class HostBuilderExtensions
     {
+        /// <summary>
+        /// 注册UnitOfWork服务
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static WebApplicationBuilder AddUnitOfWork(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork<RoadOfGropingDbContext>));
+            builder.Services.AddTransient<UnitOfWorkMiddleware>();
+            return builder;
+        }
+
+        /// <summary>
+        /// CORS策略
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static WebApplicationBuilder AddCors(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("DefaultCorsPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
+            return builder;
+        }
+        /// <summary>
+        /// 配置swaggerUI
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static WebApplication UseSwaggerUI(this WebApplication app, WebApplicationBuilder builder)
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1 Docs");
+                //options.RoutePrefix = String.Empty;
+                //options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
+                //options.DefaultModelExpandDepth(-1);
+                //options.EnableDeepLinking(); //深链接功能
+                options.DocExpansion(DocExpansion.None); //swagger文档是否打开
+                options.IndexStream = () =>
+                {
+                    var path = Path.Join(builder.Environment.WebRootPath, "pages", "swagger.html");
+                    return new FileInfo(path).OpenRead();
+                };
+            });
+            return app;
+        }
+        /// <summary>
+        /// AutoFac 配置
+        /// </summary>
+        /// <param name="hostBuilder"></param>
+        /// <returns></returns>
         public static IHostBuilder UserAutoFac(this IHostBuilder hostBuilder)
         {
             return hostBuilder.UseServiceProviderFactory(
@@ -24,6 +104,170 @@ namespace RoadOfGroping.Host.Extensions
                             IOCManager.Current = (IContainer)scope;
                         });
                     });
+        }
+
+        /// <summary>
+        /// Swagger 配置
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static WebApplicationBuilder AddSwaggerGen(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.OperationFilter<AddResponseHeadersFilter>();
+                options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+                //options.DocumentFilter<RemoveAppSuffixFilter>();
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "TheRoadOfGroping API",
+                    Version = "v1",
+                    Description = "Asp.Net Core6 WebApi开发实战",
+                    Contact = new OpenApiContact()
+                    {
+                        Name = "Lie",
+                        Email = "88888888@qq.com",
+                        Url = new Uri("https://blog.csdn.net/ousetuhou?type=blog")
+                    }
+                });
+                var binXmlFiles =
+                new DirectoryInfo(Path.Join(builder.Environment.WebRootPath, "ApiDocs"))
+                .GetFiles("*.xml", SearchOption.TopDirectoryOnly);
+                foreach (var filePath in binXmlFiles.Select(item => item.FullName))
+                {
+                    options.IncludeXmlComments(filePath, true);
+                }
+                //开启Authorize权限按钮——方式一
+                options.AddSecurityDefinition("JWTBearer", new OpenApiSecurityScheme()
+                {
+                    Description = "这是方式一(直接在输入框中输入认证信息，不需要在开头添加Bearer) ",
+                    Name = "Authorization",        //jwt默认的参数名称
+                    In = ParameterLocation.Header,  //jwt默认存放Authorization信息的位置(请求头中)
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer"
+                });
+                var scheme = new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Id = "JWTBearer",
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                ////开启Authorize权限按钮——方式二
+
+                //options.AddSecurityDefinition("JwtBearer", new OpenApiSecurityScheme()
+                //{
+                //    Description = "这是方式二(JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）)",
+                //    Name = "Authorization",//jwt默认的参数名称
+                //    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
+                //    Type = SecuritySchemeType.ApiKey
+                //});
+
+                ////开启Authorize权限按钮——默认
+                //options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                //{
+                //    {
+                //        new OpenApiSecurityScheme
+                //        {
+                //            Reference = new OpenApiReference
+                //            {
+                //                Type = ReferenceType.SecurityScheme,
+                //                Id = "Bearer"
+                //            },Scheme = "oauth2",Name = "Bearer",In=ParameterLocation.Header,
+                //        },new List<string>()
+                //    }
+                //});
+
+                //声明一个Scheme，注意下面的Id要和上面AddSecurityDefinition中的参数name一致
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    { scheme, Array.Empty<string>() }
+                });
+            });
+            return builder;
+        }
+
+        /// <summary>
+        /// 动态WebAPI 配置
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static WebApplicationBuilder AddMvcConfig(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddMvc(options => { })
+                .AddRazorPagesOptions((options) => { })
+                .AddRazorRuntimeCompilation()
+                .AddDynamicWebApi();
+            return builder;
+        }
+
+        /// <summary>
+        /// JWT 配置
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static WebApplicationBuilder AddJwtConfig(this WebApplicationBuilder builder, IConfiguration config)
+        {
+            var jwtTokenConfig = config.GetSection("JWT").Get<JwtModel>();
+            builder.Services.AddAuthentication(opts =>
+            {
+                opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.Cookie.Name = "BearerCokkie";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.SlidingExpiration = false;
+                options.LogoutPath = "/Home/Index";
+                options.Events = new CookieAuthenticationEvents
+                {
+                    OnSigningOut = async context =>
+                    {
+                        context.Response.Cookies.Delete("access-token");
+                        await Task.CompletedTask;
+                    }
+                };
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtTokenConfig.Issuer,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience = jwtTokenConfig.Audience,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtTokenConfig.SecretKey)),
+                    ClockSkew = TimeSpan.FromMinutes(1)
+                };
+                options.Events = new JwtBearerEvents()
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            context.Response.Headers.Add("Token-Expired", "true");
+                        }
+                        return Task.CompletedTask;
+                    },
+                    OnChallenge = context =>
+                    {
+                        context.HandleResponse();
+                        var payload = JsonConvert.SerializeObject(new { Code = "401", Message = "很抱歉，您无权访问该接口" });
+                        context.Response.ContentType = "application/json";
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Response.WriteAsync(payload);
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+            return builder;
         }
 
         /// <summary>
@@ -86,6 +330,7 @@ namespace RoadOfGroping.Host.Extensions
         /// 注册Hangfire
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="optionsAction"></param>
         public static void ConfigureHangfireService(this IServiceCollection services,
             Action<BackgroundJobServerOptions> optionsAction = null)
         {
@@ -109,17 +354,37 @@ namespace RoadOfGroping.Host.Extensions
         }
 
         /// <summary>
+        /// 注册AutoMapper
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static WebApplicationBuilder AddAutoMapper(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddSingleton(MapperHepler.CreateMappings);
+            builder.Services.AddSingleton<IMapper>(provider => provider.GetRequiredService<Mapper>());
+            builder.Services.Configure<AutoMapperOptions>(options =>
+            {
+                options.Configurators.Add(ctx =>
+                {
+                    AutoMappers.CreateMappings(ctx.MapperConfiguration);
+                });
+            });
+            return builder;
+        }
+
+        /// <summary>
         /// 使用 Hangfire Storage
         /// </summary>
         /// <param name="configuration"></param>
         /// <returns></returns>
         public static IGlobalConfiguration UseHangfireStorage(this IGlobalConfiguration configuration)
         {
-            string connectionString = string.Empty;
-            switch ("SqlServer")
+            var databaseType = AppsettingHelper.AppOption<DatabaseType>("ConnectionStrings:DatabaseType");
+            string? connectionString = string.Empty;
+            connectionString = AppsettingHelper.AppOption<string>("ConnectionStrings:Default");
+            switch (databaseType)
             {
-                case "SqlServer":
-                    connectionString = AppsettingHelper.AppOption<string>("ConnectionStrings:Default");
+                case DatabaseType.SqlServer:
                     configuration.UseSqlServerStorage(connectionString, new SqlServerStorageOptions
                     {
                         PrepareSchemaIfNecessary = true,
@@ -129,45 +394,37 @@ namespace RoadOfGroping.Host.Extensions
                         QueuePollInterval = TimeSpan.FromSeconds(5), // 检查作业队列的间隔时间为 5 秒
                         JobExpirationCheckInterval = TimeSpan.FromHours(1),//- 作业到期检查间隔（管理过期记录）。默认值为1小时。
                         CountersAggregateInterval = TimeSpan.FromMinutes(5),//- 聚合计数器的间隔。默认为5分钟。
-                        //DashboardJobListLimit=5000,//- 仪表板作业列表限制。默认值为50000。
+                        DashboardJobListLimit = 5000,//- 仪表板作业列表限制。默认值为50000。
                         TransactionTimeout = TimeSpan.FromMinutes(1),//- 交易超时。默认为1分钟。
                         UseRecommendedIsolationLevel = true, // 使用推荐的事务隔离级别
                         DisableGlobalLocks = true // 禁用全局锁定机制
                     });
                     break;
-                //case "MySql":
-                //    connectionString = AppSettings.AppOption<string>("App:ConnectionString:Mysql");
-                //    configuration.UseMysqlStorage(connectionString);
-                //    break;
+
+                case DatabaseType.MySql:
+                    configuration.UseStorage(new MySqlStorage(connectionString, new MySqlStorageOptions()
+                    {
+                        QueuePollInterval = TimeSpan.FromSeconds(15),
+                        JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                        CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                        PrepareSchemaIfNecessary = true,
+                        DashboardJobListLimit = 50000,
+                        TransactionTimeout = TimeSpan.FromMinutes(1),
+                        TablesPrefix = "RoadOfGroping_HangFire_"
+                    }));
+                    break;
+
+                case DatabaseType.Psotgre:
+                    break;
+
+                case DatabaseType.Sqlite:
+                    break;
+
                 default:
                     throw new Exception("不支持的数据库类型");
             }
             return configuration;
         }
-
-        /// <summary>
-        /// 使用Oracle的Hangfire Storage
-        /// </summary>
-        /// <param name="configuration"></param>
-        /// <param name="connectionString"></param>
-        /// <returns></returns>
-        //public static IGlobalConfiguration UseMysqlStorage(this IGlobalConfiguration configuration, string connectionString)
-        //{
-        //    var storage = new MySqlStorage(connectionString, new MySqlStorageOptions()
-        //    {
-        //        QueuePollInterval = TimeSpan.FromSeconds(15),
-        //        JobExpirationCheckInterval = TimeSpan.FromHours(1),
-        //        CountersAggregateInterval = TimeSpan.FromMinutes(5),
-        //        PrepareSchemaIfNecessary = true,
-        //        DashboardJobListLimit = 50000,
-        //        TransactionTimeout = TimeSpan.FromMinutes(1),
-        //        TablesPrefix = "Z_HangFire_"
-        //    });
-
-        //    configuration.UseStorage(storage);
-
-        //    return configuration;
-        //}
     }
 
     //public class AutofacModule : Autofac.Module

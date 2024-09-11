@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RoadOfGroping.Application</name>
+    </assembly>
+    <members>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.FileDisplayName">
+            <summary>
+            文件显示名称，例如文件名为  open.jpg，显示名称为： open_编码规则
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.FileName">
+            <summary>
+            文件原始名称
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.FileExt">
+            <summary>
+            文件扩展名
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.ContentType">
+            <summary>
+            文件类型
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.FilePath">
+            <summary>
+            文件路径
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.FileSize">
+            <summary>
+            文件大小，字节
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.FileType">
+            <summary>
+            文件类型
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.FileTypeString">
+            <summary>
+            文件类型名称
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.FileIpAddress">
+            <summary>
+            Ip 地址
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.CreationTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoQueryInput.name">
+            <summary>
+            关键词
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.UploadFileOutput.Name">
+            <summary>
+            文件名
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.UploadFileOutput.Url">
+            <summary>
+            附件链接
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.UserDto.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.UserDto.PasswordHash">
+            <summary>
+            密码哈希值
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.UserDto.UserEmail">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.UserDto.UserPhone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="T:RoadOfGroping.Application.Service.EventBusAppService">
+            <summary>
+            EventBus测试服务
+            </summary>
+        </member>
+        <member name="T:RoadOfGroping.Application.Service.FileAppService">
+            <summary>
+            文件应用服务
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.FileAppService.#ctor(System.IServiceProvider,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Options.IOptions{RoadOfGroping.Core.ZRoadOfGropingUtility.Minio.MinioConfig},RoadOfGroping.Core.Files.IFileInfoManager,RoadOfGroping.Core.Files.IMinioFileManager)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="serviceProvider"></param>
+            <param name="webHostEnvironment"></param>
+            <param name="minioOptions"></param>
+            <param name="fileInfoManager"></param>
+            <param name="minioFileManager"></param>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.FileAppService.UploadFile(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            上传附件
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.FileAppService.GetFile(System.String)">
+            <summary>
+            获取文件
+            </summary>
+            <param name="fileUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.FileAppService.DeleteAsync(System.Guid)">
+            <summary>
+            删除
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.MinioAppService.UploadFile(System.String,System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+            <summary>
+            上传文件
+            </summary>
+            <param name="filePath">文件保存路径</param>
+            <param name="files">文件</param>
+            <returns></returns>
+        </member>
+        <member name="T:RoadOfGroping.Application.Service.OrderAppService">
+            <summary>
+            不带基础参数的服务类
+            </summary>
+        </member>
+        <member name="T:RoadOfGroping.Application.Service.RedisAppService">
+            <summary>
+            redis测试服务
+            </summary>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.RedisAppService.SetRedis(System.String,System.String)">
+            <summary>
+            设置redis
+            </summary>
+            <param name="key"></param>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

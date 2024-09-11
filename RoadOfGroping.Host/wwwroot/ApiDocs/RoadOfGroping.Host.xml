@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RoadOfGroping.Host</name>
+    </assembly>
+    <members>
+        <member name="M:RoadOfGroping.Host.Controllers.HomeController.Privacy">
+             <summary>
+            
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Controllers.LoginController.Login(RoadOfGroping.Host.Controllers.LoginController.UserInfo)">
+            <summary>
+            登录功能
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="T:RoadOfGroping.Host.Controllers.TestController">
+            <summary>
+            测试控制器
+            </summary>
+        </member>
+        <member name="M:RoadOfGroping.Host.Controllers.TestController.#ctor(Microsoft.Extensions.Logging.ILogger{RoadOfGroping.Host.Controllers.TestController})">
+            <summary>
+            测试控制器
+            </summary>
+        </member>
+        <member name="M:RoadOfGroping.Host.Controllers.TestController.HttpClient">
+            <summary>
+            测试赋值请求头
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:RoadOfGroping.Host.Extensions.HostBuilderExtensions">
+            <summary>
+            基础配置
+            </summary>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddUnitOfWork(Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
+            <summary>
+            注册UnitOfWork服务
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddCors(Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
+            <summary>
+            CORS策略
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.UseSwaggerUI(Microsoft.AspNetCore.Builder.WebApplication,Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
+            <summary>
+            配置swaggerUI
+            </summary>
+            <param name="app"></param>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.UserAutoFac(Microsoft.Extensions.Hosting.IHostBuilder)">
+            <summary>
+            AutoFac 配置
+            </summary>
+            <param name="hostBuilder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddSwaggerGen(Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
+            <summary>
+            Swagger 配置
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddMvcConfig(Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
+            <summary>
+            动态WebAPI 配置
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddJwtConfig(Microsoft.AspNetCore.Builder.WebApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            JWT 配置
+            </summary>
+            <param name="builder"></param>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.UseRedis(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Redis 注册
+            </summary>
+            <param name="services"></param>
+            <param name="configuration"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.ConfigureHangfireService(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Hangfire.BackgroundJobServerOptions})">
+            <summary>
+            注册Hangfire
+            </summary>
+            <param name="services"></param>
+            <param name="optionsAction"></param>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddAutoMapper(Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
+            <summary>
+            注册AutoMapper
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.UseHangfireStorage(Hangfire.IGlobalConfiguration)">
+            <summary>
+            使用 Hangfire Storage
+            </summary>
+            <param name="configuration"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

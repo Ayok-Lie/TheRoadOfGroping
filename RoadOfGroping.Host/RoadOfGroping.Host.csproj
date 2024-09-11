@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>D:\Lie-Private\MyProject\TheRoadOfGroping\RoadOfGroping.Host\bin\Debug\net6.0\ApiDoc.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +22,7 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
     <PackageReference Include="Hangfire.Core" Version="1.8.14" />
+    <PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.8.14" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">
@@ -43,6 +44,16 @@
 
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="wwwroot\ApiDocs\" />
   </ItemGroup>
-
+	<Target Name="CopyXmlDocFileForBuild" AfterTargets="Build">
+		<ItemGroup>
+			<XmlDocFiles Include="$(OutDir)$(AssemblyName).xml" />
+			<XmlDocFiles Include="@(ReferencePath->'%(RootDir)%(Directory)%(Filename).xml')" Condition="$([System.String]::new('%(FileName)').StartsWith('RoadOfGroping'))" />
+	    </ItemGroup>
+		<Copy SourceFiles="@(XmlDocFiles)" Condition="Exists('%(FullPath)')" DestinationFolder="$(ApiDocDir)" SkipUnchangedFiles="true" />
+	</Target>
+	<PropertyGroup>
+		<ApiDocDir>wwwroot\ApiDocs</ApiDocDir>
+	</PropertyGroup>
 </Project>
