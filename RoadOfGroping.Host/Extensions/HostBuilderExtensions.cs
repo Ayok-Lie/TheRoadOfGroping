@@ -23,6 +23,7 @@ using RoadOfGroping.Core.ZRoadOfGropingUtility.RedisModule;
 using RoadOfGroping.EntityFramework;
 using RoadOfGroping.EntityFramework.Extensions;
 using RoadOfGroping.EntityFramework.Repositorys;
+using RoadOfGroping.Host.UnifyResult.Fiters;
 using RoadOfGroping.Model;
 using RoadOfGroping.Repository.Auditing;
 using RoadOfGroping.Repository.DynamicWebAPI;
@@ -59,7 +60,7 @@ namespace RoadOfGroping.Host.Extensions
             builder.Services.UseRepository();
             builder.Services.ConfigureHangfireService();
             builder.Services.ServicesMvc();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(builder);
             builder.Services.AddUnitOfWork();
             builder.Services.AddJwtConfig();
             builder.Services.AddCors();
@@ -88,7 +89,7 @@ namespace RoadOfGroping.Host.Extensions
             // 添加异常处理中间件
             app.UseMiddleware<ExceptionMiddleware>();
             // 添加UnitOfWork中间件
-            app.UseMiddleware<UnitOfWorkMiddleware>();
+            //app.UseMiddleware<UnitOfWorkMiddleware>();
 
             // 启用身份验证
             app.UseAuthentication();
@@ -179,7 +180,10 @@ namespace RoadOfGroping.Host.Extensions
         /// <returns></returns>
         public static void ServicesMvc(this IServiceCollection services)
         {
-            services.AddMvc(options => { })
+            //成功规范接口
+            services.AddTransient<SucceededUnifyResultFilter>();
+            services.AddMvc(options => {
+            })
                 .AddRazorPagesOptions((options) => { })
                 .AddRazorRuntimeCompilation()
                 .AddDynamicWebApi();
@@ -274,7 +278,7 @@ namespace RoadOfGroping.Host.Extensions
         public static void AddUnitOfWork(this IServiceCollection services)
         {
             services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork<RoadOfGropingDbContext>));
-            services.AddTransient<UnitOfWorkMiddleware>();
+            //services.AddTransient<UnitOfWorkMiddleware>();
         }
 
         /// <summary>

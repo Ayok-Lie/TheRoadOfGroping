@@ -5,7 +5,7 @@ namespace RoadOfGroping.Application.Service.Dtos
 {
     public class UserDto
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 用户名

@@ -77,9 +77,6 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
             // 支持泛型存入Jwt 便于扩展
             container.RegisterType<TokenHelper>().InstancePerLifetimeScope();
 
-            // api返回值处理
-            container.RegisterType<ResultHelper>().InstancePerLifetimeScope();
-
             // 注册 FilterActionResultWrapFactory 并将其注册为 IActionResultWrapFactory 的实现
             container.RegisterType<FilterActionResultWrapFactory>().As<IActionResultWrapFactory>().InstancePerLifetimeScope();
 

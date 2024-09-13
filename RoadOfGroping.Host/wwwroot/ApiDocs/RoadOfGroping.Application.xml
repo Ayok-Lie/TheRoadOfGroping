@@ -157,5 +157,48 @@
             <param name="val"></param>
             <returns></returns>
         </member>
+        <member name="T:RoadOfGroping.Application.Service.UserAppService">
+            <summary>
+            用户应用服务
+            </summary>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.UserAppService.#ctor(System.IServiceProvider,RoadOfGroping.Core.Users.IUserManager,RoadOfGroping.Core.ZRoadOfGropingUtility.Minio.IMinioService,RoadOfGroping.Core.Files.IFileInfoManager)">
+            <summary>
+            用户应用服务
+            </summary>
+            <param name="serviceProvider"></param>
+            <param name="userManager"></param>
+            <param name="minioService"></param>
+            <param name="fileInfoManager"></param>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.UserAppService.GetUserPageList">
+            <summary>
+            获取用户列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.UserAppService.GetUserById(System.Guid)">
+            <summary>
+            获取用户详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.UserAppService.CreateOrUpdateUser(RoadOfGroping.Application.Service.Dtos.UserDto)">
+            <summary>
+            创建或更新用户
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:RoadOfGroping.Application.Service.UserAppService.DeleteUser(System.Guid)">
+            <summary>
+            删除用户
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

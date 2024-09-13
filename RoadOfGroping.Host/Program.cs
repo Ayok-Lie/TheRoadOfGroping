@@ -6,6 +6,7 @@ using RoadOfGroping.Core.ZRoadOfGropingUtility.ErrorHandler;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.Extensions;
 using RoadOfGroping.EntityFramework;
 using RoadOfGroping.Host.Extensions;
+using RoadOfGroping.Host.UnifyResult.Fiters;
 
 var builder = WebApplication.CreateBuilder(args);
 // 配置文件读取
@@ -34,8 +35,10 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllers(c =>
 {
     //返回值拦截器
-    c.Filters.Add<ApiResultFilterAttribute>();
-    c.Filters.Add<ModelValidateActionFilterAttribute>();
+    c.Filters.AddService<SucceededUnifyResultFilter>(99);
+    c.Filters.AddService<UnitOfWorkFilter>(100);
+    //c.Filters.Add<ApiResultFilterAttribute>();
+    //c.Filters.Add<ModelValidateActionFilterAttribute>();
 });
 
 // 注册EventBus服务

@@ -14,7 +14,6 @@ namespace RoadOfGroping.Repository.Middlewares
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            var options = context.Features.Get<IEndpointFeature>()?.Endpoint;
             var unitOfWorkAttribute = context.Features.Get<IEndpointFeature>()?.Endpoint?.Metadata.GetMetadata<DisabledUnitOfWorkAttribute>();
 
             if (unitOfWorkAttribute?.Disabled == true)
@@ -45,7 +44,7 @@ namespace RoadOfGroping.Repository.Middlewares
                     {
                         await d.RollbackTransactionAsync();
                     }
-                    throw new Exception(ex.Message.ToString());
+                    throw;
                 }
             }
         }
