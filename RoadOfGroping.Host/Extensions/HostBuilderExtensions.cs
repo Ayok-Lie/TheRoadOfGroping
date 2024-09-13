@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using FreeRedis;
 using Hangfire;
 using Hangfire.MySql;
@@ -10,19 +11,27 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using RoadOfGroping.Application.Service.Mappers;
 using RoadOfGroping.Common.Helper;
 using RoadOfGroping.Common.JWTHelpers;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac;
-using RoadOfGroping.Core.ZRoadOfGropingUtility.RedisModule;
-using RoadOfGroping.EntityFramework.Extensions;
-using Swashbuckle.AspNetCore.Filters;
-using RoadOfGroping.Repository.DynamicWebAPI;
-using AutoMapper;
-using RoadOfGroping.Application.Service.Mappers;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.AutoMapper;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.ErrorHandler;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Minio;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.RedisModule;
 using RoadOfGroping.EntityFramework;
+using RoadOfGroping.EntityFramework.Extensions;
+using RoadOfGroping.EntityFramework.Repositorys;
+using RoadOfGroping.Model;
+using RoadOfGroping.Repository.Auditing;
+using RoadOfGroping.Repository.DynamicWebAPI;
+using RoadOfGroping.Repository.Extensions;
 using RoadOfGroping.Repository.Middlewares;
+using RoadOfGroping.Repository.Repository;
 using RoadOfGroping.Repository.UnitOfWorks;
+using RoadOfGroping.Repository.UserSession;
+using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace RoadOfGroping.Host.Extensions
@@ -33,68 +42,86 @@ namespace RoadOfGroping.Host.Extensions
     public static class HostBuilderExtensions
     {
         /// <summary>
-        /// 注册UnitOfWork服务
+        /// 应用配置
+        /// </summary>
+        public static IConfiguration? configuration { get; private set; }
+
+        /// <summary>
+        /// 添加核心服务
         /// </summary>
         /// <param name="builder"></param>
-        /// <returns></returns>
-        public static WebApplicationBuilder AddUnitOfWork(this WebApplicationBuilder builder)
+        public static void AddCoreServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork<RoadOfGropingDbContext>));
-            builder.Services.AddTransient<UnitOfWorkMiddleware>();
-            return builder;
+            var context = new ServiceConfigerContext(builder.Services);
+            configuration = context.Provider.GetRequiredService<IConfiguration>();
+            // 配置AppsettingHelper
+            builder.Services.AddSingleton(new AppsettingHelper(configuration));
+            builder.Services.UseRepository();
+            builder.Services.ConfigureHangfireService();
+            builder.Services.ServicesMvc();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddUnitOfWork();
+            builder.Services.AddJwtConfig();
+            builder.Services.AddCors();
+            builder.Services.AddAutoMapper();
+            builder.Services.UseRedis();
+            builder.Services.AddSignalR();
+            builder.Services.AddSession();
+            builder.Services.AddMinio(configuration);
+            builder.Services.AddFilters();
         }
 
         /// <summary>
-        /// CORS策略
+        /// 管道服务配置
         /// </summary>
         /// <param name="builder"></param>
-        /// <returns></returns>
-        public static WebApplicationBuilder AddCors(this WebApplicationBuilder builder)
+        public static void AddUseCore(this WebApplicationBuilder builder)
         {
-            builder.Services.AddCors(options =>
+            var app = builder.Build();
+            app.UseSwaggerUI(builder);
+            app.UseHttpsRedirection();
+            // 启用CORS策略
+            app.UseCors("DefaultCorsPolicy");
+
+            app.UseRouting();
+
+            // 添加异常处理中间件
+            app.UseMiddleware<ExceptionMiddleware>();
+            // 添加UnitOfWork中间件
+            app.UseMiddleware<UnitOfWorkMiddleware>();
+
+            // 启用身份验证
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.MapHub<TestChatHub>("/testHub");
+
+            app.UseEndpoints(endpoints =>
             {
-                options.AddPolicy("DefaultCorsPolicy", builder =>
-                {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyMethod()
-                           .AllowAnyHeader();
-                });
+                endpoints.MapDefaultControllerRoute();
+                //endpoints.MapControllerRoute(
+                //name: "default",
+                //pattern: "{controller=Home}/{action=Privacy}/{id?}");
+                endpoints.MapRazorPages();
             });
-            return builder;
+            //app.MapControllers();
+
+            // 启用Hangfire仪表盘
+
+            app.UseHangfireDashboard();
+            app.UseDeveloperExceptionPage();
+
+            app.Run();
         }
-        /// <summary>
-        /// 配置swaggerUI
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static WebApplication UseSwaggerUI(this WebApplication app, WebApplicationBuilder builder)
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1 Docs");
-                //options.RoutePrefix = String.Empty;
-                //options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
-                //options.DefaultModelExpandDepth(-1);
-                //options.EnableDeepLinking(); //深链接功能
-                options.DocExpansion(DocExpansion.None); //swagger文档是否打开
-                options.IndexStream = () =>
-                {
-                    var path = Path.Join(builder.Environment.WebRootPath, "pages", "swagger.html");
-                    return new FileInfo(path).OpenRead();
-                };
-            });
-            return app;
-        }
+
         /// <summary>
         /// AutoFac 配置
         /// </summary>
         /// <param name="hostBuilder"></param>
         /// <returns></returns>
-        public static IHostBuilder UserAutoFac(this IHostBuilder hostBuilder)
+        public static void UserAutoFac(this IHostBuilder hostBuilder)
         {
-            return hostBuilder.UseServiceProviderFactory(
+            hostBuilder.UseServiceProviderFactory(
                 new AutofacServiceProviderFactory())
                     .ConfigureContainer<ContainerBuilder>(builder =>
                     {
@@ -107,14 +134,65 @@ namespace RoadOfGroping.Host.Extensions
         }
 
         /// <summary>
+        /// 仓储服务
+        /// </summary>
+        public static void UseRepository(this IServiceCollection services)
+        {
+            services.AddScoped(typeof(IAnotherBaseRepository<,>), typeof(AnotherBaseRepository<,>));
+            // 添加应用程序模块
+            //builder.Services.AddApplication<RoadOfGropingHostModule>();
+
+            // 注册仓储服务
+            services.UseRepository<RoadOfGropingDbContext>();
+        }
+
+        /// <summary>
+        /// 注册Hangfire
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="optionsAction"></param>
+        public static void ConfigureHangfireService(this IServiceCollection services,
+            Action<BackgroundJobServerOptions> optionsAction = null)
+        {
+            var enable = AppsettingHelper.Get("HangFire:HangfireEnabled");
+            if (enable.Equals("false")) return;
+
+            var options = new BackgroundJobServerOptions()
+            {
+                ShutdownTimeout = TimeSpan.FromMinutes(30),
+                Queues = new string[] { "default", "jobs" }, //队列名称，只能为小写
+                WorkerCount = 3, //Environment.ProcessorCount * 5, //并发任务数 Math.Max(Environment.ProcessorCount, 20)
+                ServerName = "fantasy.hangfire",
+            };
+            optionsAction?.Invoke(options);
+            services.AddHangfire(config => config
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)//向前兼容
+                .UseSimpleAssemblyNameTypeSerializer()//使用简单的程序集名称类型序列化器
+                .UseRecommendedSerializerSettings()// 使用推荐的序列化器设置
+                .UseHangfireStorage()
+            ).AddHangfireServer(optionsAction: c => c = options);
+        }
+
+        /// <summary>
+        /// 动态WebAPI 配置
+        /// </summary>
+        /// <returns></returns>
+        public static void ServicesMvc(this IServiceCollection services)
+        {
+            services.AddMvc(options => { })
+                .AddRazorPagesOptions((options) => { })
+                .AddRazorRuntimeCompilation()
+                .AddDynamicWebApi();
+        }
+
+        /// <summary>
         /// Swagger 配置
         /// </summary>
-        /// <param name="builder"></param>
         /// <returns></returns>
-        public static WebApplicationBuilder AddSwaggerGen(this WebApplicationBuilder builder)
+        public static void AddSwaggerGen(this IServiceCollection services, WebApplicationBuilder builder)
         {
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(options =>
             {
                 options.OperationFilter<AddResponseHeadersFilter>();
                 options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
@@ -133,7 +211,7 @@ namespace RoadOfGroping.Host.Extensions
                     }
                 });
                 var binXmlFiles =
-                new DirectoryInfo(Path.Join(builder.Environment.WebRootPath, "ApiDocs"))
+                new DirectoryInfo(Path.Join(builder?.Environment.WebRootPath, "ApiDocs"))
                 .GetFiles("*.xml", SearchOption.TopDirectoryOnly);
                 foreach (var filePath in binXmlFiles.Select(item => item.FullName))
                 {
@@ -187,33 +265,26 @@ namespace RoadOfGroping.Host.Extensions
                     { scheme, Array.Empty<string>() }
                 });
             });
-            return builder;
         }
 
         /// <summary>
-        /// 动态WebAPI 配置
+        /// 注册UnitOfWork服务
         /// </summary>
-        /// <param name="builder"></param>
         /// <returns></returns>
-        public static WebApplicationBuilder AddMvcConfig(this WebApplicationBuilder builder)
+        public static void AddUnitOfWork(this IServiceCollection services)
         {
-            builder.Services.AddMvc(options => { })
-                .AddRazorPagesOptions((options) => { })
-                .AddRazorRuntimeCompilation()
-                .AddDynamicWebApi();
-            return builder;
+            services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork<RoadOfGropingDbContext>));
+            services.AddTransient<UnitOfWorkMiddleware>();
         }
 
         /// <summary>
         /// JWT 配置
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="config"></param>
         /// <returns></returns>
-        public static WebApplicationBuilder AddJwtConfig(this WebApplicationBuilder builder, IConfiguration config)
+        public static void AddJwtConfig(this IServiceCollection services)
         {
-            var jwtTokenConfig = config.GetSection("JWT").Get<JwtModel>();
-            builder.Services.AddAuthentication(opts =>
+            var jwtTokenConfig = configuration?.GetSection("JWT").Get<JwtModel>();
+            services.AddAuthentication(opts =>
             {
                 opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -267,19 +338,33 @@ namespace RoadOfGroping.Host.Extensions
                     }
                 };
             });
-            return builder;
+        }
+
+        /// <summary>
+        /// CORS策略
+        /// </summary>
+        /// <returns></returns>
+        public static void AddCors(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("DefaultCorsPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
         }
 
         /// <summary>
         /// Redis 注册
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
         /// <returns></returns>
-        public static IServiceCollection UseRedis(this IServiceCollection services, IConfiguration configuration)
+        public static void UseRedis(this IServiceCollection services)
         {
             // 获取缓存相关配置
-            var cacheConfig = configuration.GetSection("CacheConfig").Get<RedisCacheOptions>();
+            var cacheConfig = configuration?.GetSection("CacheConfig").Get<RedisCacheOptions>();
 
             // 注册内存缓存服务
             services.AddMemoryCache();
@@ -322,54 +407,34 @@ namespace RoadOfGroping.Host.Extensions
                 // 注册分布式内存缓存服务
                 services.AddDistributedMemoryCache();
             }
-
-            return services;
-        }
-
-        /// <summary>
-        /// 注册Hangfire
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="optionsAction"></param>
-        public static void ConfigureHangfireService(this IServiceCollection services,
-            Action<BackgroundJobServerOptions> optionsAction = null)
-        {
-            var enable = AppsettingHelper.Get("HangFire:HangfireEnabled");
-            if (enable.Equals("false")) return;
-
-            var options = new BackgroundJobServerOptions()
-            {
-                ShutdownTimeout = TimeSpan.FromMinutes(30),
-                Queues = new string[] { "default", "jobs" }, //队列名称，只能为小写
-                WorkerCount = 3, //Environment.ProcessorCount * 5, //并发任务数 Math.Max(Environment.ProcessorCount, 20)
-                ServerName = "fantasy.hangfire",
-            };
-            optionsAction?.Invoke(options);
-            services.AddHangfire(config => config
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)//向前兼容
-                .UseSimpleAssemblyNameTypeSerializer()//使用简单的程序集名称类型序列化器
-                .UseRecommendedSerializerSettings()// 使用推荐的序列化器设置
-                .UseHangfireStorage()
-            ).AddHangfireServer(optionsAction: c => c = options);
         }
 
         /// <summary>
         /// 注册AutoMapper
         /// </summary>
-        /// <param name="builder"></param>
         /// <returns></returns>
-        public static WebApplicationBuilder AddAutoMapper(this WebApplicationBuilder builder)
+        public static void AddAutoMapper(this IServiceCollection services)
         {
-            builder.Services.AddSingleton(MapperHepler.CreateMappings);
-            builder.Services.AddSingleton<IMapper>(provider => provider.GetRequiredService<Mapper>());
-            builder.Services.Configure<AutoMapperOptions>(options =>
+            services.AddSingleton(MapperHepler.CreateMappings);
+            services.AddSingleton<IMapper>(provider => provider.GetRequiredService<Mapper>());
+            services.Configure<AutoMapperOptions>(options =>
             {
                 options.Configurators.Add(ctx =>
                 {
                     AutoMappers.CreateMappings(ctx.MapperConfiguration);
                 });
             });
-            return builder;
+        }
+
+        /// <summary>
+        /// 用户Session
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddSession(this IServiceCollection services)
+        {
+            //注入用户Session
+            services.AddTransient<IUserSession, CurrentUserSession>();
+            services.AddTransient<IAuditPropertySetter, AuditPropertySetter>();
         }
 
         /// <summary>
@@ -425,29 +490,50 @@ namespace RoadOfGroping.Host.Extensions
             }
             return configuration;
         }
-    }
 
-    //public class AutofacModule : Autofac.Module
-    //{
-    //    protected override void Load(ContainerBuilder builder)
-    //    {
-    //        //builder.RegisterType<AutoFacAop>();
-    //        //程序集注入业务服务
-    //        var IAppServices = Assembly.Load("RoadOfGroping.Core");
-    //        var AppServices = Assembly.Load("RoadOfGroping.Core");
-    //        //根据名称约定（服务层的接口和实现均以Service结尾），实现服务接口和服务实现的依赖
-    //        builder.RegisterAssemblyTypes(AppServices)
-    //          .Where(t => t.Name.EndsWith("Service"))
-    //          .Where(t => typeof(IDefaultDomainService).IsAssignableFrom(t))
-    //          //.Where(t => t.GetCustomAttribute<AutoFacAop>() != null)判断是否含有特性
-    //          //.PublicOnly()//只要public访问权限的
-    //          .Where(t => t.IsClass)
-    //          //.PropertiesAutowired()
-    //          .AsImplementedInterfaces() //方法会将每个选定的类注册为它们实现的所有接口
-    //          .InstancePerDependency();
-    //        //builder.Register(c => new TimeNotificationService(c.Resolve<ILogger<TimeNotificationService>>()))
-    //        //    .As<ITimeNotificationService>()
-    //        //    .InstancePerLifetimeScope();
-    //    }
-    //}
+        /// <summary>
+        /// 注册全局拦截器
+        /// </summary>
+        public static void AddFilters(this IServiceCollection services)
+        {
+            // 注册全局拦截器
+            services.AddControllersWithViews(x =>
+            {
+                //全局返回，统一返回格式
+                //x.Filters.Add<ResFilter>();
+
+                //全局日志，报错
+                //x.Filters.Add<LogAttribute>();
+
+                //全局身份验证
+                //x.Filters.Add<TokenAttribute>();
+            });
+        }
+
+        /// <summary>
+        /// 配置swaggerUI
+        /// </summary>
+        /// <returns></returns>
+        public static void UseSwaggerUI(this WebApplication app, WebApplicationBuilder builder)
+        {
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1 Docs");
+                    //options.RoutePrefix = String.Empty;
+                    //options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
+                    //options.DefaultModelExpandDepth(-1);
+                    //options.EnableDeepLinking(); //深链接功能
+                    options.DocExpansion(DocExpansion.None); //swagger文档是否打开
+                    options.IndexStream = () =>
+                    {
+                        var path = Path.Join(builder.Environment!.WebRootPath, "pages", "swagger.html");
+                        return new FileInfo(path).OpenRead();
+                    };
+                });
+            }
+        }
+    }
 }

@@ -35,10 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\RoadOfGroping.Model\RoadOfGroping.Model.csproj" />
-    <ProjectReference Include="..\Common\RoadOfGroping.Repository\RoadOfGroping.Repository.csproj" />
     <ProjectReference Include="..\RoadOfGroping.Application\RoadOfGroping.Application.csproj" />
-    <ProjectReference Include="..\RoadOfGroping.Core\RoadOfGroping.Core.csproj" />
     <ProjectReference Include="..\RoadOfGroping.EntityFramework\RoadOfGroping.EntityFramework.csproj" />
   </ItemGroup>
 

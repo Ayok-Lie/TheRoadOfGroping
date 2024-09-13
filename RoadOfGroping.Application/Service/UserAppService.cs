@@ -58,6 +58,7 @@ namespace RoadOfGroping.Application.Service
             {
                 var data = ObjectMapper.Map<RoadOfGropingUsers>(user);
                 data.Avatar = putObjectResponse?.ObjectName;
+                data.CreatorId = "66a74f66-4cf1-4133-cfa2-08dcd317407d";
                 return await userManager.CreateAsync(data);
             }
             else

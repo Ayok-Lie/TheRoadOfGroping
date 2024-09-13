@@ -67,35 +67,6 @@ namespace RoadOfGroping.Host.Controllers
             return token;
         }
 
-        //public IActionResult Login(UserInfo user)
-        //{
-        //    if (user.username == "admin" && user.password == "123456")
-        //    {
-        //        var token = _tokenHelper.CreateJwtToken();
-        //        Response.Cookies.Append(
-        //            "access-token", token,
-        //        new CookieOptions()
-        //        {
-        //            Expires = DateTimeOffset.UtcNow.AddMinutes(
-        //                30
-        //            )
-        //        });
-        //        HttpClient httpClient = new HttpClient();
-        //        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        //        _logger.LogInformation("登录成功");
-        //        var claims = new[]
-        //        {
-        //            new Claim(ClaimTypes.Name, name),
-        //        };
-        //        var userIdentity = new ClaimsIdentity(claims, "login");
-        //        var userPrincipal = new ClaimsPrincipal(userIdentity);
-        //        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
-        //        HttpContext.Request.Headers["Authorization"] = "Bearer " + _tokenHelper.CreateJwtToken();
-        //        return Ok();
-        //    }
-        //    return BadRequest();
-        //}
-
         [HttpGet]
         public void LoginOut()
         {

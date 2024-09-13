@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RoadOfGroping.EntityFramework.Repositorys;
 
 namespace RoadOfGroping.Host.Controllers
 {
@@ -17,12 +18,15 @@ namespace RoadOfGroping.Host.Controllers
 
         private readonly ILogger<TestController> _logger;
 
+        private readonly ITestauuu testauuu;
+
         /// <summary>
         /// ²âÊÔ¿ØÖÆÆ÷
         /// </summary>
-        public TestController(ILogger<TestController> logger)
+        public TestController(ILogger<TestController> logger, ITestauuu testauuu)
         {
             _logger = logger;
+            this.testauuu = testauuu;
         }
 
         /// <summary>
