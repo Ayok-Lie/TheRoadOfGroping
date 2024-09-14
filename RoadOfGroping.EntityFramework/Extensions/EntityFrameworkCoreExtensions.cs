@@ -15,7 +15,8 @@ namespace RoadOfGroping.EntityFramework.Extensions
                     PasswordHash = "bb123456",
                     UserPhone = "8888888888",
                     UserEmail = "admin@localhost",
-                    IsDeleted = false
+                    IsDeleted = false,
+                    Role = "Admin"
                 });
 
             return builder;

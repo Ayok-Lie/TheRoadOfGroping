@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RoadOfGroping.EntityFramework;
 
@@ -11,9 +12,10 @@ using RoadOfGroping.EntityFramework;
 namespace RoadOfGroping.EntityFramework.Migrations
 {
     [DbContext(typeof(RoadOfGropingDbContext))]
-    partial class RoadOfGropingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240913092100_add_AppSetting")]
+    partial class add_AppSetting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,10 +182,6 @@ namespace RoadOfGroping.EntityFramework.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -206,7 +204,6 @@ namespace RoadOfGroping.EntityFramework.Migrations
                             Id = new Guid("45d6422e-0ebb-45db-dc2a-08dc86a36122"),
                             IsDeleted = false,
                             PasswordHash = "bb123456",
-                            Role = "Admin",
                             UserEmail = "admin@localhost",
                             UserName = "admin",
                             UserPhone = "8888888888"

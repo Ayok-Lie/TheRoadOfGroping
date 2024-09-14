@@ -51,11 +51,10 @@
         window.onload = function () {
             var configObject = JSON.parse('%(ConfigObject)');
 
-            const cookie = Cookies.get('access-token');
-
-            if (!cookie) {
-                window.location.href = '/home/index';
-            }
+            const cookie = Cookies.get('Authorization');
+            //if (!cookie) {
+            //    window.location.href = '/home/index';
+            //}
 
             // 配置 SwaggerUI
             configObject.dom_id = "#swagger-ui";

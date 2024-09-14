@@ -16,12 +16,12 @@ namespace RoadOfGroping.Repository.UserSession
         /// <summary>
         /// 用户id
         /// </summary>
-        public virtual string UserId => FindClaim(LoginClaimTypes.UserId)?.Value ?? string.Empty;
+        public virtual string UserId => FindClaim(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 
         /// <summary>
         /// 用户名称
         /// </summary>
-        public virtual string UserName => FindClaim(LoginClaimTypes.UserName)?.Value ?? string.Empty;
+        public virtual string UserName => FindClaim(ClaimTypes.Name)?.Value ?? string.Empty;
 
         /// <summary>
         /// 是否是超级管理员

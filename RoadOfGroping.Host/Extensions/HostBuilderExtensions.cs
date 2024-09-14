@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -8,6 +8,7 @@ using Hangfire.MySql;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -19,16 +20,17 @@ using RoadOfGroping.Core.ZRoadOfGropingUtility.AutoMapper;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.ErrorHandler;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Minio;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.RedisModule;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
 using RoadOfGroping.EntityFramework;
 using RoadOfGroping.EntityFramework.Extensions;
-using RoadOfGroping.EntityFramework.Repositorys;
 using RoadOfGroping.Host.UnifyResult.Fiters;
 using RoadOfGroping.Model;
 using RoadOfGroping.Repository.Auditing;
 using RoadOfGroping.Repository.DynamicWebAPI;
 using RoadOfGroping.Repository.Extensions;
-using RoadOfGroping.Repository.Middlewares;
 using RoadOfGroping.Repository.Repository;
 using RoadOfGroping.Repository.UnitOfWorks;
 using RoadOfGroping.Repository.UserSession;
@@ -47,6 +49,8 @@ namespace RoadOfGroping.Host.Extensions
         /// </summary>
         public static IConfiguration? configuration { get; private set; }
 
+        public static IWebHostEnvironment Env { get; set; }
+
         /// <summary>
         /// 添加核心服务
         /// </summary>
@@ -55,6 +59,7 @@ namespace RoadOfGroping.Host.Extensions
         {
             var context = new ServiceConfigerContext(builder.Services);
             configuration = context.Provider.GetRequiredService<IConfiguration>();
+            Env = builder.Environment;
             // 配置AppsettingHelper
             builder.Services.AddSingleton(new AppsettingHelper(configuration));
             builder.Services.UseRepository();
@@ -182,7 +187,8 @@ namespace RoadOfGroping.Host.Extensions
         {
             //成功规范接口
             services.AddTransient<SucceededUnifyResultFilter>();
-            services.AddMvc(options => {
+            services.AddMvc(options =>
+            {
             })
                 .AddRazorPagesOptions((options) => { })
                 .AddRazorRuntimeCompilation()
@@ -287,7 +293,21 @@ namespace RoadOfGroping.Host.Extensions
         /// <returns></returns>
         public static void AddJwtConfig(this IServiceCollection services)
         {
-            var jwtTokenConfig = configuration?.GetSection("JWT").Get<JwtModel>();
+            services.AddTransient<DataSeeds, DataSeeds>();
+            services.AddTransient<IAuthorizationHandler, PermissionAuthorizationHandler>();
+            services.AddTransient<IAuthorizationPolicyProvider, AppAuthorizationPolicyProvider>();
+
+            var rsaSecurityPrivateKeyString = File.ReadAllText(Path.Combine(Env.ContentRootPath, "Rsa", "key.private.json"));
+            var rsaSecurityPublicKeyString = File.ReadAllText(Path.Combine(Env.ContentRootPath, "Rsa", "key.public.json"));
+            RsaSecurityKey rsaSecurityPrivateKey = new(JsonConvert.DeserializeObject<RSAParameters>(rsaSecurityPrivateKeyString));
+            RsaSecurityKey rsaSecurityPublicKey = new(JsonConvert.DeserializeObject<RSAParameters>(rsaSecurityPublicKeyString));
+            services.AddSingleton(sp => new SigningCredentials(rsaSecurityPrivateKey, SecurityAlgorithms.RsaSha256Signature));
+
+            services.AddScoped<AppJwtBearerEvents>();
+            services.AddScoped<IAuthTokenService, AuthTokenService>();
+            services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.Name));
+            var jwtTokenConfig = configuration?.GetSection("JWT").Get<JwtOptions>();
+
             services.AddAuthentication(opts =>
             {
                 opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -295,7 +315,7 @@ namespace RoadOfGroping.Host.Extensions
             })
             .AddCookie(options =>
             {
-                options.Cookie.Name = "BearerCokkie";
+                options.Cookie.Name = "auth";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 options.SlidingExpiration = false;
                 options.LogoutPath = "/Home/Index";
@@ -318,29 +338,10 @@ namespace RoadOfGroping.Host.Extensions
                     ValidateIssuerSigningKey = true,
                     ValidAudience = jwtTokenConfig.Audience,
                     ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtTokenConfig.SecretKey)),
-                    ClockSkew = TimeSpan.FromMinutes(1)
+                    IssuerSigningKey = rsaSecurityPublicKey,
+                    ClockSkew = TimeSpan.FromMinutes(1),
                 };
-                options.Events = new JwtBearerEvents()
-                {
-                    OnAuthenticationFailed = context =>
-                    {
-                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                        {
-                            context.Response.Headers.Add("Token-Expired", "true");
-                        }
-                        return Task.CompletedTask;
-                    },
-                    OnChallenge = context =>
-                    {
-                        context.HandleResponse();
-                        var payload = JsonConvert.SerializeObject(new { Code = "401", Message = "很抱歉，您无权访问该接口" });
-                        context.Response.ContentType = "application/json";
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        context.Response.WriteAsync(payload);
-                        return Task.CompletedTask;
-                    }
-                };
+                options.EventsType = typeof(AppJwtBearerEvents);
             });
         }
 

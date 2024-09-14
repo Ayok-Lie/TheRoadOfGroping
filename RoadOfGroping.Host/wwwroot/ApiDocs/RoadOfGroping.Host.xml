@@ -11,6 +11,13 @@
             <param name="user"></param>
             <returns></returns>
         </member>
+        <member name="M:RoadOfGroping.Host.Controllers.LoginController.AbandonedLogin(RoadOfGroping.Host.Controllers.LoginController.UserInfo)">
+            <summary>
+            登录功能
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
         <member name="T:RoadOfGroping.Host.Controllers.TestController">
             <summary>
             测试控制器

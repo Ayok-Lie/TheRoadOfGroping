@@ -1,8 +1,6 @@
 using RoadOfGroping.Application.Service.Handler;
 using RoadOfGroping.Core.Files;
 using RoadOfGroping.Core.Files.Dtos;
-using RoadOfGroping.Core.ZRoadOfGropingUtility.ApiResult;
-using RoadOfGroping.Core.ZRoadOfGropingUtility.ErrorHandler;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.Extensions;
 using RoadOfGroping.EntityFramework;
 using RoadOfGroping.Host.Extensions;
@@ -18,6 +16,7 @@ var config = new ConfigurationBuilder()
 
 // 添加HttpContextAccessor服务
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 // 添加DbContext服务
 builder.Services.UsingDatabaseServices(config);
 // 添加Autofac依赖注入

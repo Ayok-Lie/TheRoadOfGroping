@@ -12,6 +12,12 @@ namespace RoadOfGroping.Core.Users.Entity
         public string UserName { get; set; }
 
         /// <summary>
+        /// 角色
+        /// </summary>
+        [Required]
+        public string Role { get; set; }
+
+        /// <summary>
         /// 密码哈希值
         /// </summary>
         [Required]
