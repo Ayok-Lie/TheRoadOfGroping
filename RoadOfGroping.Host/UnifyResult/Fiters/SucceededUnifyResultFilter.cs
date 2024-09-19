@@ -1,18 +1,17 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using System.Collections;
+using System.Reflection;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Reflection;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using RoadOfGroping.Host.Extensions;
-using System.Collections;
 using RoadOfGroping.Common.Attributes;
+using RoadOfGroping.Host.Extensions;
 
 namespace RoadOfGroping.Host.UnifyResult.Fiters
 {
@@ -219,7 +218,6 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
             return isDataResult;
         }
 
-
         /// <summary>
         /// 检查短路状态码（>=400）是否进行规范化处理
         /// </summary>
@@ -256,8 +254,8 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
         private bool CheckSucceededNonUnify(MethodInfo method, bool isWebRequest = true)
         {
             // 判断是否跳过规范化处理
-            var isSkip = method.CustomAttributes.Any(x => typeof(SkipActionFilterAttribute).IsAssignableFrom(x.AttributeType) 
-                         || typeof(ProducesResponseTypeAttribute).IsAssignableFrom(x.AttributeType) 
+            var isSkip = method.CustomAttributes.Any(x => typeof(SkipActionFilterAttribute).IsAssignableFrom(x.AttributeType)
+                         || typeof(ProducesResponseTypeAttribute).IsAssignableFrom(x.AttributeType)
                          || typeof(IApiResponseMetadataProvider).IsAssignableFrom(x.AttributeType))
                          || method.ReflectedType.IsDefined(typeof(SkipActionFilterAttribute), true);
 

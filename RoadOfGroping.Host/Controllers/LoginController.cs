@@ -6,7 +6,6 @@ using RoadOfGroping.Common.Attributes;
 using RoadOfGroping.Core.Users;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token.Dtos;
-using RoadOfGroping.Repository.UserSession;
 
 namespace RoadOfGroping.Host.Controllers
 {
@@ -29,23 +28,17 @@ namespace RoadOfGroping.Host.Controllers
         }
 
         [HttpGet]
-        public string LoginTest()
+        public async Task<AuthTokenDto> LoginTest()
         {
-            List<Claim> claims = new List<Claim>
+            var auth = new UserAuthDto()
             {
-                new Claim(ClaimTypes.Role, "UpdatePermission"),
-                new Claim(
-                    ClaimTypes.Expiration,
-                    DateTimeOffset
-                        .Now.AddMinutes(30)
-                        .ToString()
-                ),
+                Id = Guid.Parse("45D6422E-0EBB-45DB-DC2A-08DC86A36122"),
+                UserName = "admin",
+                Roles = "Admin"
             };
 
-            return _tokenHelper.CreateToken(claims);
+            return await authTokenService.CreateAuthTokenAsync(auth);
         }
-
-
 
         /// <summary>
         /// 登录功能
@@ -71,8 +64,9 @@ namespace RoadOfGroping.Host.Controllers
             _logger.LogInformation("登录成功");
             return token.AccessToken;
         }
+
         /// <summary>
-        /// 登录功能
+        /// 登录功能 --只能用于Cookie校验，无法用于jwt校验
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
@@ -88,7 +82,7 @@ namespace RoadOfGroping.Host.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, userinfo.UserName!), //HttpContext.User.Identity.Name
-                new Claim(ClaimTypes.Role, "UpdatePermission"),
+                new Claim(ClaimTypes.Role, "Admin"),
                 new Claim(
                     ClaimTypes.Expiration,
                     DateTimeOffset
@@ -102,13 +96,14 @@ namespace RoadOfGroping.Host.Controllers
             identity.AddClaims(claims);
             var principal = new ClaimsPrincipal(identity);
 
+            var aaaa = principal.Identity;
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             _logger.LogInformation("登录成功");
             return token;
         }
 
-        [HttpGet]
+        [HttpPost]
         public void LoginOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

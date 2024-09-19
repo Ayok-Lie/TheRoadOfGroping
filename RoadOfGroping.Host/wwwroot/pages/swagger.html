@@ -21,7 +21,7 @@
             justify-content: center;
             left: 15%;
             top: 7%;
-            position: absolute
+            position: absolute;
         }
 
             .button-container button {
@@ -48,21 +48,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui-standalone-preset.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
     <script>
+        let cookieCheckInterval; // 定义全局变量用于保存定时器ID
+
         window.onload = function () {
             var configObject = JSON.parse('%(ConfigObject)');
 
-            const cookie = Cookies.get('Authorization');
-            //if (!cookie) {
-            //    window.location.href = '/home/index';
-            //}
+            // 检查是否已经创建定时器
+            if (!cookieCheckInterval) {
+                // 持续检测 cookie 的存在性
+                cookieCheckInterval = setInterval(function () {
+                    const cookie = Cookies.get('Authorization');
+                    if (!cookie) {
+                        clearInterval(cookieCheckInterval); // 清除定时器
+                        //window.location.href = '/home/index'; // 如果没有 cookie，则重定向
+                    }
+                }, 500); // 每5000毫秒（5秒）检测一次
+            }
 
             // 配置 SwaggerUI
             configObject.dom_id = "#swagger-ui";
             configObject.presets = [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset];
             configObject.layout = "StandaloneLayout";
             configObject.requestInterceptor = function (request) {
-                // 添加 Authorization 头
-                request.headers['Authorization'] = 'Bearer ' + cookie;
+                // 添加 Authorization 头（可根据需要取消注释）
+                // request.headers['Authorization'] = 'Bearer ' + cookie;
                 return request;
             };
 
@@ -92,9 +101,16 @@
             });
 
             // 退出登录并清除 cookie
-            document.getElementById("logoutButton").addEventListener("click", function () {
-                Cookies.remove("access-token"); // 清除名为 "access-token" 的 cookie
-                window.location.href = "/home/index"; // 替换 "/home/logout" 为正确的退出登录 URL
+            document.getElementById("logoutButton").addEventListener("click", async function () {
+                // 调用后端注销 API
+                await fetch('/api/Login/LoginOut', {
+                    method: 'POST',
+                    credentials: 'include' // 确保 cookie 被带上
+                });
+
+                Cookies.remove("Set-Cookie"); // 清除名为 "Set-Cookie" 的 cookie
+                clearInterval(cookieCheckInterval); // 清除 cookie 检查定时器
+                window.location.href = "/home/index"; // 替换为正确的首页 URL
             });
         }
     </script>

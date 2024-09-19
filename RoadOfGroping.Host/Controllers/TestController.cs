@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission;
-using RoadOfGroping.EntityFramework.Repositorys;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations;
 
 namespace RoadOfGroping.Host.Controllers
 {
@@ -20,15 +19,12 @@ namespace RoadOfGroping.Host.Controllers
 
         private readonly ILogger<TestController> _logger;
 
-        private readonly ITestauuu testauuu;
-
         /// <summary>
         /// ²âÊÔ¿ØÖÆÆ÷
         /// </summary>
-        public TestController(ILogger<TestController> logger, ITestauuu testauuu)
+        public TestController(ILogger<TestController> logger)
         {
             _logger = logger;
-            this.testauuu = testauuu;
         }
 
         /// <summary>
@@ -56,6 +52,7 @@ namespace RoadOfGroping.Host.Controllers
                 throw new KeyNotFoundException("Get User failed");
             }
         }
+
         [HttpGet]
         //public async Task<string> CilentGetTest()
         //{

@@ -1,6 +1,6 @@
-﻿using Nito.AsyncEx;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+using Nito.AsyncEx;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations
 {

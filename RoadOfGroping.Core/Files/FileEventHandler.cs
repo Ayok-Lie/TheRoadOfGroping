@@ -5,7 +5,6 @@ using RoadOfGroping.Core.Files.Dtos;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Minio;
 
-
 namespace RoadOfGroping.Core.Files
 {
     public class FileEventHandler : IEventHandle<FileEventDto>, ITransientDependency

@@ -18,6 +18,7 @@ namespace RoadOfGroping.EntityFramework
                 {
                     case DatabaseType.SqlServer:
                         option.UseSqlServer(connectionString);
+                        //option.AddInterceptors(new FrameworkInterceptor());
                         break;
 
                     case DatabaseType.MySql:

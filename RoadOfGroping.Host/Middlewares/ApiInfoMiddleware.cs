@@ -1,6 +1,6 @@
-﻿using RoadOfGroping.Common.DependencyInjection;
+﻿using System.Diagnostics;
+using RoadOfGroping.Common.DependencyInjection;
 using RoadOfGroping.Host.Extensions;
-using System.Diagnostics;
 
 namespace RoadOfGroping.Host.Middlewares
 {

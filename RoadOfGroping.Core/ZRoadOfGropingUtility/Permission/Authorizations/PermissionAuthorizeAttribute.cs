@@ -7,6 +7,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations
     {
         // 权限分隔符，用于分隔多个权限
         public const string PermissionSeparator = ",";
+
         // 策略前缀，用于标识权限策略
         public const string PolicyPrefix = "Permission:";
 

@@ -1,4 +1,5 @@
 ﻿using RoadOfGroping.Common.Attributes;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.RedisModule;
 using RoadOfGroping.Repository.DomainService;
 
 namespace RoadOfGroping.Application.Service
@@ -9,9 +10,9 @@ namespace RoadOfGroping.Application.Service
     [DisabledUnitOfWork(true)]
     public class RedisAppService : ApplicationService
     {
-        private readonly ICacheTool cacheTool;
+        private readonly CacheManager cacheTool;
 
-        public RedisAppService(IServiceProvider serviceProvider, ICacheTool cacheTool) : base(serviceProvider)
+        public RedisAppService(IServiceProvider serviceProvider, CacheManager cacheTool) : base(serviceProvider)
         {
             this.cacheTool = cacheTool;
         }

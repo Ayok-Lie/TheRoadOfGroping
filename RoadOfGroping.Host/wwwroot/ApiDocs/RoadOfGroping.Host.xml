@@ -23,7 +23,7 @@
             测试控制器
             </summary>
         </member>
-        <member name="M:RoadOfGroping.Host.Controllers.TestController.#ctor(Microsoft.Extensions.Logging.ILogger{RoadOfGroping.Host.Controllers.TestController},RoadOfGroping.EntityFramework.Repositorys.ITestauuu)">
+        <member name="M:RoadOfGroping.Host.Controllers.TestController.#ctor(Microsoft.Extensions.Logging.ILogger{RoadOfGroping.Host.Controllers.TestController})">
             <summary>
             测试控制器
             </summary>

@@ -12,14 +12,12 @@
 // 在任何情况下，作者或版权持有人都不对任何索赔、损害或其他责任负责，无论这些追责来自合同、侵权或其它行为中，
 // 还是产生于、源于或有关于本软件以及本软件的使用或其它处置。
 
-using Microsoft.Extensions.Configuration;
-
 namespace RoadOfGroping.Host.UnifyResult;
 
 /// <summary>
 /// 规范化配置选项
 /// </summary>
-public sealed class UnifyResultSettingsOptions 
+public sealed class UnifyResultSettingsOptions
 {
     /// <summary>
     /// 设置返回 200 状态码列表

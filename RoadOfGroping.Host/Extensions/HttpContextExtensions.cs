@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using System.Text;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RoadOfGroping.Host.Extensions
 {
@@ -14,7 +14,6 @@ namespace RoadOfGroping.Host.Extensions
         {
             string encodeFilename = System.Web.HttpUtility.UrlEncode(fileName, Encoding.GetEncoding("UTF-8"));
             httpContext.Response.Headers.Add("Content-Disposition", "inline;filename=" + encodeFilename);
-
         }
 
         /// <summary>
@@ -26,7 +25,6 @@ namespace RoadOfGroping.Host.Extensions
         {
             string encodeFilename = System.Web.HttpUtility.UrlEncode(fileName, Encoding.GetEncoding("UTF-8"));
             httpContext.Response.Headers.Add("Content-Disposition", "attachment;filename=" + encodeFilename);
-
         }
 
         /// <summary>
@@ -43,7 +41,6 @@ namespace RoadOfGroping.Host.Extensions
                 res = str.Split(",")[0];
             }
             return res;
-
         }
 
         /// <summary>
@@ -56,6 +53,7 @@ namespace RoadOfGroping.Host.Extensions
             string header = request.Headers["X-Requested-With"];
             return "XMLHttpRequest".Equals(header);
         }
+
         /// <summary>
         /// 获取客户端IP
         /// </summary>

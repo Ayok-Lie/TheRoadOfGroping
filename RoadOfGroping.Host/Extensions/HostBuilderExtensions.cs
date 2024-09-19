@@ -296,6 +296,7 @@ namespace RoadOfGroping.Host.Extensions
             services.AddTransient<DataSeeds, DataSeeds>();
             services.AddTransient<IAuthorizationHandler, PermissionAuthorizationHandler>();
             services.AddTransient<IAuthorizationPolicyProvider, AppAuthorizationPolicyProvider>();
+            //services.AddTransient<IAuthorizationHandler, PermissionUrlHandler>();
 
             var rsaSecurityPrivateKeyString = File.ReadAllText(Path.Combine(Env.ContentRootPath, "Rsa", "key.private.json"));
             var rsaSecurityPublicKeyString = File.ReadAllText(Path.Combine(Env.ContentRootPath, "Rsa", "key.public.json"));
@@ -323,7 +324,7 @@ namespace RoadOfGroping.Host.Extensions
                 {
                     OnSigningOut = async context =>
                     {
-                        context.Response.Cookies.Delete("access-token");
+                        context.Response.Cookies.Delete("Authorization");
                         await Task.CompletedTask;
                     }
                 };
@@ -371,9 +372,6 @@ namespace RoadOfGroping.Host.Extensions
             // 获取缓存相关配置
             var cacheConfig = configuration?.GetSection("CacheConfig").Get<RedisCacheOptions>();
 
-            // 注册内存缓存服务
-            services.AddMemoryCache();
-
             // 判断是否启用Redis缓存
             if (cacheConfig.EnableRedis)
             {
@@ -406,7 +404,9 @@ namespace RoadOfGroping.Host.Extensions
             }
             else
             {
-                // 注册内存缓存工具为单例服务
+                // 注册内存缓存服务
+                services.AddMemoryCache();
+
                 services.AddSingleton<ICacheTool, MemoryCacheTool>();
 
                 // 注册分布式内存缓存服务

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Minio.Exceptions;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.ResultResponse;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.ErrorHandler

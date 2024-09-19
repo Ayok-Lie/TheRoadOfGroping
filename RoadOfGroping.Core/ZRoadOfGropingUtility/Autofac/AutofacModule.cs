@@ -4,7 +4,6 @@ using Autofac;
 using RoadOfGroping.Common.Dependency;
 using RoadOfGroping.Common.DependencyInjection;
 using RoadOfGroping.Core.Interceptors;
-using RoadOfGroping.Core.ZRoadOfGropingUtility.ApiResult;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.ResultResponse;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
 using Module = Autofac.Module;
@@ -99,7 +98,6 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
                 builder.RegisterGeneric(type);
             }
         }
-
 
         //public class AutofacModule : Autofac.Module
         //{

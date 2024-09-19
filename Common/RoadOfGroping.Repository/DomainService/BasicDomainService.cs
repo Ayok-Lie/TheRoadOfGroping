@@ -88,7 +88,6 @@ namespace RoadOfGroping.Repository.DomainService
             {
                 await ValidateOnCreateOrUpdate(entity);
                 return await EntityRepo.InsertAsync(entity);
-               
             }
             catch (Exception ex)
             {

@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-
-namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token.Dtos
+﻿namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token.Dtos
 {
     public class UserAuthDto
     {

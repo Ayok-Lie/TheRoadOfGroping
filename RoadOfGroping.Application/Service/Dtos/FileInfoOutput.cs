@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RoadOfGroping.Core.Files.Entitys;
+﻿using RoadOfGroping.Core.Files.Entitys;
 
 namespace RoadOfGroping.Application.Service.Dtos
 {
     public class FileInfoOutput
     {
         public Guid Id { get; set; }
+
         /// <summary>
         /// 文件显示名称，例如文件名为  open.jpg，显示名称为： open_编码规则
         /// </summary>

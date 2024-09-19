@@ -3,7 +3,7 @@ using RoadOfGroping.Repository.DomainService;
 
 namespace RoadOfGroping.Core.OrderTest
 {
-    public interface IOrderManager : IBasicDomainService<Order, long>
+    public interface IOrderManager : IAnotherDomainService<Order, long>
     {
         Task<List<Order>> Get();
 

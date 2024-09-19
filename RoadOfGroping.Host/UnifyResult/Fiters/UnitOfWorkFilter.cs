@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using RoadOfGroping.Common.Attributes;
 using RoadOfGroping.Repository.UnitOfWorks;
@@ -11,12 +10,13 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
     /// </summary>
     public class UnitOfWorkFilter : IAsyncActionFilter, IOrderedFilter
     {
-
         private readonly ILogger<UnitOfWorkFilter> _logger;
+
         public UnitOfWorkFilter(ILogger<UnitOfWorkFilter> logger)
         {
             this._logger = logger;
         }
+
         /// <summary>
         /// 过滤器排序
         /// </summary>

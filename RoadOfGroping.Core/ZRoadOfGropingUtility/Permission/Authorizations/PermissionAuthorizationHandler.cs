@@ -21,7 +21,6 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations
             {
                 context.Succeed(requirement);
             }
-
             // 获取用户名
             var isAuthenticated = context.User.Identity?.IsAuthenticated ?? false;
             var userPermissions = _dataSeeds.GetUserPermissions(context.User.FindFirst(ClaimTypes.Role)?.Value);

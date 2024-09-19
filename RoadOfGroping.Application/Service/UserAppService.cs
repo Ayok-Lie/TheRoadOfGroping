@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Minio.DataModel.Response;
 using RoadOfGroping.Application.Service.Dtos;
 using RoadOfGroping.Core.Files;
 using RoadOfGroping.Core.Users;

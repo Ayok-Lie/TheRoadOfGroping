@@ -59,7 +59,6 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token
             // 将访问令牌放入Cookie中
             _httpContextAccessor.HttpContext.Response.Cookies.Append(HeaderNames.Authorization, result.AccessToken, new CookieOptions
             {
-                HttpOnly = true,
                 IsEssential = true,
                 MaxAge = TimeSpan.FromDays(_jwtOptions.RefreshTokenExpiresDays),
                 Path = "/",
@@ -139,6 +138,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token
 
             var identity = principal.Identities.First();
             var userId = Guid.Parse(identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            var role = identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
             var refreshTokenId = identity.Claims.FirstOrDefault(c => c.Type == RefreshTokenIdClaimType).Value;
             var refreshTokenKey = GetRefreshTokenKey(userId, refreshTokenId);
             var refreshToken = await _distributedCache.GetAsync(refreshTokenKey);
@@ -154,7 +154,8 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token
             var user = new UserAuthDto()
             {
                 Id = userId,
-                UserName = principal.Identity.Name
+                UserName = principal.Identity.Name,
+                Roles = role
             };
 
             // 创建新的认证令牌

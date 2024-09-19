@@ -13,6 +13,7 @@ namespace RoadOfGroping.Host.Controllers
         {
             _logger = logger;
         }
+
         public IActionResult Index()
         {
             _logger.LogInformation("正在加载首页......");

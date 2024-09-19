@@ -1,5 +1,4 @@
-﻿using RoadOfGroping.Common.DependencyInjection;
-using RoadOfGroping.Core.ZRoadOfGropingUtility.Minio;
+﻿using RoadOfGroping.Core.ZRoadOfGropingUtility.Minio;
 using RoadOfGroping.Repository.DomainService;
 
 namespace RoadOfGroping.Core.Files

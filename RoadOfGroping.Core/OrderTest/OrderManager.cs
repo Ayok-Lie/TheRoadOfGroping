@@ -4,7 +4,7 @@ using RoadOfGroping.Repository.DomainService;
 
 namespace RoadOfGroping.Core.OrderTest
 {
-    public class OrderManager : BasicDomainService<Order, long>, IOrderManager
+    public class OrderManager : AnotherDomainService<Order, long>, IOrderManager
     {
         public OrderManager(IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -23,7 +23,7 @@ namespace RoadOfGroping.Core.OrderTest
                 DateTime = DateTime.UtcNow,
                 Name = GenerateRandomChineseCharacter().ToString() + GenerateRandomChineseCharacter().ToString(),
             };
-            await CreateAsync(order);
+            await Create(order);
         }
 
         public override async Task ValidateOnCreateOrUpdate(Order entity)
@@ -36,6 +36,16 @@ namespace RoadOfGroping.Core.OrderTest
             // 中文汉字在Unicode编码中的范围是 0x4E00 到 0x9FA5
             int unicode = new Random().Next(0x4E00, 0x9FA6);
             return (char)unicode;
+        }
+
+        public override IQueryable<Order> GetIncludeQuery()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task ValidateOnDelete(Order entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

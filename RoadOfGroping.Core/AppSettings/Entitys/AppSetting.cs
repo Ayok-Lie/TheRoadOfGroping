@@ -6,6 +6,7 @@ namespace RoadOfGroping.Core.AppSettings.Entitys
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
+
         /// <summary>
         /// 应用域名
         /// </summary>

@@ -13,6 +13,7 @@ namespace RoadOfGroping.Common.JWTHelpers
     public class JwtHelper
     {
         private static readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+
         /// <summary>
         /// 创建加密JwtToken
         /// </summary>
