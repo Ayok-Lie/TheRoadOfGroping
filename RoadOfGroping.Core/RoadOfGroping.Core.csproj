@@ -49,4 +49,13 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Localization\Language.en-US.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Localization\Language.zh-CN.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

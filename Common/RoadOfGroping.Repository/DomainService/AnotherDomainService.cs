@@ -6,14 +6,15 @@ using RoadOfGroping.Repository.Repository;
 
 namespace RoadOfGroping.Repository.DomainService
 {
-    public abstract class AnotherDomainService<TEntity, TPrimaryKey> : IAnotherDomainService<TEntity, TPrimaryKey>, ITransientDependency where TEntity : class, IEntity<TPrimaryKey>
+    public abstract class AnotherDomainService<TEntity, TPrimaryKey> : ServiceBase,IAnotherDomainService<TEntity, TPrimaryKey>, ITransientDependency where TEntity : class, IEntity<TPrimaryKey>
     {
+
         public virtual IServiceProvider ServiceProvider { get; private set; }
         public IAnotherBaseRepository<TEntity, TPrimaryKey> Repo { get; }
         public IQueryable<TEntity> Query => Repo.GetAll();
         public IQueryable<TEntity> QueryAsNoTracking => Query.AsNoTracking();
 
-        public AnotherDomainService(IServiceProvider serviceProvider)
+        protected AnotherDomainService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
             ServiceProvider = serviceProvider;
             Repo = serviceProvider.GetRequiredService<IAnotherBaseRepository<TEntity, TPrimaryKey>>();

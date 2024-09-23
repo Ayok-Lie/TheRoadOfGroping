@@ -1,0 +1,6 @@
+{
+  "Name": "姓名",
+  "Gender": "性别",
+  "Age": "年龄",
+  "UserDoesNotExist": "用户{0}不存在"
+}

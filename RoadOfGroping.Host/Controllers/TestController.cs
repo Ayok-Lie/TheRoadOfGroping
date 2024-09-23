@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using RoadOfGroping.Common.Localization;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations;
+using TencentCloud.Common.Profile;
 
 namespace RoadOfGroping.Host.Controllers
 {
@@ -10,7 +13,7 @@ namespace RoadOfGroping.Host.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class TestController : ControllerBase
+    public class TestController : RoadOfGropingControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
@@ -19,12 +22,20 @@ namespace RoadOfGroping.Host.Controllers
 
         private readonly ILogger<TestController> _logger;
 
-        /// <summary>
-        /// 测试控制器
-        /// </summary>
-        public TestController(ILogger<TestController> logger)
+        public TestController(IServiceProvider serviceProvider, ILogger<TestController> logger) : base(serviceProvider)
         {
             _logger = logger;
+        }
+
+        /// <summary>
+        /// 获取多语言
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public string Get()
+        {
+            //var path = Localizer["Name"].SearchedLocation;
+            return L("Name");
         }
 
         /// <summary>

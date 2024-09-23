@@ -14,7 +14,7 @@ namespace RoadOfGroping.Repository.DomainService
     /// </summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <typeparam name="TPrimaryKey">主键类型</typeparam>
-    public abstract class BasicDomainService<TEntity, TPrimaryKey> : IBasicDomainService<TEntity, TPrimaryKey>, ITransientDependency where TEntity : class, IEntity<TPrimaryKey>
+    public abstract class BasicDomainService<TEntity, TPrimaryKey> : ServiceBase, IBasicDomainService<TEntity, TPrimaryKey>, ITransientDependency where TEntity : class, IEntity<TPrimaryKey>
     {
         /// <summary>
         /// 服务提供者。
@@ -45,7 +45,7 @@ namespace RoadOfGroping.Repository.DomainService
         /// 初始化基础领域服务实例。
         /// </summary>
         /// <param name="serviceProvider">服务提供者</param>
-        public BasicDomainService(IServiceProvider serviceProvider)
+        public BasicDomainService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
             ServiceProvider = serviceProvider;
             EntityRepo = serviceProvider.GetRequiredService<IBaseRepository<TEntity, TPrimaryKey>>();

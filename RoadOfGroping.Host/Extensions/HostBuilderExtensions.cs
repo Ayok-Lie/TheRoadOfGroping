@@ -9,12 +9,14 @@ using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using RoadOfGroping.Application.Service.Mappers;
 using RoadOfGroping.Common.Helper;
 using RoadOfGroping.Common.JWTHelpers;
+using RoadOfGroping.Common.Localization;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.AutoMapper;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.ErrorHandler;
@@ -68,6 +70,7 @@ namespace RoadOfGroping.Host.Extensions
             builder.Services.AddSwaggerGen(builder);
             builder.Services.AddUnitOfWork();
             builder.Services.AddJwtConfig();
+            builder.Services.AddJosnLocalization();
             builder.Services.AddCors();
             builder.Services.AddAutoMapper();
             builder.Services.UseRedis();
@@ -75,43 +78,8 @@ namespace RoadOfGroping.Host.Extensions
             builder.Services.AddSession();
             builder.Services.AddMinio(configuration);
             //builder.Services.AddFilters();
-            //builder.Services.AddJsonLocalization(options => options.ResourcesPath = "Resources");
         }
 
-        /// <summary>
-        /// 多语言
-        /// </summary>
-        /// <param name="app"></param>
-        public static void UseRequestLocalization(this WebApplication app)
-        {
-            // 启用中间件
-            app.UseRequestLocalization(options =>
-            {
-                var cultures = new[] { "zh-CN", "en-US", "zh-TW" };
-                options.AddSupportedCultures(cultures);
-                options.AddSupportedUICultures(cultures);
-                options.SetDefaultCulture(cultures[0]);
-
-                // 当Http响应时，将 当前区域信息 设置到 Response Header：Content-Language 中
-                options.ApplyCurrentCultureToResponseHeaders = true;
-            });
-        }
-
-
-        /// <summary>
-        /// 注册全局拦截器
-        /// </summary>
-        public static void AddFilters(this IServiceCollection services)
-        {
-            // 注册全局拦截器
-            services.AddControllersWithViews(x =>
-            {
-                //配置请求类型
-                x.Filters.Add<EnsureJsonFilter>();
-                //解析Post请求参数，将json反序列化赋值参数
-                x.Filters.Add(new AutoFromBodyActionFilter());
-            });
-        }
         /// <summary>
         /// 管道服务配置
         /// </summary>
@@ -119,13 +87,16 @@ namespace RoadOfGroping.Host.Extensions
         public static void AddUseCore(this WebApplicationBuilder builder)
         {
             var app = builder.Build();
+
+            app.UseRouting();
+
             app.UseSwaggerUI(builder);
+
             app.UseHttpsRedirection();
             // 启用CORS策略
             app.UseCors("DefaultCorsPolicy");
 
-            app.UseRouting();
-
+            app.UseRequestLocalization();
             // 添加异常处理中间件
             app.UseMiddleware<ExceptionMiddleware>();
 
@@ -151,6 +122,59 @@ namespace RoadOfGroping.Host.Extensions
             app.UseDeveloperExceptionPage();
 
             app.Run();
+        }
+
+
+        /// <summary>
+        /// 多语言服务
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddJosnLocalization(this IServiceCollection services)
+        {
+            services.AddJsonLocalization(options =>
+            {
+                options.ResourcesPath = "Localization";
+                // options.ResourcesPathType = ResourcesPathType.TypeBased;
+                options.ResourcesPathType = ResourcesPathType.CultureBased;
+            });
+            services.AddControllersWithViews().AddMvcLocalization(options =>
+            {
+                options.ResourcesPath = "Localization";
+            }, LanguageViewLocationExpanderFormat.Suffix);
+        }
+
+        /// <summary>
+        /// 多语言
+        /// </summary>
+        /// <param name="app"></param>
+        public static void UseRequestLocalization(this WebApplication app)
+        {
+            // 启用中间件
+            app.UseRequestLocalization(options =>
+            {
+                var cultures = new[] { "zh-CN", "en-US" };
+                options.AddSupportedCultures(cultures);
+                options.AddSupportedUICultures(cultures);
+                options.SetDefaultCulture(cultures[0]);
+
+                // 当Http响应时，将 当前区域信息 设置到 Response Header：Content-Language 中
+                options.ApplyCurrentCultureToResponseHeaders = true;
+            });
+        }
+
+        /// <summary>
+        /// 注册全局拦截器
+        /// </summary>
+        public static void AddFilters(this IServiceCollection services)
+        {
+            // 注册全局拦截器
+            services.AddControllersWithViews(x =>
+            {
+                //配置请求类型
+                x.Filters.Add<EnsureJsonFilter>();
+                //解析Post请求参数，将json反序列化赋值参数
+                x.Filters.Add(new AutoFromBodyActionFilter());
+            });
         }
 
         /// <summary>
@@ -540,6 +564,7 @@ namespace RoadOfGroping.Host.Extensions
             }
             return configuration;
         }
+
         /// <summary>
         /// 配置swaggerUI
         /// </summary>

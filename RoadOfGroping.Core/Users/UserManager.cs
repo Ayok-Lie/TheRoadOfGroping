@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Resources;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using RoadOfGroping.Core.Users.Dtos;
 using RoadOfGroping.Core.Users.Entity;
 using RoadOfGroping.Repository.DomainService;
@@ -18,7 +20,7 @@ namespace RoadOfGroping.Core.Users
 
             if (user == null)
             {
-                throw new ArgumentException(userInfo.UserName + " is not a valid user");
+                throw new ArgumentException(L($"UserDoesNotExist",userInfo.UserName));
             }
             return user;
         }
