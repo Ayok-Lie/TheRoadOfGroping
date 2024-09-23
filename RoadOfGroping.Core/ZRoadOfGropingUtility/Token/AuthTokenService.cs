@@ -23,7 +23,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token
         private readonly JwtBearerOptions _jwtBearerOptions;
 
         private readonly JwtOptions _jwtOptions;
-        private readonly MemoryCacheTool _distributedCache;
+        private readonly CacheManager _distributedCache;
         private readonly ILogger<AuthTokenService> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SigningCredentials _signingCredentials;
@@ -32,7 +32,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token
         public AuthTokenService(
            IOptionsSnapshot<JwtBearerOptions> jwtBearerOptions,
            IOptionsSnapshot<JwtOptions> jwtOptions,
-           MemoryCacheTool distributedCache,
+           CacheManager distributedCache,
            ILogger<AuthTokenService> logger,
            IHttpContextAccessor httpContextAccessor,
            SigningCredentials signingCredentials)

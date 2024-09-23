@@ -41,6 +41,8 @@ namespace RoadOfGroping.Application.Service
             return await userManager.QueryAsNoTracking.ToListAsync();
         }
 
+
+
         /// <summary>
         /// 获取用户详情
         /// </summary>
@@ -101,5 +103,6 @@ namespace RoadOfGroping.Application.Service
         {
             await userManager.DeleteAsync(id);
         }
+
     }
 }

@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using RoadOfGroping.Common.Consts;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR.Dtos;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.RedisModule;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR
 {
     public class ChatHubManager : IChatHubManager
     {
         private readonly IHubContext<ChatHub, IChatService> _hubContext;
-        private readonly ICacheTool _cacheManager;
+        private readonly CacheManager _cacheManager;
 
         public ChatHubManager(IHubContext<ChatHub, IChatService> hubContext,
-            ICacheTool cacheManager)
+            CacheManager cacheManager)
         {
             _hubContext = hubContext;
             _cacheManager = cacheManager;

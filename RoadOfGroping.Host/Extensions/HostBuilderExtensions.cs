@@ -74,9 +74,44 @@ namespace RoadOfGroping.Host.Extensions
             builder.Services.AddSignalR();
             builder.Services.AddSession();
             builder.Services.AddMinio(configuration);
-            builder.Services.AddFilters();
+            //builder.Services.AddFilters();
+            //builder.Services.AddJsonLocalization(options => options.ResourcesPath = "Resources");
         }
 
+        /// <summary>
+        /// 多语言
+        /// </summary>
+        /// <param name="app"></param>
+        public static void UseRequestLocalization(this WebApplication app)
+        {
+            // 启用中间件
+            app.UseRequestLocalization(options =>
+            {
+                var cultures = new[] { "zh-CN", "en-US", "zh-TW" };
+                options.AddSupportedCultures(cultures);
+                options.AddSupportedUICultures(cultures);
+                options.SetDefaultCulture(cultures[0]);
+
+                // 当Http响应时，将 当前区域信息 设置到 Response Header：Content-Language 中
+                options.ApplyCurrentCultureToResponseHeaders = true;
+            });
+        }
+
+
+        /// <summary>
+        /// 注册全局拦截器
+        /// </summary>
+        public static void AddFilters(this IServiceCollection services)
+        {
+            // 注册全局拦截器
+            services.AddControllersWithViews(x =>
+            {
+                //配置请求类型
+                x.Filters.Add<EnsureJsonFilter>();
+                //解析Post请求参数，将json反序列化赋值参数
+                x.Filters.Add(new AutoFromBodyActionFilter());
+            });
+        }
         /// <summary>
         /// 管道服务配置
         /// </summary>
@@ -93,8 +128,6 @@ namespace RoadOfGroping.Host.Extensions
 
             // 添加异常处理中间件
             app.UseMiddleware<ExceptionMiddleware>();
-            // 添加UnitOfWork中间件
-            //app.UseMiddleware<UnitOfWorkMiddleware>();
 
             // 启用身份验证
             app.UseAuthentication();
@@ -110,7 +143,7 @@ namespace RoadOfGroping.Host.Extensions
                 //pattern: "{controller=Home}/{action=Privacy}/{id?}");
                 endpoints.MapRazorPages();
             });
-            //app.MapControllers();
+            app.MapControllers();
 
             // 启用Hangfire仪表盘
 
@@ -137,6 +170,15 @@ namespace RoadOfGroping.Host.Extensions
                             IOCManager.Current = (IContainer)scope;
                         });
                     });
+        }
+
+        /// <summary>
+        /// 配置自动注册依赖注入
+        /// </summary>
+        public static void AddAutoDI(this IServiceCollection services)
+        {
+            services.AddDependencyServices();
+            //services.AddManagerRegisterServices();
         }
 
         /// <summary>
@@ -185,8 +227,6 @@ namespace RoadOfGroping.Host.Extensions
         /// <returns></returns>
         public static void ServicesMvc(this IServiceCollection services)
         {
-            //成功规范接口
-            services.AddTransient<SucceededUnifyResultFilter>();
             services.AddMvc(options =>
             {
             })
@@ -207,6 +247,8 @@ namespace RoadOfGroping.Host.Extensions
                 options.OperationFilter<AddResponseHeadersFilter>();
                 options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
+                //使Post请求的Body参数在Swagger UI中以Json格式显示。
+                //options.OperationFilter<JsonBodyOperationFilter>();
                 //options.DocumentFilter<RemoveAppSuffixFilter>();
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
@@ -284,7 +326,8 @@ namespace RoadOfGroping.Host.Extensions
         public static void AddUnitOfWork(this IServiceCollection services)
         {
             services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork<RoadOfGropingDbContext>));
-            //services.AddTransient<UnitOfWorkMiddleware>();
+            services.AddTransient<SucceededUnifyResultFilter>();
+            services.AddTransient<UnitOfWorkFilter>();
         }
 
         /// <summary>
@@ -396,7 +439,7 @@ namespace RoadOfGroping.Host.Extensions
                 services.AddSingleton<IRedisClient>(redis);
 
                 // 注册Redis缓存工具为单例服务
-                services.AddSingleton<ICacheTool, RedisCacheTool>();
+                services.AddSingleton<RedisCacheTool>();
 
                 // 配置客户端缓存选项
                 var options = new ClientSideCachingOptions();
@@ -407,11 +450,13 @@ namespace RoadOfGroping.Host.Extensions
                 // 注册内存缓存服务
                 services.AddMemoryCache();
 
-                services.AddSingleton<ICacheTool, MemoryCacheTool>();
+                services.AddSingleton<MemoryCacheTool>();
 
                 // 注册分布式内存缓存服务
                 services.AddDistributedMemoryCache();
             }
+
+            services.AddTransient<CacheManager>();
         }
 
         /// <summary>
@@ -495,26 +540,6 @@ namespace RoadOfGroping.Host.Extensions
             }
             return configuration;
         }
-
-        /// <summary>
-        /// 注册全局拦截器
-        /// </summary>
-        public static void AddFilters(this IServiceCollection services)
-        {
-            // 注册全局拦截器
-            services.AddControllersWithViews(x =>
-            {
-                //全局返回，统一返回格式
-                //x.Filters.Add<ResFilter>();
-
-                //全局日志，报错
-                //x.Filters.Add<LogAttribute>();
-
-                //全局身份验证
-                //x.Filters.Add<TokenAttribute>();
-            });
-        }
-
         /// <summary>
         /// 配置swaggerUI
         /// </summary>

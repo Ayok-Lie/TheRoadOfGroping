@@ -1,11 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using RoadOfGroping.Common.Dependency;
 using RoadOfGroping.Common.DependencyInjection;
 using RoadOfGroping.Core.Interceptors;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.ResultResponse;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
+using static System.Formats.Asn1.AsnWriter;
 using Module = Autofac.Module;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
@@ -35,39 +37,36 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
             foreach (var assembly in assemblies)
             {
                 // 注册程序集中的所有类型
-                container.RegisterAssemblyTypes(assembly)
-                    //.Where(t => t.GetCustomAttribute<AutoFacAop>() != null) 判断是否含有特性
-                    .Where(b => !b.IsAbstract && b.IsClass) // 过滤出非抽象类
-                    .PublicOnly() // 只注册公共类型
-                    .AsImplementedInterfaces(); // 注册为它们实现的接口
+                //container.RegisterAssemblyTypes(assembly)
+                //    //.Where(t => t.GetCustomAttribute<AutoFacAop>() != null) 判断是否含有特性
+                //    .Where(b => !b.IsAbstract && b.IsClass && !b.IsGenericType) // 过滤出非抽象类
+                //    .PublicOnly() // 只注册公共类型
+                //    .AsImplementedInterfaces(); // 注册为它们实现的接口
 
-                // 遍历程序集中的所有类型
                 foreach (var type in assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && !t.IsGenericType))
                 {
-                    // 如果类型继承自 IScopedDependency
+                    // 获取类型的接口
+                    var interfaces = type.GetInterfaces();
+
+                    // 首先判断实现的生命周期并注册
                     if (type.IsAssignableTo<IScopedDependency>())
                     {
-                        // 注册为每个生命周期作用域一个实例
-                        container.RegisterType(type).InstancePerLifetimeScope();
+                        // 对于作用域依赖，注册实现类和接口
+                        container.RegisterType(type).AsSelf().As(interfaces).InstancePerLifetimeScope();
                     }
-                    // 如果类型继承自 ISingletonDependency
                     else if (type.IsAssignableTo<ISingletonDependency>())
                     {
-                        // 注册为单例
-                        container.RegisterType(type).SingleInstance();
+                        // 对于单例依赖，注册实现类和接口
+                        container.RegisterType(type).AsSelf().As(interfaces).SingleInstance();
                     }
-                    // 如果类型继承自 ITransientDependency
                     else if (type.IsAssignableTo<ITransientDependency>())
                     {
-                        // 注册为每次请求一个实例
-                        container.RegisterType(type).InstancePerDependency();
-                    }
-                    else
-                    {
-                        // 如果没有接口，直接注册实现类
-                        container.RegisterType(type).InstancePerLifetimeScope();
+                        // 对于瞬态依赖，注册实现类和接口
+                        container.RegisterType(type).AsSelf().As(interfaces).InstancePerDependency();
                     }
                 }
+
+
             }
 
             // 用于Jwt的各种操作
@@ -123,4 +122,75 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
         //    }
         //}
     }
+
+
+    public static class AutoDependencyInjection
+    {
+        public static IServiceCollection AddDependencyServices(this IServiceCollection services)
+        {
+            // 获取所有程序集，并筛选出以 "RoadOfGroping" 开头的程序集
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(t => t.FullName.StartsWith("RoadOfGroping")).ToArray();
+
+            // 遍历符合条件的程序集
+            foreach (var assembly in assemblies)
+            {
+                // 遍历符合条件的类并注册其实现到服务容器中
+                var types = assembly.GetTypes()
+                    .Where(t => t.IsClass && !t.IsAbstract && !t.IsGenericType);
+
+                foreach (var type in types)
+                {
+                    // 获取类型的接口
+                    var interfaces = type.GetInterfaces();
+
+                    // 根据生命周期，注册实现类和接口
+                    if (type.IsAssignableTo<IScopedDependency>())
+                    {
+                        RegisterServices(services, interfaces, type, ServiceLifetime.Scoped);
+                    }
+                    else if (type.IsAssignableTo<ISingletonDependency>())
+                    {
+                        RegisterServices(services, interfaces, type, ServiceLifetime.Singleton);
+                    }
+                    else if (type.IsAssignableTo<ITransientDependency>())
+                    {
+                        RegisterServices(services, interfaces, type, ServiceLifetime.Transient);
+                    }
+                }
+            }
+
+            IOC_DependencyInjectionManager.Current = services.BuildServiceProvider();
+            return services;
+        }
+
+        private static void RegisterServices(IServiceCollection services, Type[] interfaces, Type implementation, ServiceLifetime lifetime)
+        {
+            foreach (var @interface in interfaces)
+            {
+                // 检查是否已经注册
+                var existingService = services.FirstOrDefault(serviceDescriptor => serviceDescriptor.ServiceType == @interface);
+                if (existingService != null)
+                {
+                    // 如果已经注册，则跳过
+                    continue;
+                }
+
+                // 注册服务
+                switch (lifetime)
+                {
+                    case ServiceLifetime.Scoped:
+                        services.AddScoped(@interface, implementation);
+                        break;
+                    case ServiceLifetime.Singleton:
+                        services.AddSingleton(@interface, implementation);
+                        break;
+                    case ServiceLifetime.Transient:
+                        services.AddTransient(@interface, implementation);
+                        break;
+                }
+            }
+        }
+    }
+
 }

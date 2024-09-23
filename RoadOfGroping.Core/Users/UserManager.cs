@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RoadOfGroping.Core.Users.Dtos;
 using RoadOfGroping.Core.Users.Entity;
 using RoadOfGroping.Repository.DomainService;
 
@@ -10,14 +11,14 @@ namespace RoadOfGroping.Core.Users
         {
         }
 
-        public async Task<RoadOfGropingUsers> Login(string username, string password)
+        public async Task<RoadOfGropingUsers> Login(UserInfo userInfo)
         {
             var users = Query.ToList();
-            var user = await Query.Where(a => a.UserName == username && a.PasswordHash == password).FirstOrDefaultAsync();
+            var user = await Query.Where(a => a.UserName == userInfo.UserName && a.PasswordHash == userInfo.Password).FirstOrDefaultAsync();
 
             if (user == null)
             {
-                throw new ArgumentException(username);
+                throw new ArgumentException(userInfo.UserName + " is not a valid user");
             }
             return user;
         }

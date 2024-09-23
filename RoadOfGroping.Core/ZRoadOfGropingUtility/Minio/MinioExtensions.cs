@@ -37,5 +37,6 @@ public static class MinioExtensions
         services.AddSingleton((MinioClient)client);
 
         services.AddTransient<IMinioService, MinioService>();
+        services.AddTransient<IMinioManager, MinioManager>();
     }
 }

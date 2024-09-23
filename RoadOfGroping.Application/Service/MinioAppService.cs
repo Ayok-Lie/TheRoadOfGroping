@@ -10,9 +10,9 @@ namespace RoadOfGroping.Application.Service
     [DisabledUnitOfWork(true)]
     public class MinioAppService : ApplicationService
     {
-        private readonly IMinioService minioService;
+        private readonly IMinioManager minioService;
 
-        public MinioAppService(IServiceProvider serviceProvider, IMinioService minioService) : base(serviceProvider)
+        public MinioAppService(IServiceProvider serviceProvider, IMinioManager minioService) : base(serviceProvider)
         {
             this.minioService = minioService;
         }

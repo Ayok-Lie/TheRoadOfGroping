@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using RoadOfGroping.Application.Service.Dtos;
 using RoadOfGroping.Common.Attributes;
 using RoadOfGroping.Core.Users;
+using RoadOfGroping.Core.Users.Dtos;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token.Dtos;
 
@@ -28,8 +30,9 @@ namespace RoadOfGroping.Host.Controllers
         }
 
         [HttpGet]
-        public async Task<AuthTokenDto> LoginTest()
+        public async Task<AuthTokenDto> LoginTest(string test)
         {
+            var aaaa = test;
             var auth = new UserAuthDto()
             {
                 Id = Guid.Parse("45D6422E-0EBB-45DB-DC2A-08DC86A36122"),
@@ -40,15 +43,17 @@ namespace RoadOfGroping.Host.Controllers
             return await authTokenService.CreateAuthTokenAsync(auth);
         }
 
+
         /// <summary>
         /// 登录功能
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPost]
         public async Task<string> Login(UserInfo user)
         {
-            var userinfo = await _userManager.Login(user.username, user.password);
+            var userinfo = await _userManager.Login(user);
             if (userinfo == null)
             {
                 throw new Exception("账号密码错误");
@@ -66,14 +71,28 @@ namespace RoadOfGroping.Host.Controllers
         }
 
         /// <summary>
+        /// 测试功能
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task Test123123(List<string> aaaa)
+        {
+            await Task.CompletedTask;
+        }
+
+        [HttpPost]
+        public async Task Test1231231312(string aaaaaa)
+        {
+            await Task.CompletedTask;
+        }
+        /// <summary>
         /// 登录功能 --只能用于Cookie校验，无法用于jwt校验
         /// </summary>
-        /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<string> AbandonedLogin(UserInfo user)
         {
-            var userinfo = await _userManager.Login(user.username, user.password);
+            var userinfo = await _userManager.Login(user);
             if (userinfo == null)
             {
                 throw new Exception("账号密码错误");
@@ -107,13 +126,6 @@ namespace RoadOfGroping.Host.Controllers
         public void LoginOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        }
-
-        public class UserInfo
-        {
-            public string username { get; set; }
-
-            public string password { get; set; }
         }
     }
 }

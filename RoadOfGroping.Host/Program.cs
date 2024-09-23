@@ -17,6 +17,15 @@ var config = new ConfigurationBuilder()
 // 添加HttpContextAccessor服务
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+
+builder.Services.AddControllers(c =>
+{
+    //返回值拦截器
+    c.Filters.AddService<SucceededUnifyResultFilter>(99);
+    c.Filters.AddService<UnitOfWorkFilter>(100);
+    //c.Filters.Add<ApiResultFilterAttribute>();
+    //c.Filters.Add<ModelValidateActionFilterAttribute>();
+});
 // 添加DbContext服务
 builder.Services.UsingDatabaseServices(config);
 // 添加Autofac依赖注入
@@ -30,15 +39,6 @@ builder.Host.ConfigureLogging((context, loggingBuilder) =>
 });
 
 builder.Services.AddRazorPages();
-
-builder.Services.AddControllers(c =>
-{
-    //返回值拦截器
-    c.Filters.AddService<SucceededUnifyResultFilter>(99);
-    c.Filters.AddService<UnitOfWorkFilter>(100);
-    //c.Filters.Add<ApiResultFilterAttribute>();
-    //c.Filters.Add<ModelValidateActionFilterAttribute>();
-});
 
 // 注册EventBus服务
 builder.Services.AddEventBusAndSubscribes(c =>

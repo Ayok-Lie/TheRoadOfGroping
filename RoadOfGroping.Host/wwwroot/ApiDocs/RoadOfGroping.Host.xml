@@ -4,18 +4,24 @@
         <name>RoadOfGroping.Host</name>
     </assembly>
     <members>
-        <member name="M:RoadOfGroping.Host.Controllers.LoginController.Login(RoadOfGroping.Host.Controllers.LoginController.UserInfo)">
+        <member name="M:RoadOfGroping.Host.Controllers.LoginController.Login(RoadOfGroping.Core.Users.Dtos.UserInfo)">
             <summary>
             登录功能
             </summary>
             <param name="user"></param>
             <returns></returns>
+            <exception cref="T:System.Exception"></exception>
         </member>
-        <member name="M:RoadOfGroping.Host.Controllers.LoginController.AbandonedLogin(RoadOfGroping.Host.Controllers.LoginController.UserInfo)">
+        <member name="M:RoadOfGroping.Host.Controllers.LoginController.Test123123(System.Collections.Generic.List{System.String})">
             <summary>
-            登录功能
+            测试功能
             </summary>
-            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Controllers.LoginController.AbandonedLogin(RoadOfGroping.Core.Users.Dtos.UserInfo)">
+            <summary>
+            登录功能 --只能用于Cookie校验，无法用于jwt校验
+            </summary>
             <returns></returns>
         </member>
         <member name="T:RoadOfGroping.Host.Controllers.TestController">
@@ -50,6 +56,17 @@
             </summary>
             <param name="builder"></param>
         </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.UseRequestLocalization(Microsoft.AspNetCore.Builder.WebApplication)">
+            <summary>
+            多语言
+            </summary>
+            <param name="app"></param>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddFilters(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            注册全局拦截器
+            </summary>
+        </member>
         <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddUseCore(Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
             <summary>
             管道服务配置
@@ -62,6 +79,11 @@
             </summary>
             <param name="hostBuilder"></param>
             <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddAutoDI(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            配置自动注册依赖注入
+            </summary>
         </member>
         <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.UseRepository(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
@@ -129,11 +151,6 @@
             </summary>
             <param name="configuration"></param>
             <returns></returns>
-        </member>
-        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddFilters(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            注册全局拦截器
-            </summary>
         </member>
         <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.UseSwaggerUI(Microsoft.AspNetCore.Builder.WebApplication,Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
             <summary>

@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Minio;
+using Minio.ApiEndpoints;
 using Minio.DataModel;
 using Minio.DataModel.Args;
 using Minio.DataModel.Encryption;
@@ -153,11 +154,11 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Minio
                 {
                     foreach (string prefix in input.PrefixArr)
                     {
-                        var files = _minioClient.ListObjectsAsync
+                        var files = _minioClient.ListObjectsAsync(
                             (new ListObjectsArgs()
                             .WithBucket(input.BucketName)
                             .WithPrefix(prefix)
-                            .WithRecursive(input.Recursive));
+                            .WithRecursive(input.Recursive)));
                         var filePaths = files.ToList().Wait();
                         filePathList.InsertRange(filePathList.Count(), filePaths);
                     }
@@ -335,17 +336,6 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Minio
                                 .WithObjects(objectNames);
 
             var observable = await _minioClient.RemoveObjectsAsync(rmArgs);
-
-            observable.Subscribe(item =>
-            {
-                logger.LogWarning($"{item.Key}文件对象删除失败");
-            }, ex =>
-            {
-                logger.LogWarning($"{DateTime.Now}:{ex.Message}-{ex.ToString()}");
-            }, () =>
-            {
-                logger.LogInformation("批量删除文件对象成功");
-            });
         }
 
         public async Task<string> PresignedGetObject(string bucketName, string objectNames)
