@@ -12,12 +12,6 @@
             <returns></returns>
             <exception cref="T:System.Exception"></exception>
         </member>
-        <member name="M:RoadOfGroping.Host.Controllers.LoginController.Test123123(System.Collections.Generic.List{System.String})">
-            <summary>
-            测试功能
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:RoadOfGroping.Host.Controllers.LoginController.AbandonedLogin(RoadOfGroping.Core.Users.Dtos.UserInfo)">
             <summary>
             登录功能 --只能用于Cookie校验，无法用于jwt校验

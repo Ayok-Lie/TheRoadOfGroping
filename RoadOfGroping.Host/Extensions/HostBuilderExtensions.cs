@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Data;
+using System.Security.Cryptography;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -29,8 +31,8 @@ using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
 using RoadOfGroping.EntityFramework;
 using RoadOfGroping.EntityFramework.Extensions;
 using RoadOfGroping.Host.UnifyResult.Fiters;
-using RoadOfGroping.Model;
 using RoadOfGroping.Repository.Auditing;
+using RoadOfGroping.Repository.Dappers;
 using RoadOfGroping.Repository.DynamicWebAPI;
 using RoadOfGroping.Repository.Extensions;
 using RoadOfGroping.Repository.Repository;
@@ -59,8 +61,8 @@ namespace RoadOfGroping.Host.Extensions
         /// <param name="builder"></param>
         public static void AddCoreServices(this WebApplicationBuilder builder)
         {
-            var context = new ServiceConfigerContext(builder.Services);
-            configuration = context.Provider.GetRequiredService<IConfiguration>();
+            //var context = new ServiceConfigerContext(builder.Services);
+            configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
             Env = builder.Environment;
             // 配置AppsettingHelper
             builder.Services.AddSingleton(new AppsettingHelper(configuration));
@@ -211,6 +213,11 @@ namespace RoadOfGroping.Host.Extensions
         public static void UseRepository(this IServiceCollection services)
         {
             services.AddScoped(typeof(IAnotherBaseRepository<,>), typeof(AnotherBaseRepository<,>));
+
+            // 注册IDbConnection，使用Scoped生命周期
+            services.AddScoped<IDbConnection>(provider =>
+                new SqlConnection(configuration.GetConnectionString("Default")));
+            services.AddScoped(typeof(IDapperManager<>), typeof(DapperManager<>));
             // 添加应用程序模块
             //builder.Services.AddApplication<RoadOfGropingHostModule>();
 

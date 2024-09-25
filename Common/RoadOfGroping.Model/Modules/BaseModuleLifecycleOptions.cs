@@ -1,4 +1,4 @@
-﻿using RoadOfGroping.Model.Collections;
+﻿using RoadOfGroping.Common.Collections;
 using RoadOfGroping.Model.Interface;
 
 namespace RoadOfGroping.Model.Modules

@@ -71,21 +71,6 @@ namespace RoadOfGroping.Host.Controllers
         }
 
         /// <summary>
-        /// 测试功能
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task Test123123(List<string> aaaa)
-        {
-            await Task.CompletedTask;
-        }
-
-        [HttpPost]
-        public async Task Test1231231312(string aaaaaa)
-        {
-            await Task.CompletedTask;
-        }
-        /// <summary>
         /// 登录功能 --只能用于Cookie校验，无法用于jwt校验
         /// </summary>
         /// <returns></returns>

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using RoadOfGroping.Common.Localization;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations;
 using TencentCloud.Common.Profile;

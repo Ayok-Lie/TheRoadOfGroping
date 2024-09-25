@@ -1,13 +1,16 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.ComponentModel.Design;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using Autofac;
+using Autofac.Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using RoadOfGroping.Common.Dependency;
 using RoadOfGroping.Common.DependencyInjection;
 using RoadOfGroping.Core.Interceptors;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.ResultResponse;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
-using static System.Formats.Asn1.AsnWriter;
+using TencentCloud.Tsf.V20180326.Models;
 using Module = Autofac.Module;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
@@ -65,8 +68,6 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
                         container.RegisterType(type).AsSelf().As(interfaces).InstancePerDependency();
                     }
                 }
-
-
             }
 
             // 用于Jwt的各种操作
@@ -98,6 +99,34 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
             }
         }
 
+        ///// <summary>
+        ///// 属性注入
+        ///// </summary>
+        ///// <param name="builder"></param>
+        //private void RegisterAutowired(ContainerBuilder builder)
+        //{
+        //    // Register your own things directly with Autofac, like:
+        //    builder.RegisterType<HelloService>().As<IHelloService>().InstancePerDependency().AsImplementedInterfaces();
+
+        //    // 获取所有控制器类型并使用属性注入
+        //    var controllerBaseType = typeof(ControllerBase);
+        //    builder.RegisterAssemblyTypes(typeof(Program).Assembly)
+        //        .Where(t => controllerBaseType.IsAssignableFrom(t) && t != controllerBaseType)
+        //        .PropertiesAutowired(new AutowiredPropertySelector());
+        //}
+
+        /// <summary>
+        /// 属性注入选择器
+        /// </summary>
+        public class AutowiredPropertySelector : IPropertySelector
+        {
+            public bool InjectProperty(PropertyInfo propertyInfo, object instance)
+            {
+                // 带有 AutowiredAttribute 特性的属性会进行属性注入
+                return propertyInfo.CustomAttributes.Any(it => it.AttributeType == typeof(AutowiredAttribute));
+            }
+        }
+
         //public class AutofacModule : Autofac.Module
         //{
         //    protected override void Load(ContainerBuilder builder)
@@ -122,7 +151,6 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
         //    }
         //}
     }
-
 
     public static class AutoDependencyInjection
     {
@@ -182,9 +210,11 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
                     case ServiceLifetime.Scoped:
                         services.AddScoped(@interface, implementation);
                         break;
+
                     case ServiceLifetime.Singleton:
                         services.AddSingleton(@interface, implementation);
                         break;
+
                     case ServiceLifetime.Transient:
                         services.AddTransient(@interface, implementation);
                         break;
@@ -192,5 +222,4 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
             }
         }
     }
-
 }

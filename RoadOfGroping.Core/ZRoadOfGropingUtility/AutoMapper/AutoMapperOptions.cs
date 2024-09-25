@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using RoadOfGroping.Model.Collections;
+using RoadOfGroping.Common.Collections;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.AutoMapper
 {
