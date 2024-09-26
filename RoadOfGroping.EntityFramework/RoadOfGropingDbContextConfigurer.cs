@@ -5,7 +5,7 @@ using RoadOfGroping.EntityFramework.Extensions;
 
 namespace RoadOfGroping.EntityFramework
 {
-    public static class RoadOfGropingEntityFrameworkCoreModule
+    public static class RoadOfGropingDbContextConfigurer
     {
         public static void UsingDatabaseServices(this IServiceCollection services, IConfiguration configuration)
         {

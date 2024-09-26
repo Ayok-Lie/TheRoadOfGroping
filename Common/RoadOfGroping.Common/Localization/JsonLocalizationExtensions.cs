@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
+using RoadOfGroping.Common.Consts;
 
 namespace RoadOfGroping.Common.Localization
 {
@@ -20,16 +17,23 @@ namespace RoadOfGroping.Common.Localization
         {
             // 添加选项支持
             services.AddOptions();
+
             // 添加日志记录服务
             services.AddLogging();
-            // 配置JsonLocalizationOptions，设置资源路径的默认值
-            services.PostConfigure<JsonLocalizationOptions>(options => { options.ResourcesPath ??= "Resources"; });
-            // 尝试注册IStringLocalizer泛型接口的实现
+
+            // 配置 JsonLocalizationOptions，设置资源路径的默认值
+            services.PostConfigure<JsonLocalizationOptions>(options =>
+            {
+                options.ResourcesPath ??= "Resources"; // 如果未提供资源路径，使用默认值
+            });
+
+            // 尝试注册 IStringLocalizer 泛型接口的实现
             services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
-            // 尝试注册IStringLocalizerFactory的单例实现
+
+            // 尝试注册 IStringLocalizerFactory 的单例实现
             services.TryAddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
 
-            // 返回服务集合以供后续调用
+            // 返回服务集合以便后续调用
             return services;
         }
 
@@ -38,17 +42,33 @@ namespace RoadOfGroping.Common.Localization
         /// </summary>
         /// <param name="services">要添加服务的 <see cref="IServiceCollection"/>。</param>
         /// <param name="setupAction">
-        /// 一个 <see cref="Action{LocalizationOptions}"/> 用于配置 <see cref="JsonLocalizationOptions"/>。
+        /// 一个 <see cref="Action{JsonLocalizationOptions}"/> 用于配置 <see cref="JsonLocalizationOptions"/>。
         /// </param>
         /// <returns>返回 <see cref="IServiceCollection"/> 以便可以链式调用其他方法。</returns>
         public static IServiceCollection AddJsonLocalization(this IServiceCollection services, Action<JsonLocalizationOptions> setupAction)
         {
-            // 配置JsonLocalizationOptions
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services)); // 更改为抛出 ArgumentNullException
+            }
+
+            // 配置 JsonLocalizationOptions
             services.Configure(setupAction);
+
             // 调用无参数的重载，完成服务的添加
             AddJsonLocalization(services);
 
-            // 返回服务集合以供后续调用
+            // 注册 LocalizationSource 作为单例
+            services.AddSingleton<ILocalizationSource, LocalizationSource>((serviceProvider) =>
+            {
+                var factory = serviceProvider.GetRequiredService<IStringLocalizerFactory>();
+                return new LocalizationSource(RoadOfGropingConst.LocalizationSourceName, factory, typeof(AllLocalizationClass));
+            });
+
+            // 注册 LocalizationManager 作为单例
+            services.AddSingleton<ILocalizationManager, LocalizationManager>();
+
+            // 返回服务集合以便后续调用
             return services;
         }
     }

@@ -144,6 +144,12 @@
             不带基础参数的服务类
             </summary>
         </member>
+        <member name="M:RoadOfGroping.Application.Service.OrderAppService.GetLanguage">
+            <summary>
+            获取多语言
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:RoadOfGroping.Application.Service.RedisAppService">
             <summary>
             redis测试服务

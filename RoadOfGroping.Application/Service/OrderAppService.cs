@@ -31,6 +31,16 @@ namespace RoadOfGroping.Application.Service
             return await _orderManager.Get();
         }
 
+        /// <summary>
+        /// 获取多语言
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetLanguage()
+        {
+            //var path = Localizer["Name"].SearchedLocation;
+            return L("Name");
+        }
         [HttpPost]
         public async Task Create()
         {

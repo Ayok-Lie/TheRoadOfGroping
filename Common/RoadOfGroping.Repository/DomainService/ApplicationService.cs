@@ -2,8 +2,9 @@
 {
     public class ApplicationService : ServiceBase, IApplicationService
     {
-        public ApplicationService(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ApplicationService(IServiceProvider serviceProvider, string localizationSourceName = null) : base(serviceProvider)
         {
+            base.LocalizationSourceName = "Localization";
         }
     }
 }
