@@ -1,8 +1,3 @@
-using RoadOfGroping.Application.Service.Handler;
-using RoadOfGroping.Core.Files;
-using RoadOfGroping.Core.Files.Dtos;
-using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.Extensions;
-using RoadOfGroping.EntityFramework;
 using RoadOfGroping.Host.Extensions;
 using RoadOfGroping.Host.UnifyResult.Fiters;
 
@@ -27,7 +22,7 @@ builder.Services.AddControllers(c =>
     //c.Filters.Add<ModelValidateActionFilterAttribute>();
 });
 // 添加DbContext服务
-builder.Services.UsingDatabaseServices(config);
+//builder.Services.UsingDatabaseServices(config);
 // 添加Autofac依赖注入
 builder.Host.UserAutoFac();
 
@@ -40,11 +35,11 @@ builder.Host.ConfigureLogging((context, loggingBuilder) =>
 
 builder.Services.AddRazorPages();
 
-// 注册EventBus服务
-builder.Services.AddEventBusAndSubscribes(c =>
-{
-    c.Subscribe<TestDto, TestEventHandler>();
-    c.Subscribe<FileEventDto, FileEventHandler>();
-});
+//// 注册EventBus服务
+//builder.Services.AddEventBusAndSubscribes(c =>
+//{
+//    c.Subscribe<TestDto, TestEventHandler>();
+//    c.Subscribe<FileEventDto, FileEventHandler>();
+//});
 
 builder.AddUseCore();

@@ -9,30 +9,28 @@ using Hangfire.MySql;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using RoadOfGroping.Application.Service.Mappers;
+using RoadOfGroping.Common.Enums;
 using RoadOfGroping.Common.Extensions;
 using RoadOfGroping.Common.Helper;
-using RoadOfGroping.Common.JWTHelpers;
 using RoadOfGroping.Common.LazyModule;
 using RoadOfGroping.Common.Localization;
+using RoadOfGroping.Common.Options;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.AutoMapper;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.ErrorHandler;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Minio;
-using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission;
-using RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.RedisModule;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
 using RoadOfGroping.EntityFramework;
-using RoadOfGroping.EntityFramework.Extensions;
 using RoadOfGroping.Host.UnifyResult.Fiters;
+using RoadOfGroping.Model.Extensions;
 using RoadOfGroping.Repository.Auditing;
 using RoadOfGroping.Repository.Dappers;
 using RoadOfGroping.Repository.DynamicWebAPI;
@@ -76,7 +74,7 @@ namespace RoadOfGroping.Host.Extensions
             builder.Services.AddUnitOfWork();
             builder.Services.AddJwtConfig();
             builder.Services.AddJosnLocalization();
-            builder.Services.AddAutoMapper();
+            //builder.Services.AddAutoMapper();
             builder.Services.UseRedis();
             builder.Services.AddSignalR();
             builder.Services.AddSession();
@@ -125,9 +123,10 @@ namespace RoadOfGroping.Host.Extensions
             app.UseHangfireDashboard();
             app.UseDeveloperExceptionPage();
 
+            app.InitApplication();
+
             app.Run();
         }
-
 
         /// <summary>
         /// 多语言服务
@@ -223,7 +222,7 @@ namespace RoadOfGroping.Host.Extensions
                 new SqlConnection(configuration.GetConnectionString("Default")));
             services.AddScoped(typeof(IDapperManager<>), typeof(DapperManager<>));
             // 添加应用程序模块
-            //builder.Services.AddApplication<RoadOfGropingHostModule>();
+            services.AddApplication<RoadOfGropingHostModule>();
 
             // 注册仓储服务
             services.UseRepository<RoadOfGropingDbContext>();
@@ -371,9 +370,9 @@ namespace RoadOfGroping.Host.Extensions
         /// <returns></returns>
         public static void AddJwtConfig(this IServiceCollection services)
         {
-            services.AddTransient<DataSeeds, DataSeeds>();
-            services.AddTransient<IAuthorizationHandler, PermissionAuthorizationHandler>();
-            services.AddTransient<IAuthorizationPolicyProvider, AppAuthorizationPolicyProvider>();
+            //services.AddTransient<DataSeeds, DataSeeds>();
+            //services.AddTransient<IAuthorizationHandler, PermissionAuthorizationHandler>();
+            //services.AddTransient<IAuthorizationPolicyProvider, AppAuthorizationPolicyProvider>();
             //services.AddTransient<IAuthorizationHandler, PermissionUrlHandler>();
 
             var rsaSecurityPrivateKeyString = File.ReadAllText(Path.Combine(Env.ContentRootPath, "Rsa", "key.private.json"));

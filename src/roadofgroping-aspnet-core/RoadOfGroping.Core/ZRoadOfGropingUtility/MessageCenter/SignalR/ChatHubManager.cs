@@ -29,7 +29,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR
 
         public async Task SendOtherUser(MessageInput input)
         {
-            var connectionClients = await _cacheManager.LRangeAsync<ConnectionClient>(CacheConst.SignlRKey, 0, -1);
+            var connectionClients = await _cacheManager.LRangeAsync<ConnectionClient>(RoadOfGropingConst.SignlRKey, 0, -1);
             var hubClient = connectionClients.FirstOrDefault(p => p.GroupName == (input.UserId));
             if (hubClient != null)
             {
@@ -44,7 +44,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR
         /// <returns></returns>
         public async Task SendUser(MessageInput input)
         {
-            var connectionClients = await _cacheManager.LRangeAsync<ConnectionClient>(CacheConst.SignlRKey, 0, -1);
+            var connectionClients = await _cacheManager.LRangeAsync<ConnectionClient>(RoadOfGropingConst.SignlRKey, 0, -1);
             var hubClients = connectionClients.Where(p => p.GroupName == input.UserId);
             if (!hubClients.Any()) return;
             var connectionIds = hubClients.Select(c => c.ConnectionId).ToList();
@@ -53,7 +53,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR
 
         public async Task SendUsers(MessageInput input)
         {
-            var connectionClients = await _cacheManager.LRangeAsync<ConnectionClient>(CacheConst.SignlRKey, 0, -1);
+            var connectionClients = await _cacheManager.LRangeAsync<ConnectionClient>(RoadOfGropingConst.SignlRKey, 0, -1);
             var hubClients = connectionClients.Where(p => input.UserIds.Contains(p.GroupName));
             if (!hubClients.Any()) return;
             var connectionIds = hubClients.Select(c => c.ConnectionId).ToList();

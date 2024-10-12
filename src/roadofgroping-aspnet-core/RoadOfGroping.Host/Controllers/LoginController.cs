@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using RoadOfGroping.Application.Service.Dtos;
+using RoadOfGroping.Application.AccountService;
 using RoadOfGroping.Common.Attributes;
-using RoadOfGroping.Core.Users;
 using RoadOfGroping.Core.Users.Dtos;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token.Dtos;
@@ -16,31 +15,15 @@ namespace RoadOfGroping.Host.Controllers
     [Route("api/[controller]/[action]")]
     public class LoginController : ControllerBase
     {
-        private TokenHelper _tokenHelper;
         private ILogger<LoginController> _logger;
-        private IUserManager _userManager;
+        private IAccountAppService _userManager;
         private IAuthTokenService authTokenService;
 
-        public LoginController(TokenHelper tokenHelper, ILogger<LoginController> logger, IUserManager userManager, IAuthTokenService authTokenService)
+        public LoginController(ILogger<LoginController> logger, IAccountAppService userManager, IAuthTokenService authTokenService)
         {
-            _tokenHelper = tokenHelper;
             _logger = logger;
             _userManager = userManager;
             this.authTokenService = authTokenService;
-        }
-
-        [HttpGet]
-        public async Task<AuthTokenDto> LoginTest(string test)
-        {
-            var aaaa = test;
-            var auth = new UserAuthDto()
-            {
-                Id = Guid.Parse("45D6422E-0EBB-45DB-DC2A-08DC86A36122"),
-                UserName = "admin",
-                Roles = new List<string> { "Admin" }
-            };
-
-            return await authTokenService.CreateAuthTokenAsync(auth);
         }
 
         /// <summary>
@@ -52,27 +35,7 @@ namespace RoadOfGroping.Host.Controllers
         [HttpPost]
         public async Task<UserLoginDto> Login(LoginDto user)
         {
-            var userinfo = await _userManager.Login(user);
-            if (userinfo == null)
-            {
-                throw new Exception("账号密码错误");
-            }
-            var auth = new UserAuthDto()
-            {
-                Id = userinfo.Id,
-                UserName = userinfo.UserName,
-                Roles = userinfo.Roles,
-                IsApiLogin = user.IsApiLogin
-            };
-            _logger.LogInformation("登录成功");
-
-            var tokenInfo = await authTokenService.CreateAuthTokenAsync(auth);
-            return new UserLoginDto()
-            {
-                AccessToken = tokenInfo.AccessToken,
-                RefreshToken = tokenInfo.RefreshToken,
-                Expires = DateTime.UtcNow.AddMinutes(30)
-            };
+            return await _userManager.Login(user);
         }
 
         /// <summary>
@@ -96,7 +59,7 @@ namespace RoadOfGroping.Host.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<string> AbandonedLogin(LoginDto user)
+        public async Task AbandonedLogin(LoginDto user)
         {
             var userinfo = await _userManager.Login(user);
             if (userinfo == null)
@@ -115,7 +78,6 @@ namespace RoadOfGroping.Host.Controllers
                         .ToString()
                 ),
             };
-            var token = _tokenHelper.CreateToken(claims);
 
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
             identity.AddClaims(claims);
@@ -125,7 +87,6 @@ namespace RoadOfGroping.Host.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             _logger.LogInformation("登录成功");
-            return token;
         }
 
         [HttpPost]

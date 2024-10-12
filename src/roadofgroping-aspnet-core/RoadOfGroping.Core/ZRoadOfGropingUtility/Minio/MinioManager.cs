@@ -1,14 +1,14 @@
-﻿using Minio;
+﻿using System.Reactive.Linq;
+using System.Security.Cryptography;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Minio;
 using Minio.DataModel;
 using Minio.DataModel.Args;
 using Minio.DataModel.Encryption;
 using Minio.DataModel.Response;
 using Minio.DataModel.Result;
 using Minio.Exceptions;
-using System.Reactive.Linq;
-using System.Security.Cryptography;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Minio
 {

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Nito.AsyncEx;
+using RoadOfGroping.Common.DependencyInjection;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations
 {
-    public class AppAuthorizationPolicyProvider : IAuthorizationPolicyProvider
+    public class AppAuthorizationPolicyProvider : IAuthorizationPolicyProvider, ITransientDependency
     {
         private static readonly AsyncLock _mutex = new();
         private readonly AuthorizationOptions _authorizationOptions;

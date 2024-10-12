@@ -5,7 +5,7 @@ namespace RoadOfGroping.Application.Service.Dtos
 {
     public class UserDto
     {
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
 
         /// <summary>
         /// 用户名
@@ -30,5 +30,10 @@ namespace RoadOfGroping.Application.Service.Dtos
         public string UserPhone { get; set; }
 
         public IFormFile File { get; set; }
+
+        /// <summary>
+        /// 角色
+        /// </summary>
+        public List<string>? Roles { get; set; }
     }
 }

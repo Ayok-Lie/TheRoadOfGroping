@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using RoadOfGroping.Core.AppSettings.Entitys;
 using RoadOfGroping.Core.Files.Entitys;
 using RoadOfGroping.Core.OrderTest.Entity;
+using RoadOfGroping.Core.Permissions.Entity;
+using RoadOfGroping.Core.Roles.Entity;
 using RoadOfGroping.Core.Users.Entity;
 using RoadOfGroping.EntityFramework.Extensions;
 using RoadOfGroping.Repository.Auditing;
@@ -32,11 +34,19 @@ namespace RoadOfGroping.EntityFramework
         /// <summary>
         /// 用户实体集。
         /// </summary>
-        public virtual DbSet<RoadOfGropingUsers> RoadOfGropingUsers { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         public virtual DbSet<FileInfos> FileInfos { get; set; }
 
         public virtual DbSet<AppSetting> AppSetting { get; set; }
+
+        public virtual DbSet<UserRoles> UserRoles { get; set; }
+
+        public virtual DbSet<Roles> Roles { get; set; }
+
+        public virtual DbSet<PermissionOriginal> PermissionOriginal { get; set; }
+
+        public virtual DbSet<PermissionRoleRelation> PermissionRoleRelation { get; set; }
 
         /// <summary>
         /// 配置模型创建。

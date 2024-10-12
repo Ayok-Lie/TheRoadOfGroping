@@ -1,6 +1,5 @@
-﻿using System.Reflection.Emit;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using RoadOfGroping.Core.Roles.Entity;
 using RoadOfGroping.Core.Users.Entity;
 
 namespace RoadOfGroping.EntityFramework.Extensions
@@ -9,22 +8,27 @@ namespace RoadOfGroping.EntityFramework.Extensions
     {
         public static ModelBuilder ConfigureModel(this ModelBuilder builder)
         {
-            builder.Entity<RoadOfGropingUsers>().HasData(
-                new RoadOfGropingUsers
-                {
-                    Id = Guid.Parse("45D6422E-0EBB-45DB-DC2A-08DC86A36122"),
-                    UserName = "admin",
-                    PasswordHash = "bb123456",
-                    UserPhone = "8888888888",
-                    UserEmail = "admin@localhost",
-                    IsDeleted = false,
-                    Roles = new List<string> { "Admin" }
-                });
+            #region 用户
 
-            builder.Entity<RoadOfGropingUsers>(c =>
+            builder.Entity<Users>().HasMany<UserRoles>().WithOne().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+
+            #endregion 用户
+
+            #region 角色
+
+            builder.Entity<Roles>().HasMany<UserRoles>().WithOne().HasForeignKey(x => x.RoleId).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Roles>(c =>
             {
-                c.Property(u => u.Roles).HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<List<string>>(v));
+                c.HasIndex(o => o.RoleName).IsUnique().HasFilter("IsDeleted = 0");
+                c.HasIndex(o => o.RoleCode).IsUnique().HasFilter("IsDeleted = 0");
             });
+
+            #endregion 角色
+
+            //builder.Entity<Users>(c =>
+            //{
+            //    c.Property(u => u.Roles).HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<List<string>>(v));
+            //});
 
             return builder;
         }

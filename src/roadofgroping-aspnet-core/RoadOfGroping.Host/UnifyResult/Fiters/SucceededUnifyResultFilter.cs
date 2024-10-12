@@ -86,7 +86,7 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
             {
                 return;
             }
-            IUnifyResultProvider unifyResult = context.HttpContext.RequestServices.GetRequiredService<IUnifyResultProvider>();
+            IRESTfulResultProvider unifyResult = context.HttpContext.RequestServices.GetRequiredService<IRESTfulResultProvider>();
 
             // 处理 BadRequestObjectResult 类型规范化处理
             if (actionExecutedContext.Result is BadRequestObjectResult badRequestObjectResult)
@@ -224,7 +224,7 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
         /// <param name="context"></param>
         /// <param name="unifyResult"></param>
         /// <returns>返回 true 跳过处理，否则进行规范化处理</returns>
-        internal static bool CheckStatusCodeNonUnify(HttpContext context, out IUnifyResultProvider unifyResult)
+        internal static bool CheckStatusCodeNonUnify(HttpContext context, out IRESTfulResultProvider unifyResult)
         {
             // 获取终点路由特性
             var endpointFeature = context.Features.Get<IEndpointFeature>();
@@ -239,7 +239,7 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
             if (isSkip == true) unifyResult = null;
             else
             {
-                unifyResult = context.RequestServices.GetRequiredService<IUnifyResultProvider>();
+                unifyResult = context.RequestServices.GetRequiredService<IRESTfulResultProvider>();
             }
 
             return unifyResult == null || isSkip;

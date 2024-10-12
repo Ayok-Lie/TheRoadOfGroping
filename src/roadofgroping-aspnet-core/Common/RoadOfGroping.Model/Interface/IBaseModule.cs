@@ -1,11 +1,7 @@
 ﻿namespace RoadOfGroping.Model.Interface
 {
-    public interface IBaseModule : IPreConfigureServices
+    public interface IBaseModule : IPreConfigureServices, IInitApplication, ILaterInitApplication
     {
         void ConfigerService(ServiceConfigerContext context);
-
-        void InitApplication(InitApplicationContext context);
-
-        void LaterInitApplication(InitApplicationContext context);
     }
 }

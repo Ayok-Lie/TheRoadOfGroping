@@ -1,10 +1,7 @@
-﻿using System.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RoadOfGroping.Common.LazyModule;
 using RoadOfGroping.Core.OrderTest;
 using RoadOfGroping.Core.OrderTest.Entity;
-using RoadOfGroping.Core.Users;
 using RoadOfGroping.Repository.Dappers;
 using RoadOfGroping.Repository.DomainService;
 
@@ -22,9 +19,9 @@ namespace RoadOfGroping.Application.Service
 
         private readonly IOrderManager orderManager1;
 
-        public OrderAppService(IServiceProvider serviceProvider, 
-            IOrderManager orderManager, 
-            ILogger<OrderAppService> logger, 
+        public OrderAppService(IServiceProvider serviceProvider,
+            IOrderManager orderManager,
+            ILogger<OrderAppService> logger,
             IDapperManager<Order> dapperManager) : base(serviceProvider)
         {
             _orderManager = orderManager;
@@ -48,16 +45,15 @@ namespace RoadOfGroping.Application.Service
             //var path = Localizer["Name"].SearchedLocation;
             return L("Name");
         }
+
         [HttpPost]
         public async Task Create()
         {
             await _orderManager.Create();
         }
 
-
         public async Task ExampleUsage()
         {
-
             // 2. 异步获取所有用户
             var allUsers = await dapperManager.GetAllAsync();
             Console.WriteLine("All users retrieved:");
@@ -105,6 +101,5 @@ namespace RoadOfGroping.Application.Service
             var foundUser = await dapperManager.FindAsync(findQuery, new { Name = "张三" });
             Console.WriteLine(foundUser != null ? $"Found user: {foundUser.Name}" : "User not found.");
         }
-
     }
 }

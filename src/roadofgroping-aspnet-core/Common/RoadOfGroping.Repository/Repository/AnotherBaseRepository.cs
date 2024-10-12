@@ -111,13 +111,12 @@ namespace RoadOfGroping.Repository.Repository
         public TEntity Insert(TEntity entity)
         {
             DbSet.Add(entity);
-            DbContext.SaveChanges();
             return entity;
         }
 
-        public virtual Task<TEntity> InsertAsync(TEntity entity)
+        public virtual async Task<TEntity> InsertAsync(TEntity entity)
         {
-            return Task.FromResult(Insert(entity));
+            return (await DbSet.AddAsync(entity)).Entity;
         }
 
         public virtual TPrimaryKey InsertAndGetId(TEntity entity)

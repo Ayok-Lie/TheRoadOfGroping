@@ -9,7 +9,7 @@ namespace RoadOfGroping.Application.Service.Mappers
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<RoadOfGropingUsers, UserDto>().ReverseMap();
+            configuration.CreateMap<Users, UserDto>().ReverseMap();
             configuration.CreateMap<FileInfos, FileInfoOutput>().ReverseMap();
         }
     }

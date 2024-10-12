@@ -1,16 +1,13 @@
-﻿using System.ComponentModel.Design;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using RoadOfGroping.Common.Dependency;
 using RoadOfGroping.Common.DependencyInjection;
 using RoadOfGroping.Core.Interceptors;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.ResultResponse;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
-using TencentCloud.Tsf.V20180326.Models;
 using Module = Autofac.Module;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
@@ -37,44 +34,41 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Autofac
             container.RegisterType<AutoFacAop>();
 
             // 遍历所有程序集
-            foreach (var assembly in assemblies)
-            {
-                // 注册程序集中的所有类型
-                //container.RegisterAssemblyTypes(assembly)
-                //    //.Where(t => t.GetCustomAttribute<AutoFacAop>() != null) 判断是否含有特性
-                //    .Where(b => !b.IsAbstract && b.IsClass && !b.IsGenericType) // 过滤出非抽象类
-                //    .PublicOnly() // 只注册公共类型
-                //    .AsImplementedInterfaces(); // 注册为它们实现的接口
+            //foreach (var assembly in assemblies)
+            //{
+            //    // 注册程序集中的所有类型
+            //    //container.RegisterAssemblyTypes(assembly)
+            //    //    //.Where(t => t.GetCustomAttribute<AutoFacAop>() != null) 判断是否含有特性
+            //    //    .Where(b => !b.IsAbstract && b.IsClass && !b.IsGenericType) // 过滤出非抽象类
+            //    //    .PublicOnly() // 只注册公共类型
+            //    //    .AsImplementedInterfaces(); // 注册为它们实现的接口
 
-                foreach (var type in assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && !t.IsGenericType))
-                {
-                    // 获取类型的接口
-                    var interfaces = type.GetInterfaces();
+            //    foreach (var type in assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && !t.IsGenericType))
+            //    {
+            //        // 获取类型的接口
+            //        var interfaces = type.GetInterfaces();
 
-                    // 首先判断实现的生命周期并注册
-                    if (type.IsAssignableTo<IScopedDependency>())
-                    {
-                        // 对于作用域依赖，注册实现类和接口
-                        container.RegisterType(type).AsSelf().As(interfaces).InstancePerLifetimeScope();
-                    }
-                    else if (type.IsAssignableTo<ISingletonDependency>())
-                    {
-                        // 对于单例依赖，注册实现类和接口
-                        container.RegisterType(type).AsSelf().As(interfaces).SingleInstance();
-                    }
-                    else if (type.IsAssignableTo<ITransientDependency>())
-                    {
-                        // 对于瞬态依赖，注册实现类和接口
-                        container.RegisterType(type).AsSelf().As(interfaces).InstancePerDependency();
-                    }
-                }
-            }
+            //        // 首先判断实现的生命周期并注册
+            //        if (type.IsAssignableTo<IScopedDependency>())
+            //        {
+            //            // 对于作用域依赖，注册实现类和接口
+            //            container.RegisterType(type).AsSelf().As(interfaces).InstancePerLifetimeScope();
+            //        }
+            //        else if (type.IsAssignableTo<ISingletonDependency>())
+            //        {
+            //            // 对于单例依赖，注册实现类和接口
+            //            container.RegisterType(type).AsSelf().As(interfaces).SingleInstance();
+            //        }
+            //        else if (type.IsAssignableTo<ITransientDependency>())
+            //        {
+            //            // 对于瞬态依赖，注册实现类和接口
+            //            container.RegisterType(type).AsSelf().As(interfaces).InstancePerDependency();
+            //        }
+            //    }
+            //}
 
             // 用于Jwt的各种操作
             container.RegisterType<JwtSecurityTokenHandler>().InstancePerLifetimeScope();
-
-            // 支持泛型存入Jwt 便于扩展
-            container.RegisterType<TokenHelper>().InstancePerLifetimeScope();
 
             // 注册 FilterActionResultWrapFactory 并将其注册为 IActionResultWrapFactory 的实现
             container.RegisterType<FilterActionResultWrapFactory>().As<IActionResultWrapFactory>().InstancePerLifetimeScope();

@@ -1,0 +1,30 @@
+﻿[
+  {
+    "DisplayName": "查询",
+    "Code": "App.User.Query",
+    "ParentCode": null,
+    "IsSystem": true,
+    "Sort": 0
+  },
+  {
+    "DisplayName": "新增",
+    "Code": "App.User.Create",
+    "ParentCode": null,
+    "IsSystem": true,
+    "Sort": 1
+  },
+  {
+    "DisplayName": "修改",
+    "Code": "App.User.Update",
+    "ParentCode": null,
+    "IsSystem": true,
+    "Sort": 2
+  },
+  {
+    "DisplayName": "删除",
+    "Code": "App.User.Delete",
+    "ParentCode": null,
+    "IsSystem": true,
+    "Sort": 3
+  }
+]

@@ -19,10 +19,5 @@
         /// 推送渠道
         /// </summary>
         public PushChannelType PushChannelType { get; set; }
-
-        /// <summary>
-        /// 租户id
-        /// </summary>
-        public long TenantId { get; set; }
     }
 }

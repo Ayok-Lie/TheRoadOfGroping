@@ -13,12 +13,16 @@ namespace RoadOfGroping.Common.Localization
     {
         // 用于缓存资源的并发字典
         private readonly ConcurrentDictionary<string, Dictionary<string, string>> _resourcesCache = new();
+
         // 资源文件路径
         private readonly string _resourcesPath;
+
         // 资源名称
         private readonly string _resourceName;
+
         // 资源路径类型
         private readonly ResourcesPathType _resourcesPathType;
+
         // 日志记录器
         private readonly ILogger _logger;
 

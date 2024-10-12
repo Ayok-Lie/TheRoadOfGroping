@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RoadOfGroping.Common\RoadOfGroping.Common.csproj" />
+    <ProjectReference Include="..\RoadOfGroping.Model\RoadOfGroping.Model.csproj" />
   </ItemGroup>
 
 </Project>

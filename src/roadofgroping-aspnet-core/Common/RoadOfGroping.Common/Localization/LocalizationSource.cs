@@ -1,9 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
 using Microsoft.Extensions.Localization;
-using RoadOfGroping.Common.Extensions;
-using System.Collections.Generic;
-using System;
 
 namespace RoadOfGroping.Common.Localization
 {

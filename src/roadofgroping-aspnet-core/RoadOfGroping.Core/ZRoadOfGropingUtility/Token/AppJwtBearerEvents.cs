@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using RoadOfGroping.Common.Extensions;
-using RoadOfGroping.Common.JWTHelpers;
+using RoadOfGroping.Common.Options;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token.Dtos;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token

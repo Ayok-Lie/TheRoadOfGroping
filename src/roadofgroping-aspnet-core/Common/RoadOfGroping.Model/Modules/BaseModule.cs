@@ -48,12 +48,22 @@ namespace RoadOfGroping.Model.Modules
         {
         }
 
+        public virtual async Task InitApplicationAsync(InitApplicationContext context)
+        {
+            await Task.CompletedTask;
+        }
+
         /// <summary>
         ///
         /// </summary>
         /// <param name="context"></param>
         public virtual void LaterInitApplication(InitApplicationContext context)
         {
+        }
+
+        public virtual async Task LaterInitApplicationAsync(InitApplicationContext context)
+        {
+            await Task.CompletedTask;
         }
 
         public static bool IsModule(Type type)

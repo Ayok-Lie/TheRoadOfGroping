@@ -82,7 +82,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR
                 GroupName = groupName,
                 ConnectionId = Context.ConnectionId
             });
-            var connectionClients = await _cacheManager.LRangeAsync<ConnectionClient>(CacheConst.SignlRKey, 0, -1);
+            var connectionClients = await _cacheManager.LRangeAsync<ConnectionClient>(RoadOfGropingConst.SignlRKey, 0, -1);
             var clients = connectionClients.Where(n => n.GroupName == groupName).ToList();
             if (clients.Any())
             {
@@ -91,8 +91,8 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR
                     if (!IsConnectionActive(client.ConnectionId))
                     {
                         int index = Array.IndexOf(connectionClients, client);
-                        await _cacheManager.LRemAsync(CacheConst.SignlRKey, index, client);
-                        await _cacheManager.LPushAsync(CacheConst.SignlRKey, new ConnectionClient()
+                        await _cacheManager.LRemAsync(RoadOfGropingConst.SignlRKey, index, client);
+                        await _cacheManager.LPushAsync(RoadOfGropingConst.SignlRKey, new ConnectionClient()
                         {
                             GroupName = groupName,
                             ConnectionId = Context.ConnectionId
@@ -102,7 +102,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR
             }
             else
             {
-                await _cacheManager.LPushAsync(CacheConst.SignlRKey, new ConnectionClient()
+                await _cacheManager.LPushAsync(RoadOfGropingConst.SignlRKey, new ConnectionClient()
                 {
                     GroupName = groupName,
                     ConnectionId = Context.ConnectionId
@@ -113,11 +113,11 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.SignalR
         public async Task<string> RemoveCacheClient()
         {
             HubClients.ConnectionClient.Remove(HubClients.ConnectionClient.FirstOrDefault(c => c.ConnectionId == Context.ConnectionId));
-            var connectionClients = await _cacheManager.LRangeAsync<ConnectionClient>(CacheConst.SignlRKey, 0, -1);
+            var connectionClients = await _cacheManager.LRangeAsync<ConnectionClient>(RoadOfGropingConst.SignlRKey, 0, -1);
             var client = connectionClients.FirstOrDefault(n => n.ConnectionId == Context.ConnectionId);
             if (client != null)
             {
-                await _cacheManager.LRemAsync(CacheConst.SignlRKey, 0, client);
+                await _cacheManager.LRemAsync(RoadOfGropingConst.SignlRKey, 0, client);
                 _logger.LogWarning($"remove :{client.ConnectionId}");
                 return client.GroupName;
             }

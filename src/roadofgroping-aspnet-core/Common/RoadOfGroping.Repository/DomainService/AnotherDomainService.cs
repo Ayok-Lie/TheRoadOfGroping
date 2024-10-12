@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RoadOfGroping.Common.DependencyInjection;
+using RoadOfGroping.Common.Extensions;
 using RoadOfGroping.Repository.Entities;
 using RoadOfGroping.Repository.Repository;
 
 namespace RoadOfGroping.Repository.DomainService
 {
-    public abstract class AnotherDomainService<TEntity, TPrimaryKey> : ServiceBase,IAnotherDomainService<TEntity, TPrimaryKey>, ITransientDependency where TEntity : class, IEntity<TPrimaryKey>
+    public abstract class AnotherDomainService<TEntity, TPrimaryKey> : ServiceBase, IAnotherDomainService<TEntity, TPrimaryKey>, ITransientDependency where TEntity : class, IEntity<TPrimaryKey>
     {
-
         public virtual IServiceProvider ServiceProvider { get; private set; }
         public IAnotherBaseRepository<TEntity, TPrimaryKey> Repo { get; }
         public IQueryable<TEntity> Query => Repo.GetAll();
@@ -86,14 +87,14 @@ namespace RoadOfGroping.Repository.DomainService
                 return;
             }
 
-            //PropertyInfo[] properties = obj.GetType().GetProperties();
-            //foreach (PropertyInfo propertyInfo in properties)
-            //{
-            //    if (!propertyInfo.PropertyType.IsStructs())
-            //    {
-            //        propertyInfo.SetValue(obj, null);
-            //    }
-            //}
+            PropertyInfo[] properties = obj.GetType().GetProperties();
+            foreach (PropertyInfo propertyInfo in properties)
+            {
+                if (!propertyInfo.PropertyType.IsStructs())
+                {
+                    propertyInfo.SetValue(obj, null);
+                }
+            }
         }
     }
 }

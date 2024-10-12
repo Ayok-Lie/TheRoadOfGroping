@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Reflection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -14,8 +11,10 @@ namespace RoadOfGroping.Common.Localization
     {
         // 用于缓存已创建的本地化器
         private readonly ConcurrentDictionary<string, JsonStringLocalizer> _localizerCache = new();
+
         // 日志记录器
         private readonly ILogger _logger;
+
         // 本地化选项
         private readonly JsonLocalizationOptions _localizationOptions;
 

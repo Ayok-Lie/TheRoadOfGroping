@@ -1,6 +1,8 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
+using RoadOfGroping.Common.DependencyInjection;
+using RoadOfGroping.Common.Helper;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.Email
 {
@@ -15,7 +17,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.Email
     /// <summary>
     /// 邮件通知服务
     /// </summary>
-    public class EmailPushManager : IEmailPushManager
+    public class EmailPushManager : IEmailPushManager, ITransientDependency
     {
         private readonly ILogger<EmailPushManager> _logger;
 
@@ -30,8 +32,9 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.Email
         /// <param name="data">邮件通知内容</param>
         public async Task<string> SendMessage(EmailMessagePushData data)
         {
+            var emailSettings = AppsettingHelper.AppOption<EmailSettings>("EmailSettings");
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(data.FromName, data.UserName));
+            message.From.Add(new MailboxAddress(emailSettings.FromName, emailSettings.UserName));
             message.To.Add(new MailboxAddress(data.ToName, data.ToEmailAddress));
             message.Subject = data.Subject;
 
@@ -44,10 +47,10 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.MessageCenter.Email
             {
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(data.Host, data.Port, false);
+                    client.Connect(emailSettings.Host, emailSettings.Port, false);
 
                     // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(data.UserName, data.Password);
+                    client.Authenticate(emailSettings.UserName, emailSettings.Password);
 
                     var result = await client.SendAsync(message);
                     client.Disconnect(true);

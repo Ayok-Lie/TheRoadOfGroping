@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using RoadOfGroping.Common.DependencyInjection;
 
 namespace RoadOfGroping.Host.UnifyResult.Providers
 {
     /// <summary>
     /// RESTful 风格返回值
     /// </summary>
-    public class RESTfulResultProvider : IUnifyResultProvider, ITransientDependency
+    public class RESTfulResultProvider : IRESTfulResultProvider
     {
         /// <summary>
         /// 设置响应状态码

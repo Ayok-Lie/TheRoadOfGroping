@@ -4,6 +4,68 @@
         <name>RoadOfGroping.Application</name>
     </assembly>
     <members>
+        <member name="M:RoadOfGroping.Application.AccountService.AccountAppService.Login(RoadOfGroping.Core.Users.Dtos.LoginDto)">
+            <summary>
+            登录功能
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:RoadOfGroping.Application.AccountService.AccountAppService.PasswordReset(RoadOfGroping.Application.AccountService.Dtos.PasswordResetInput)">
+            <summary>
+            密码重置
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:RoadOfGroping.Application.AccountService.AccountAppService.ChangePassword(RoadOfGroping.Application.AccountService.Dtos.ChangePasswordInput)">
+            <summary>
+            修改密码
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Application.AccountService.AccountAppService.SendEmailAddressConfirmCode(RoadOfGroping.Application.AccountService.Dtos.SendPasswordResetCodeInput)">
+            <summary>
+            发送邮箱验证码
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+            <exception cref="!:UserFriendlyException"></exception>
+        </member>
+        <member name="P:RoadOfGroping.Application.AccountService.Dtos.PasswordResetInput.UserName">
+            <summary>
+            用户名称
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.AccountService.Dtos.PasswordResetInput.EmailAddress">
+            <summary>
+            邮箱地址
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.AccountService.Dtos.SendPasswordResetCodeInput.EmailAddress">
+            <summary>
+            邮箱地址
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.AccountService.Dtos.SendPasswordResetCodeInput.link">
+            <summary>
+            链接
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.AccountService.Dtos.SendPasswordResetCodeInput.VerificationCode">
+            <summary>
+            验证码
+            </summary>
+        </member>
+        <member name="M:RoadOfGroping.Application.RoadOfGropingApplicationModule.ConfigerService(RoadOfGroping.Model.ServiceConfigerContext)">
+            <summary>
+            服务注入
+            </summary>
+            <param name="context"></param>
+        </member>
         <member name="P:RoadOfGroping.Application.Service.Dtos.FileInfoOutput.FileDisplayName">
             <summary>
             文件显示名称，例如文件名为  open.jpg，显示名称为： open_编码规则
@@ -89,6 +151,11 @@
             手机号
             </summary>
         </member>
+        <member name="P:RoadOfGroping.Application.Service.Dtos.UserDto.Roles">
+            <summary>
+            角色
+            </summary>
+        </member>
         <member name="T:RoadOfGroping.Application.Service.EventBusAppService">
             <summary>
             EventBus测试服务
@@ -163,12 +230,37 @@
             <param name="val"></param>
             <returns></returns>
         </member>
-        <member name="T:RoadOfGroping.Application.Service.UserAppService">
+        <member name="P:RoadOfGroping.Application.UserService.Dtos.CreateOrUpdateUserInput.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.UserService.Dtos.CreateOrUpdateUserInput.Password">
+            <summary>
+            密码哈希值
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.UserService.Dtos.CreateOrUpdateUserInput.UserEmail">
+            <summary>
+            邮箱
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.UserService.Dtos.CreateOrUpdateUserInput.UserPhone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:RoadOfGroping.Application.UserService.Dtos.CreateOrUpdateUserInput.Roles">
+            <summary>
+            角色
+            </summary>
+        </member>
+        <member name="T:RoadOfGroping.Application.UserService.UserAppService">
             <summary>
             用户应用服务
             </summary>
         </member>
-        <member name="M:RoadOfGroping.Application.Service.UserAppService.#ctor(System.IServiceProvider,RoadOfGroping.Core.Users.IUserManager,RoadOfGroping.Core.ZRoadOfGropingUtility.Minio.IMinioService,RoadOfGroping.Core.Files.IFileInfoManager)">
+        <member name="M:RoadOfGroping.Application.UserService.UserAppService.#ctor(System.IServiceProvider,RoadOfGroping.Core.Users.DomainService.IUserManager,RoadOfGroping.Core.ZRoadOfGropingUtility.Minio.IMinioService,RoadOfGroping.Core.Files.IFileInfoManager,Yitter.IdGenerator.IIdGenerator,RoadOfGroping.Repository.Repository.IBaseRepository{RoadOfGroping.Core.Users.Entity.UserRoles})">
             <summary>
             用户应用服务
             </summary>
@@ -177,13 +269,13 @@
             <param name="minioService"></param>
             <param name="fileInfoManager"></param>
         </member>
-        <member name="M:RoadOfGroping.Application.Service.UserAppService.GetUserPageList">
+        <member name="M:RoadOfGroping.Application.UserService.UserAppService.GetUserPageList">
             <summary>
             获取用户列表
             </summary>
             <returns></returns>
         </member>
-        <member name="M:RoadOfGroping.Application.Service.UserAppService.GetUserById(System.Guid)">
+        <member name="M:RoadOfGroping.Application.UserService.UserAppService.GetUserById(System.String)">
             <summary>
             获取用户详情
             </summary>
@@ -191,7 +283,7 @@
             <returns></returns>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
-        <member name="M:RoadOfGroping.Application.Service.UserAppService.CreateOrUpdateUser(RoadOfGroping.Application.Service.Dtos.UserDto)">
+        <member name="M:RoadOfGroping.Application.UserService.UserAppService.CreateOrUpdateUser(RoadOfGroping.Application.Service.Dtos.UserDto)">
             <summary>
             创建或更新用户
             </summary>
@@ -199,7 +291,21 @@
             <returns></returns>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
-        <member name="M:RoadOfGroping.Application.Service.UserAppService.DeleteUser(System.Guid)">
+        <member name="M:RoadOfGroping.Application.UserService.UserAppService.CreateUser(RoadOfGroping.Application.UserService.Dtos.CreateOrUpdateUserInput)">
+            <summary>
+            添加系统用户
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Application.UserService.UserAppService.UpdateUser(RoadOfGroping.Application.UserService.Dtos.CreateOrUpdateUserInput)">
+            <summary>
+            更新系统用户信息
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Application.UserService.UserAppService.DeleteUser(System.String)">
             <summary>
             删除用户
             </summary>

@@ -7,7 +7,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
-using RoadOfGroping.Common.JWTHelpers;
+using RoadOfGroping.Common.Extensions;
+using RoadOfGroping.Common.Options;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.RedisModule;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token.Dtos;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
@@ -59,7 +60,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token
             if (user.IsApiLogin)
             {
                 // 将访问令牌放入Cookie中
-                _httpContextAccessor.HttpContext.Response.Cookies.Append(HeaderNames.Authorization, result.AccessToken, new CookieOptions
+                _httpContextAccessor.HttpContext?.Response.Cookies.Append(HeaderNames.Authorization, result.AccessToken, new CookieOptions
                 {
                     IsEssential = true,
                     MaxAge = TimeSpan.FromDays(_jwtOptions.RefreshTokenExpiresDays),
@@ -71,7 +72,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token
         }
 
         // 创建刷新令牌的方法
-        private async Task<(string refreshTokenId, string refreshToken)> CreateRefreshTokenAsync(Guid userId)
+        private async Task<(string refreshTokenId, string refreshToken)> CreateRefreshTokenAsync(string userId)
         {
             var tokenId = Guid.NewGuid().ToString("N");
 
@@ -139,7 +140,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token
             }
 
             var identity = principal.Identities.First();
-            var userId = Guid.Parse(identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            var userId = identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var role = identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
             var refreshTokenId = identity.Claims.FirstOrDefault(c => c.Type == RefreshTokenIdClaimType).Value;
             var refreshTokenKey = GetRefreshTokenKey(userId, refreshTokenId);
@@ -166,9 +167,9 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token
         }
 
         // 获取刷新令牌的键
-        private string GetRefreshTokenKey(Guid? userId, string refreshTokenId)
+        private string GetRefreshTokenKey(string userId, string refreshTokenId)
         {
-            if (!userId.HasValue) throw new ArgumentNullException(nameof(userId));
+            if (userId.IsNullOrEmpty()) throw new ArgumentNullException(nameof(userId));
             if (string.IsNullOrEmpty(refreshTokenId)) throw new ArgumentNullException(nameof(refreshTokenId));
 
             return $"{userId}:{refreshTokenId}";

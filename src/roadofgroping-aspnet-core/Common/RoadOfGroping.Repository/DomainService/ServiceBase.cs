@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using RoadOfGroping.Common.Localization;
 using RoadOfGroping.Repository.UserSession;
 
@@ -17,7 +16,7 @@ namespace RoadOfGroping.Repository.DomainService
         /// <summary>
         /// 用户信息服务，通过此属性可以访问当前用户会话的信息
         /// </summary>
-        public IUserSession UserService { get; private set; }
+        public IUserSession UserSession { get; private set; }
 
         /// <summary>
         /// 对象映射器，用于在不同对象之间进行映射转换
@@ -47,7 +46,7 @@ namespace RoadOfGroping.Repository.DomainService
             }
         }
 
-        #endregion
+        #endregion Properties
 
         #region Constructors
 
@@ -60,14 +59,14 @@ namespace RoadOfGroping.Repository.DomainService
         {
             // 从服务提供者中获取所需服务
             ObjectMapper = serviceProvider.GetRequiredService<IMapper>();
-            UserService = serviceProvider.GetRequiredService<IUserSession>();
+            UserSession = serviceProvider.GetRequiredService<IUserSession>();
             LocalizationManager = serviceProvider.GetRequiredService<ILocalizationManager>();
 
             // 设置本地化源名称
             LocalizationSourceName = localizationSourceName;
         }
 
-        #endregion
+        #endregion Constructors
 
         #region Localization Methods
 
@@ -115,7 +114,6 @@ namespace RoadOfGroping.Repository.DomainService
             return LocalizationSource.GetString(name, cultureInfo, args);
         }
 
-
-        #endregion
+        #endregion Localization Methods
     }
 }

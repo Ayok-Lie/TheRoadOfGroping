@@ -37,7 +37,13 @@ namespace RoadOfGroping.Model
             Services.AddObjectAccessor<InitApplicationContext>();
             Services.AddSingleton<IModuleContainer>(this);
             Services.AddSingleton<IModuleApplication>(this);
-
+            services.AddSingleton<OnInitApplicationModuleLifecycleContributor>();
+            services.AddSingleton<PostInitApplicationModuleLifecycleContributor>();
+            services.Configure<BaseModuleLifecycleOptions>(options =>
+            {
+                options.Contributors.Add<OnInitApplicationModuleLifecycleContributor>();
+                options.Contributors.Add<PostInitApplicationModuleLifecycleContributor>();
+            });
             Modules = LoadModules(services);
 
             ConfigerService();
@@ -127,6 +133,8 @@ namespace RoadOfGroping.Model
         public virtual void InitApplication(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
+            ServiceProvider.GetRequiredService<IObjectAccessor<InitApplicationContext>>().Value =
+                new InitApplicationContext(scope.ServiceProvider);
             scope.ServiceProvider
                 .GetRequiredService<IModuleManager>()
                 .InitializeModules();
@@ -139,6 +147,8 @@ namespace RoadOfGroping.Model
         public virtual async Task InitApplicationAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
+            ServiceProvider.GetRequiredService<IObjectAccessor<InitApplicationContext>>().Value =
+                new InitApplicationContext(scope.ServiceProvider);
             await scope.ServiceProvider
                .GetRequiredService<IModuleManager>()
                .InitializeModulesAsync();
