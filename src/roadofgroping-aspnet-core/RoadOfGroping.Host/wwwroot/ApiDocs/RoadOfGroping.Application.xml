@@ -230,6 +230,18 @@
             <param name="val"></param>
             <returns></returns>
         </member>
+        <member name="M:RoadOfGroping.Application.ToolService.ToolAppService.import_excel">
+            <summary>
+            Excel导入的具体实现
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RoadOfGroping.Application.ToolService.ToolAppService.export_excel">
+            <summary>
+            Excel导出的具体实现
+            </summary>
+            <returns></returns>
+        </member>
         <member name="P:RoadOfGroping.Application.UserService.Dtos.CreateOrUpdateUserInput.UserName">
             <summary>
             用户名

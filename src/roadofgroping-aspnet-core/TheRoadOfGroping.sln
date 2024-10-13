@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoadOfGroping.Application",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRWpfApp", "FormApplication\SignalRWpfApp\SignalRWpfApp.csproj", "{A67BF940-59A5-4303-A88B-8FC326F580FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SematicKernelApp", "FormApplication\SematicKernelApp\SematicKernelApp.csproj", "{19F21C05-53CC-4582-8C5B-791FD09BFCBC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{A67BF940-59A5-4303-A88B-8FC326F580FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A67BF940-59A5-4303-A88B-8FC326F580FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A67BF940-59A5-4303-A88B-8FC326F580FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19F21C05-53CC-4582-8C5B-791FD09BFCBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19F21C05-53CC-4582-8C5B-791FD09BFCBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19F21C05-53CC-4582-8C5B-791FD09BFCBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19F21C05-53CC-4582-8C5B-791FD09BFCBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{F520EE51-E608-4457-A89F-240E2520E932} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
 		{C555C6B0-B735-4EF1-A372-DD4AB74384B9} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
 		{A67BF940-59A5-4303-A88B-8FC326F580FB} = {3BA60870-0375-4710-BE0F-6940D6734781}
+		{19F21C05-53CC-4582-8C5B-791FD09BFCBC} = {3BA60870-0375-4710-BE0F-6940D6734781}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A77C2C63-075D-4BAB-A5DD-65B3FD3F000C}

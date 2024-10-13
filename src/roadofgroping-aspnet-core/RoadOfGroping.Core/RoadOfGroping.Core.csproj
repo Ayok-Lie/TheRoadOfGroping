@@ -25,9 +25,11 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="MiniExcel" Version="1.34.2" />
     <PackageReference Include="Minio" Version="6.0.3" />
     <PackageReference Include="My.Extensions.Localization.Json" Version="3.3.0" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
+    <PackageReference Include="NPOI" Version="2.7.1" />
     <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
     <PackageReference Include="RestSharp" Version="112.0.0" />
     <PackageReference Include="TencentCloudSDK" Version="3.0.1084" />
