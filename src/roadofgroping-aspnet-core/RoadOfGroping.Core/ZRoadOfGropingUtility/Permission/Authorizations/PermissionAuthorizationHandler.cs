@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RoadOfGroping.Common.DependencyInjection;
 using RoadOfGroping.Core.Permissions.DomainService;
+using RoadOfGroping.Core.Roles.Entity.DomainService;
+using RoadOfGroping.Core.Users.DomainService;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations
 {
@@ -11,11 +13,15 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPermissionRoleRelationManager _permissionRoleRelationManager;
+        private readonly IUserRolesManager _userRolesManager;
 
-        public PermissionAuthorizationHandler(IHttpContextAccessor httpContextAccessor, IPermissionRoleRelationManager permissionRoleRelationManager)
+        public PermissionAuthorizationHandler(IHttpContextAccessor httpContextAccessor,
+            IPermissionRoleRelationManager permissionRoleRelationManager, 
+            IUserRolesManager userRolesManager)
         {
             _httpContextAccessor = httpContextAccessor;
             _permissionRoleRelationManager = permissionRoleRelationManager;
+            _userRolesManager = userRolesManager;
         }
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
@@ -35,28 +41,21 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations
                 //return;
                 throw new Exception("请登录到系统");
             }
-
-            var str = context.User.FindFirst(ClaimTypes.Role)?.Value;
-            if (str != null)
+            var roleIds = await _userRolesManager.GetUserRoleIdsAsync(userId);
+            var userPermissions = await _permissionRoleRelationManager.GetUserAllPermissionsAsync(roleIds);
+            foreach (var permission in requirement.Permissions)
             {
-                var roleId = str.Split(',').ToList();
-                var userPermissions = await _permissionRoleRelationManager.QueryAsNoTracking
-                        .Where(x => roleId.Contains(x.RoleId))
-                        .Select(x => x.PermissionCode).ToListAsync();
-                foreach (var permission in requirement.Permissions)
+                if (userPermissions.Contains(permission))
                 {
-                    if (userPermissions.Contains(permission))
-                    {
-                        context.Succeed(requirement);
-                        break;
-                    }
-                    else
-                    {
-                        //failureReason = new AuthorizationFailureReason(this, $"权限不足，无法请求--请求接口{_httpContextAccessor.HttpContext?.Request?.Path ?? ""}");
-                        //context.Fail(failureReason);
-                        //return;
-                        throw new Exception($"权限不足，无法请求--请求接口{_httpContextAccessor.HttpContext?.Request?.Path}");
-                    }
+                    context.Succeed(requirement);
+                    break;
+                }
+                else
+                {
+                    //failureReason = new AuthorizationFailureReason(this, $"权限不足，无法请求--请求接口{_httpContextAccessor.HttpContext?.Request?.Path ?? ""}");
+                    //context.Fail(failureReason);
+                    //return;
+                    throw new Exception($"权限不足，无法请求--请求接口{_httpContextAccessor.HttpContext?.Request?.Path}");
                 }
             }
         }

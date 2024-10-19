@@ -60,7 +60,7 @@
                     const cookie = Cookies.get('Authorization');
                     if (!cookie) {
                         clearInterval(cookieCheckInterval); // 清除定时器
-                        window.location.href = '/home/index'; // 如果没有 cookie，则重定向
+                        //window.location.href = '/home/index'; // 如果没有 cookie，则重定向
                     }
                 }, 500); // 每5000毫秒（5秒）检测一次
             }

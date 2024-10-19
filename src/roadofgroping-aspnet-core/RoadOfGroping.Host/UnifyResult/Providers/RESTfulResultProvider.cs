@@ -64,7 +64,7 @@ namespace RoadOfGroping.Host.UnifyResult.Providers
         /// <param name="context"></param>
         /// <param name="metadata"></param>
         /// <returns></returns>
-        public IActionResult OnValidateFailed(ActionExecutingContext context, ValidationMetadata metadata)
+        public IActionResult OnValidateFailed(ActionExecutedContext context, ValidationMetadata metadata)
         {
             return new JsonResult(RESTfulResult(metadata.StatusCode ?? StatusCodes.Status400BadRequest, data: metadata.Data, errors: metadata.ValidationResult));
         }

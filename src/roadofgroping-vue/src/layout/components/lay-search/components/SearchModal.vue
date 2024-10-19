@@ -7,11 +7,12 @@ import SearchFooter from "./SearchFooter.vue";
 import { useNav } from "@/layout/hooks/useNav";
 import SearchHistory from "./SearchHistory.vue";
 import type { optionsItem, dragItem } from "../types";
-import { ref, computed, shallowRef, watch } from "vue";
+import { ref, computed, shallowRef, watch, onMounted } from "vue";
 import { useDebounceFn, onKeyStroke } from "@vueuse/core";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import { cloneDeep, isAllEmpty, storageLocal } from "@pureadmin/utils";
 import SearchIcon from "@iconify-icons/ri/search-line";
+import { useUserStoreHook } from "@/store/modules/user";
 
 interface Props {
   /** 弹窗显隐 */
@@ -72,6 +73,10 @@ const showSearchResult = computed(() => {
 
 const showSearchHistory = computed(() => {
   return !keyword.value && historyOptions.value.length > 0;
+});
+
+onMounted(() => {
+  useUserStoreHook().getUserConfiger(); // 在菜单渲染时调用 getUserConfiger() 方法
 });
 
 const showEmpty = computed(() => {

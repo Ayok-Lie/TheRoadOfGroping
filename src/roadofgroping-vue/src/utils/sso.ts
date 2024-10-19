@@ -1,5 +1,5 @@
 import type { UserLoginDto } from "@/shared";
-import { removeToken, setToken } from "./auth";
+import { removeToken, setToken, setUser } from "./auth";
 import { subBefore, getQueryMap } from "@pureadmin/utils";
 
 /**
@@ -38,11 +38,13 @@ import { subBefore, getQueryMap } from "@pureadmin/utils";
     removeToken();
 
     // 保存新信息到本地
-    setToken(params);
+    setToken(params.tokenInfoOutput);
+
+    setUser(params.userInfoOutPut);
 
     // 删除不需要显示在 url 的参数
-    delete params.roles;
-    delete params.accessToken;
+    // delete params.roles;
+    delete params.tokenInfoOutput.accessToken;
 
     const newUrl = `${location.origin}${location.pathname}${subBefore(
       location.hash,

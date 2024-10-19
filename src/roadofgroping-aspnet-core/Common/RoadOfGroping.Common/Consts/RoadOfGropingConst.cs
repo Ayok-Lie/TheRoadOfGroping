@@ -47,7 +47,7 @@ namespace RoadOfGroping.Common.Consts
         /// <summary>
         /// 默认用户头像
         /// </summary>
-        public const string DefaulUserAvatar = "https://www.gravatar.com/avatar/0000000000?d=mp";
+        public const string DefaulUserAvater = "https://www.gravatar.com/avatar/0000000000?d=mp";
 
         /// <summary>
         /// 默认用户邮箱

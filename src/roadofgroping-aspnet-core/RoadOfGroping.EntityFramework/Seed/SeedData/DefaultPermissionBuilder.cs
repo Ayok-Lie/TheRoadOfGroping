@@ -60,6 +60,7 @@ namespace RoadOfGroping.EntityFramework.Seed.SeedData
                             {
                                 PermissionOriginal entity = new()
                                 {
+                                    Id = Guid.NewGuid(),
                                     DisplayName = item.DisplayName,
                                     Code = item.Code,
                                     ParentCode = item.ParentCode,
@@ -73,7 +74,7 @@ namespace RoadOfGroping.EntityFramework.Seed.SeedData
 
                                 PermissionRoleRelation permissionRole = new()
                                 {
-                                    PermissionCode = item.Code,
+                                    PermissionId = entity.Id,
                                     IsGranted = true,
                                     RoleId = RoadOfGropingConst.DefaultRoleId
                                 };

@@ -100,7 +100,7 @@ namespace RoadOfGroping.Host.Extensions
 
             app.UseRequestLocalization();
             // 添加异常处理中间件
-            app.UseMiddleware<ExceptionMiddleware>();
+            //app.UseMiddleware<ExceptionMiddleware>();
 
             // 启用身份验证
             app.UseAuthentication();
@@ -382,7 +382,7 @@ namespace RoadOfGroping.Host.Extensions
             services.AddSingleton(sp => new SigningCredentials(rsaSecurityPrivateKey, SecurityAlgorithms.RsaSha256Signature));
 
             services.AddScoped<AppJwtBearerEvents>();
-            services.AddScoped<IAuthTokenService, AuthTokenService>();
+            services.AddScoped<IAuthTokenManager, AuthTokenManager>();
             services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.Name));
             var jwtTokenConfig = configuration?.GetSection("JWT").Get<JwtOptions>();
 

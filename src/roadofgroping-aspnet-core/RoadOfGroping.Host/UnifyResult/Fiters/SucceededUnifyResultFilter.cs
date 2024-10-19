@@ -12,13 +12,14 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using RoadOfGroping.Common.Attributes;
 using RoadOfGroping.Host.Extensions;
+using TencentCloud.Cfg.V20210820.Models;
 
 namespace RoadOfGroping.Host.UnifyResult.Fiters
 {
     /// <summary>
     /// 规范化结构（请求成功）过滤器
     /// </summary>
-    public class SucceededUnifyResultFilter : IAsyncActionFilter, IOrderedFilter
+    public class SucceededUnifyResultFilter : ActionFilter, IOrderedFilter
     {
         /// <summary>
         /// 过滤器排序
@@ -36,16 +37,13 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
         /// <param name="context"></param>
         /// <param name="next"></param>
         /// <returns></returns>
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        public void OnActionExecuted(ActionExecutedContext context)
         {
-            // 执行 Action 并获取结果
-            var actionExecutedContext = await next();
-
             // 排除 WebSocket 请求处理
-            if (actionExecutedContext.HttpContext.IsWebSocketRequest()) return;
+            if (context.HttpContext.IsWebSocketRequest()) return;
 
             // 处理已经含有状态码结果的 Result
-            if (actionExecutedContext.Result is IStatusCodeActionResult statusCodeResult &&
+            if (context.Result is IStatusCodeActionResult statusCodeResult &&
                 statusCodeResult.StatusCode != null)
             {
                 // 小于 200 或者 大于 299 都不是成功值，直接跳过
@@ -67,7 +65,8 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
 
                         // 如果 Response 已经完成输出，则禁止写入
                         if (httpContext.Response.HasStarted) return;
-                        await unifyRes.OnResponseStatusCodes(httpContext, statusCode,
+
+                        unifyRes.OnResponseStatusCodes(httpContext, statusCode,
                             httpContext.RequestServices.GetService<IOptions<UnifyResultSettingsOptions>>()?.Value);
                     }
 
@@ -76,7 +75,7 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
             }
 
             // 如果出现异常，则不会进入该过滤器
-            if (actionExecutedContext.Exception != null) return;
+            if (context.Exception != null) return;
 
             // 获取控制器信息
             var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
@@ -86,31 +85,32 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
             {
                 return;
             }
+
             IRESTfulResultProvider unifyResult = context.HttpContext.RequestServices.GetRequiredService<IRESTfulResultProvider>();
 
             // 处理 BadRequestObjectResult 类型规范化处理
-            if (actionExecutedContext.Result is BadRequestObjectResult badRequestObjectResult)
+            if (context.Result is BadRequestObjectResult badRequestObjectResult)
             {
                 // 解析验证消息
                 var validationMetadata = GetValidationMetadata(badRequestObjectResult.Value);
 
                 var result = unifyResult.OnValidateFailed(context, validationMetadata);
-                if (result != null) actionExecutedContext.Result = result;
+                if (result != null) context.Result = result;
             }
             else
             {
                 IActionResult result = default;
 
                 // 检查是否是有效的结果（可进行规范化的结果）
-                if (CheckVaildResult(actionExecutedContext.Result, out var data))
+                if (CheckVaildResult(context.Result, out var data))
                 {
-                    result = unifyResult.OnSucceeded(actionExecutedContext, data);
+                    result = unifyResult.OnSucceeded(context, data);
                 }
 
                 // 如果是不能规范化的结果类型，则跳过
                 if (result == null) return;
 
-                actionExecutedContext.Result = result;
+                context.Result = result;
             }
         }
 

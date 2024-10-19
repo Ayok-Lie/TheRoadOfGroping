@@ -10,6 +10,7 @@ import { defineComponent } from "vue";
 import { ElConfigProvider } from "element-plus";
 import { ReDialog } from "@/components/ReDialog";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
+import { useUserStoreHook } from "./store/modules/user";
 
 export default defineComponent({
   name: "app",
@@ -21,6 +22,9 @@ export default defineComponent({
     currentLocale() {
       return zhCn;
     }
+  },
+  mounted() {
+    useUserStoreHook().getUserConfiger();
   }
 });
 </script>

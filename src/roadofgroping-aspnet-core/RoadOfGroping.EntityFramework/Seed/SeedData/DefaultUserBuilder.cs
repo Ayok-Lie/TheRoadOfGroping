@@ -32,7 +32,7 @@ namespace RoadOfGroping.EntityFramework.Seed.SeedData
                     Password = RoadOfGropingConst.DefaultPassWord,
                     UserPhone = RoadOfGropingConst.DefaultUserPhone,
                     UserEmail = RoadOfGropingConst.DefaultUserEmail,
-                    Avatar = RoadOfGropingConst.DefaulUserAvatar,
+                    Avater = RoadOfGropingConst.DefaulUserAvater,
                     IsDeleted = false,
                 };
 

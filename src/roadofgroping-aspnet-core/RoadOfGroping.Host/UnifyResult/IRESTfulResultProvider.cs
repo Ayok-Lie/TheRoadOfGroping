@@ -45,7 +45,7 @@ public interface IRESTfulResultProvider : ITransientDependency
     /// <param name="context"></param>
     /// <param name="metadata"></param>
     /// <returns></returns>
-    IActionResult OnValidateFailed(ActionExecutingContext context, ValidationMetadata metadata);
+    IActionResult OnValidateFailed(ActionExecutedContext context, ValidationMetadata metadata);
 
     /// <summary>
     /// 拦截返回状态码

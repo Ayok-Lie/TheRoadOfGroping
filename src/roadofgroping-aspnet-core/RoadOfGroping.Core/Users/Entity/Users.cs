@@ -15,6 +15,13 @@ namespace RoadOfGroping.Core.Users.Entity
         public string UserName { get; set; }
 
         /// <summary>
+        /// 昵称
+        /// </summary>
+        [MaxLength(256)]
+        [Comment("昵称")]
+        public string? NickName { get; set; }
+
+        /// <summary>
         /// 密码哈希值
         /// </summary>
         [Required]
@@ -26,7 +33,7 @@ namespace RoadOfGroping.Core.Users.Entity
         /// </summary>
         [MaxLength(256)]
         [Comment("邮箱")]
-        public string UserEmail { get; set; }
+        public string? UserEmail { get; set; }
 
         /// <summary>
         /// 手机号
@@ -39,6 +46,6 @@ namespace RoadOfGroping.Core.Users.Entity
         /// 头像
         /// </summary>
 
-        public string? Avatar { get; set; }
+        public string? Avater { get; set; }
     }
 }

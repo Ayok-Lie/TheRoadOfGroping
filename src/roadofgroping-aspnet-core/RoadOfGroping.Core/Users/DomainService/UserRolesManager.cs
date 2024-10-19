@@ -1,4 +1,5 @@
-﻿using RoadOfGroping.Core.Users.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using RoadOfGroping.Core.Users.Entity;
 using RoadOfGroping.Repository.DomainService;
 
 namespace RoadOfGroping.Core.Users.DomainService
@@ -17,6 +18,11 @@ namespace RoadOfGroping.Core.Users.DomainService
         public async Task UpdateAsync(UserRoles userRoles)
         {
             await Update(userRoles);
+        }
+
+        public async Task<List<string>> GetUserRoleIdsAsync(string userId)
+        {
+            return await QueryAsNoTracking.Where(x => x.UserId == userId).Select(x => x.RoleId).ToListAsync();
         }
 
         public override IQueryable<UserRoles> GetIncludeQuery()

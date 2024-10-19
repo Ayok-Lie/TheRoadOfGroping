@@ -8,23 +8,39 @@ import {
   storageLocal
 } from "../utils";
 import { useMultiTagsStoreHook } from "./multiTags";
-import { type DataInfo, setToken, removeToken, userKey } from "@/utils/auth";
-import { type AuthTokenDto, LoginServiceProxy } from "@/shared";
-const loginServiceProxy = new LoginServiceProxy();
+import {
+  type DataInfo,
+  type ConfigurationInfo,
+  setToken,
+  userKey,
+  removeToken,
+  setConfig,
+  setUser,
+  userConfig
+} from "@/utils/auth";
+import {
+  type UserLoginDto,
+  type FeatureListDto,
+  type TokenInfoOutput,
+  AccountsServiceProxy,
+  FeaturesServiceProxy
+} from "@/shared";
+const accountServiceProxy = new AccountsServiceProxy();
+const featuresServiceProxy = new FeaturesServiceProxy();
 export const useUserStore = defineStore({
   id: "pure-user",
   state: (): userType => ({
     // 头像
-    avatar: storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? "",
+    avatar: storageLocal().getItem<DataInfo>(userKey)?.avatar ?? "",
     // 用户名
-    username: storageLocal().getItem<DataInfo<number>>(userKey)?.userName ?? "",
+    username: storageLocal().getItem<DataInfo>(userKey)?.userName ?? "",
     // 昵称
-    nickname: storageLocal().getItem<DataInfo<number>>(userKey)?.nickName ?? "",
+    nickname: storageLocal().getItem<DataInfo>(userKey)?.nickName ?? "",
     // 页面级别权限
-    roles: storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [],
+    roles: storageLocal().getItem<ConfigurationInfo>(userConfig)?.roles ?? [],
     // 按钮级别权限
     permissions:
-      storageLocal().getItem<DataInfo<number>>(userKey)?.permissions ?? [],
+      storageLocal().getItem<ConfigurationInfo>(userConfig)?.permissions ?? [],
     // 是否勾选了登录页的免登录
     isRemembered: false,
     // 登录页的免登录存储几天，默认7天
@@ -61,13 +77,29 @@ export const useUserStore = defineStore({
     },
     /** 登入 */
     async loginByUsername(data) {
-      return new Promise<AuthTokenDto>((resolve, reject) => {
-        loginServiceProxy
+      return new Promise<UserLoginDto>((resolve, reject) => {
+        accountServiceProxy
           .login(data)
           .then(res => {
-            setToken(res);
-            debugger;
+            if (res) {
+              setUser(res.userInfoOutPut);
+              setToken(res.tokenInfoOutput);
+              resolve(res);
+            }
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+
+    async getUserConfiger() {
+      return new Promise<FeatureListDto>((resolve, reject) => {
+        featuresServiceProxy
+          .getUserConfigurations()
+          .then(res => {
             if (!!res) {
+              setConfig(res);
               resolve(res);
             }
           })
@@ -88,9 +120,9 @@ export const useUserStore = defineStore({
     },
     /** 刷新`token` */
     async handRefreshToken(data) {
-      return new Promise<AuthTokenDto>((resolve, reject) => {
-        loginServiceProxy
-          .refreshAuthToken(data)
+      return new Promise<TokenInfoOutput>((resolve, reject) => {
+        accountServiceProxy
+          .refrshToken(data)
           .then(res => {
             if (res) {
               setToken(res);

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using RoadOfGroping.Application.AccountService;
+using RoadOfGroping.Application.AccountService.Dtos;
 using RoadOfGroping.Common.Attributes;
 using RoadOfGroping.Core.Users.Dtos;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.Token;
@@ -17,9 +18,9 @@ namespace RoadOfGroping.Host.Controllers
     {
         private ILogger<LoginController> _logger;
         private IAccountAppService _userManager;
-        private IAuthTokenService authTokenService;
+        private IAuthTokenManager authTokenService;
 
-        public LoginController(ILogger<LoginController> logger, IAccountAppService userManager, IAuthTokenService authTokenService)
+        public LoginController(ILogger<LoginController> logger, IAccountAppService userManager, IAuthTokenManager authTokenService)
         {
             _logger = logger;
             _userManager = userManager;
@@ -39,22 +40,6 @@ namespace RoadOfGroping.Host.Controllers
         }
 
         /// <summary>
-        /// 刷新Token
-        /// </summary>
-        /// <param name="auth"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<UserLoginDto> RefreshAuthToken(AuthTokenDto auth)
-        {
-            var tokenInfo = await authTokenService.RefreshAuthTokenAsync(auth);
-            return new UserLoginDto()
-            {
-                AccessToken = tokenInfo.AccessToken,
-                RefreshToken = tokenInfo.RefreshToken
-            };
-        }
-
-        /// <summary>
         /// 登录功能 --只能用于Cookie校验，无法用于jwt校验
         /// </summary>
         /// <returns></returns>
@@ -69,7 +54,7 @@ namespace RoadOfGroping.Host.Controllers
             // 设置Token的Claims
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, userinfo.UserName!), //HttpContext.User.Identity.Name
+                new Claim(ClaimTypes.Name, userinfo.UserInfoOutPut.UserName!), //HttpContext.User.Identity.Name
                 new Claim(ClaimTypes.Role, "Admin"),
                 new Claim(
                     ClaimTypes.Expiration,

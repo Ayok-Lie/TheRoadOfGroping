@@ -12,13 +12,6 @@
             <returns></returns>
             <exception cref="T:System.Exception"></exception>
         </member>
-        <member name="M:RoadOfGroping.Host.Controllers.LoginController.RefreshAuthToken(RoadOfGroping.Core.ZRoadOfGropingUtility.Token.Dtos.AuthTokenDto)">
-            <summary>
-            刷新Token
-            </summary>
-            <param name="auth"></param>
-            <returns></returns>
-        </member>
         <member name="M:RoadOfGroping.Host.Controllers.LoginController.AbandonedLogin(RoadOfGroping.Core.Users.Dtos.LoginDto)">
             <summary>
             登录功能 --只能用于Cookie校验，无法用于jwt校验
@@ -314,7 +307,7 @@
             排序属性
             </summary>
         </member>
-        <member name="M:RoadOfGroping.Host.UnifyResult.Fiters.SucceededUnifyResultFilter.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)">
+        <member name="M:RoadOfGroping.Host.UnifyResult.Fiters.SucceededUnifyResultFilter.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
             <summary>
             处理规范化结果
             </summary>
@@ -396,7 +389,7 @@
             <param name="data"></param>
             <returns></returns>
         </member>
-        <member name="M:RoadOfGroping.Host.UnifyResult.IRESTfulResultProvider.OnValidateFailed(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,RoadOfGroping.Host.UnifyResult.ValidationMetadata)">
+        <member name="M:RoadOfGroping.Host.UnifyResult.IRESTfulResultProvider.OnValidateFailed(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext,RoadOfGroping.Host.UnifyResult.ValidationMetadata)">
             <summary>
             验证失败返回值
             </summary>
@@ -442,7 +435,7 @@
             <param name="data"></param>
             <returns></returns>
         </member>
-        <member name="M:RoadOfGroping.Host.UnifyResult.Providers.RESTfulResultProvider.OnValidateFailed(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,RoadOfGroping.Host.UnifyResult.ValidationMetadata)">
+        <member name="M:RoadOfGroping.Host.UnifyResult.Providers.RESTfulResultProvider.OnValidateFailed(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext,RoadOfGroping.Host.UnifyResult.ValidationMetadata)">
             <summary>
             验证失败/业务异常返回值
             </summary>

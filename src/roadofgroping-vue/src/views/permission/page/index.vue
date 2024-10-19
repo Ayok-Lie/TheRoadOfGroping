@@ -33,7 +33,6 @@ function onChange() {
   useUserStoreHook()
     .loginByUsername({ username: username.value, password: "bb123456" })
     .then(res => {
-      debugger;
       if (res) {
         storageLocal().removeItem("async-routes");
         usePermissionStoreHook().clearAllCachePage();

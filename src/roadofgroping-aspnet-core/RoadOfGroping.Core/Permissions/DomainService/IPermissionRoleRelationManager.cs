@@ -8,5 +8,7 @@ namespace RoadOfGroping.Core.Permissions.DomainService
         Task<PermissionRoleRelation> CreateAsync(PermissionRoleRelation permissionRole);
 
         Task<PermissionRoleRelation> UpdateAsync(PermissionRoleRelation permissionRole);
+
+        Task<List<string>> GetUserAllPermissionsAsync(List<string> roleIds);
     }
 }

@@ -85,7 +85,7 @@ namespace RoadOfGroping.Application.UserService
             if (user.Id == string.Empty)
             {
                 var data = ObjectMapper.Map<Users>(user);
-                data.Avatar = picUrl;
+                data.Avater = picUrl;
                 return await userManager.CreateAsync(data);
             }
             else
@@ -96,7 +96,7 @@ namespace RoadOfGroping.Application.UserService
                     throw new ArgumentException("User not found");
                 }
                 ObjectMapper.Map(existingUser, user);
-                existingUser.Avatar = picUrl;
+                existingUser.Avater = picUrl;
                 return await userManager.UpdateAsync(existingUser);
             }
         }

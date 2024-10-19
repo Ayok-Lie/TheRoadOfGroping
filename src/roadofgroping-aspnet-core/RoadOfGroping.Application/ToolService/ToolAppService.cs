@@ -21,14 +21,6 @@ namespace RoadOfGroping.Application.ToolService
 
         private readonly IWebHostEnvironment _hostingEnv;
 
-        private readonly List<string> list = new List<string>()
-            {
-                "App.User.Query",
-                "App.User.Create",
-                "App.User.Update",
-                "App.User.Delete"
-            };
-
         public class Student
         {
             public string? Name { get; set; }
@@ -119,20 +111,6 @@ namespace RoadOfGroping.Application.ToolService
                 };
             }
         }
-
-
-        public async Task CreatePermissionRoleRelation()
-        {
-            foreach (var item in list)
-            {
-                var relation = new PermissionRoleRelation();
-                relation.PermissionCode = item;
-                relation.IsGranted = true;
-                relation.RoleId = RoadOfGropingConst.DefaultRoleId;
-                await permissionRoleRelationManager.Create(relation);
-            }
-        }
-
 
         private DataTable ListToDataTable<T>(List<T> items)
         {

@@ -32,8 +32,7 @@ dataThemeChange(overallStyle.value);
 const { title } = useNav();
 const input = new LoginDto({
   userName: "admin",
-  password: "bb123456",
-  isApiLogin: false
+  password: "bb123456"
 });
 const ruleForm = reactive(input);
 
@@ -45,7 +44,6 @@ const onLogin = async (formEl: FormInstance | undefined) => {
       useUserStoreHook()
         .loginByUsername(ruleForm)
         .then(res => {
-          debugger;
           if (res) {
             // 获取后端路由
             return initRouter().then(() => {

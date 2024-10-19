@@ -15,11 +15,14 @@ using Yitter.IdGenerator;
 
 namespace RoadOfGroping.Application.AccountService
 {
+    /// <summary>
+    /// 登录、注册、密码重置、修改密码、发送邮箱验证码等功能
+    /// </summary>
     public class AccountAppService : ApplicationService, IAccountAppService
     {
         private ILogger<AccountAppService> _logger;
         private IUserManager _userManager;
-        private IAuthTokenService authTokenService;
+        private IAuthTokenManager authTokenService;
         private readonly CacheManager _cacheManager;
         private readonly IIdGenerator _idGenerator;
         private readonly IUserRolesManager _userRolesManager;
@@ -29,7 +32,7 @@ namespace RoadOfGroping.Application.AccountService
         public AccountAppService(IServiceProvider serviceProvider,
             ILogger<AccountAppService> logger,
             IUserManager userManager,
-            IAuthTokenService authTokenService,
+            IAuthTokenManager authTokenService,
             CacheManager cacheManager,
             IIdGenerator idGenerator,
             IUserRolesManager userRolesManager,
@@ -63,23 +66,45 @@ namespace RoadOfGroping.Application.AccountService
             {
                 throw new ArgumentException(L("PasswordError"));
             }
-            var roles = await _userRolesManager.QueryAsNoTracking.Where(a => a.UserId == user.Id).Select(a => a.RoleId.ToString()).ToListAsync();
-            var auth = new UserAuthDto()
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                IsApiLogin = dto.IsApiLogin,
-                Roles = roles
-            };
 
-            var tokenInfo = await authTokenService.CreateAuthTokenAsync(auth);
+            var tokenInfo = await authTokenService.CreateAuthTokenAsync(user.Id);
             _logger.LogInformation("登录成功");
             return new UserLoginDto()
             {
-                AccessToken = tokenInfo.AccessToken,
-                RefreshToken = tokenInfo.RefreshToken,
-                Expires = DateTime.UtcNow.AddMinutes(30)
+                TokenInfoOutput = new TokenInfoOutput()
+                {
+                    AccessToken = tokenInfo.AccessToken,
+                    RefreshToken = tokenInfo.RefreshToken,
+                    Expires = tokenInfo.Expiration,
+                },
+                UserInfoOutPut = new UserInfoOutPut()
+                {
+                    Avater = user.Avater,
+                    UserName = user.UserName,
+                    NickName = user.NickName
+                }
             };
+        }
+
+        /// <summary>
+        /// Swagger登录功能
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public async Task SwaggerLogin(LoginDto dto)
+        {
+            var user = await _userManager.QueryAsNoTracking.FirstOrDefaultAsync(x => x.UserName == dto.UserName);
+            if (user == null)
+            {
+                throw new ArgumentException(L($"UserDoesNotExist", user.UserName));
+            }
+            if (user == null || user.Password != MD5Encryption.Encrypt($"{_idGenerator.Encode(user.Id)}{dto.Password}"))
+            {
+                throw new ArgumentException(L("PasswordError"));
+            }
+            await authTokenService.CreateJwtTokenForSwaggerAuth(user.Id);
+            _logger.LogInformation("Swagger登录成功");
         }
 
         /// <summary>
@@ -157,6 +182,18 @@ namespace RoadOfGroping.Application.AccountService
             {
                 throw new Exception("请检查邮箱中的验证码，有效期3分钟，可能进入垃圾箱了。");
             }
+        }
+
+
+        public async Task<TokenInfoOutput> RefrshToken(RefreshTokenInput input)
+        {
+            var tokenInfo = await authTokenService.RefreshAuthTokenAsync(input);
+            return new TokenInfoOutput()
+            {
+                AccessToken = tokenInfo.AccessToken,
+                RefreshToken = tokenInfo.RefreshToken,
+                Expires = tokenInfo.Expiration,
+            };
         }
     }
 }

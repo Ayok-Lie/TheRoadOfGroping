@@ -23,6 +23,7 @@ namespace RoadOfGroping.Core.Roles.Entity.DomainService
             throw new NotImplementedException();
         }
 
+
         public override Task ValidateOnCreateOrUpdate(Roles entity)
         {
             throw new NotImplementedException();

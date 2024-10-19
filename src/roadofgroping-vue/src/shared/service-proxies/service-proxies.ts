@@ -12,6 +12,345 @@ import 'rxjs/add/operator/finally';import axios, { AxiosError, AxiosInstance, Ax
 
 import moment from 'moment';
 
+export class AccountsServiceProxy {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "";
+
+    }
+
+    /**
+     * 登录功能
+     * @param body (optional) 
+     * @return Success
+     */
+    login(body: LoginDto | undefined, cancelToken?: CancelToken): Promise<UserLoginDto> {
+        let url_ = this.baseUrl + "/api/Accounts/Login";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processLogin(_response);
+        });
+    }
+
+    protected processLogin(response: AxiosResponse): Promise<UserLoginDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = UserLoginDto.fromJS(resultData200);
+            return Promise.resolve<UserLoginDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<UserLoginDto>(null as any);
+    }
+
+    /**
+     * Swagger登录功能
+     * @param body (optional) 
+     * @return Success
+     */
+    swaggerLogin(body: LoginDto | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/Accounts/SwaggerLogin";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processSwaggerLogin(_response);
+        });
+    }
+
+    protected processSwaggerLogin(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * 密码重置
+     * @param body (optional) 
+     * @return Success
+     */
+    passwordReset(body: PasswordResetInput | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/Accounts/PasswordReset";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processPasswordReset(_response);
+        });
+    }
+
+    protected processPasswordReset(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * 修改密码
+     * @param body (optional) 
+     * @return Success
+     */
+    changePassword(body: ChangePasswordInput | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/Accounts/ChangePassword";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processChangePassword(_response);
+        });
+    }
+
+    protected processChangePassword(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * 发送邮箱验证码
+     * @param body (optional) 
+     * @return Success
+     */
+    sendEmailAddressConfirmCode(body: SendPasswordResetCodeInput | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/Accounts/SendEmailAddressConfirmCode";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processSendEmailAddressConfirmCode(_response);
+        });
+    }
+
+    protected processSendEmailAddressConfirmCode(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    refrshToken(body: RefreshTokenInput | undefined, cancelToken?: CancelToken): Promise<TokenInfoOutput> {
+        let url_ = this.baseUrl + "/api/Accounts/RefrshToken";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processRefrshToken(_response);
+        });
+    }
+
+    protected processRefrshToken(response: AxiosResponse): Promise<TokenInfoOutput> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = TokenInfoOutput.fromJS(resultData200);
+            return Promise.resolve<TokenInfoOutput>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<TokenInfoOutput>(null as any);
+    }
+}
+
 export class EventBussServiceProxy {
     protected instance: AxiosInstance;
     protected baseUrl: string;
@@ -99,6 +438,190 @@ export class EventBussServiceProxy {
     }
 
     protected processEventChnnalCache(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+}
+
+export class FeaturesServiceProxy {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "";
+
+    }
+
+    /**
+     * @return Success
+     */
+    getUserConfigurations( cancelToken?: CancelToken): Promise<FeatureListDto> {
+        let url_ = this.baseUrl + "/api/Features/GetUserConfigurations";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetUserConfigurations(_response);
+        });
+    }
+
+    protected processGetUserConfigurations(response: AxiosResponse): Promise<FeatureListDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = FeatureListDto.fromJS(resultData200);
+            return Promise.resolve<FeatureListDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<FeatureListDto>(null as any);
+    }
+}
+
+export class FileServiceProxy {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "";
+
+    }
+
+    /**
+     * @param file (optional) 
+     * @return Success
+     */
+    upload(file: FileParameter | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/File/upload";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (file === null || file === undefined)
+            throw new Error("The parameter 'file' cannot be null.");
+        else
+            content_.append("file", file.data, file.fileName ? file.fileName : "file");
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processUpload(_response);
+        });
+    }
+
+    protected processUpload(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    download(filename: string, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/File/download/{filename}";
+        if (filename === undefined || filename === null)
+            throw new Error("The parameter 'filename' must be defined.");
+        url_ = url_.replace("{filename}", encodeURIComponent("" + filename));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processDownload(_response);
+        });
+    }
+
+    protected processDownload(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -438,62 +961,6 @@ export class LoginServiceProxy {
     }
 
     /**
-     * @param test (optional) 
-     * @return Success
-     */
-    loginTest(test: string | undefined, cancelToken?: CancelToken): Promise<AuthTokenDto> {
-        let url_ = this.baseUrl + "/api/Login/LoginTest?";
-        if (test === null)
-            throw new Error("The parameter 'test' cannot be null.");
-        else if (test !== undefined)
-            url_ += "test=" + encodeURIComponent("" + test) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processLoginTest(_response);
-        });
-    }
-
-    protected processLoginTest(response: AxiosResponse): Promise<AuthTokenDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = AuthTokenDto.fromJS(resultData200);
-            return Promise.resolve<AuthTokenDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<AuthTokenDto>(null as any);
-    }
-
-    /**
      * 登录功能
      * @param body (optional) 
      * @return Success
@@ -551,68 +1018,11 @@ export class LoginServiceProxy {
     }
 
     /**
-     * 刷新Token
-     * @param body (optional) 
-     * @return Success
-     */
-    refreshAuthToken(body: AuthTokenDto | undefined, cancelToken?: CancelToken): Promise<UserLoginDto> {
-        let url_ = this.baseUrl + "/api/Login/RefreshAuthToken";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_: AxiosRequestConfig = {
-            data: content_,
-            method: "POST",
-            url: url_,
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processRefreshAuthToken(_response);
-        });
-    }
-
-    protected processRefreshAuthToken(response: AxiosResponse): Promise<UserLoginDto> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            result200 = UserLoginDto.fromJS(resultData200);
-            return Promise.resolve<UserLoginDto>(result200);
-
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<UserLoginDto>(null as any);
-    }
-
-    /**
      * 登录功能 --只能用于Cookie校验，无法用于jwt校验
      * @param body (optional) 
      * @return Success
      */
-    abandonedLogin(body: LoginDto | undefined, cancelToken?: CancelToken): Promise<string> {
+    abandonedLogin(body: LoginDto | undefined, cancelToken?: CancelToken): Promise<void> {
         let url_ = this.baseUrl + "/api/Login/AbandonedLogin";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -624,7 +1034,6 @@ export class LoginServiceProxy {
             url: url_,
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "text/plain"
             },
             cancelToken
         };
@@ -640,7 +1049,7 @@ export class LoginServiceProxy {
         });
     }
 
-    protected processAbandonedLogin(response: AxiosResponse): Promise<string> {
+    protected processAbandonedLogin(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -652,17 +1061,13 @@ export class LoginServiceProxy {
         }
         if (status === 200) {
             const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return Promise.resolve<string>(result200);
+            return Promise.resolve<void>(null as any);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<string>(null as any);
+        return Promise.resolve<void>(null as any);
     }
 
     /**
@@ -1460,7 +1865,7 @@ export class TestServiceProxy {
     }
 }
 
-export class GetTestResultServiceProxy {
+export class ToolsServiceProxy {
     protected instance: AxiosInstance;
     protected baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -1474,15 +1879,67 @@ export class GetTestResultServiceProxy {
     }
 
     /**
-     * @param userId (optional) 
      * @return Success
      */
-    getTest(userId: string | undefined, cancelToken?: CancelToken): Promise<void> {
-        let url_ = this.baseUrl + "/api/Token/GetTestResult/GetTest?";
-        if (userId === null)
-            throw new Error("The parameter 'userId' cannot be null.");
-        else if (userId !== undefined)
-            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+    excelSaveTest( cancelToken?: CancelToken): Promise<string> {
+        let url_ = this.baseUrl + "/api/Tools/ExcelSaveTest";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processExcelSaveTest(_response);
+        });
+    }
+
+    protected processExcelSaveTest(response: AxiosResponse): Promise<string> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<string>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<string>(null as any);
+    }
+
+    /**
+     * @param filepath (optional) 
+     * @return Success
+     */
+    getExcelData(filepath: string | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/Tools/GetExcelData?";
+        if (filepath === null)
+            throw new Error("The parameter 'filepath' cannot be null.");
+        else if (filepath !== undefined)
+            url_ += "filepath=" + encodeURIComponent("" + filepath) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -1500,11 +1957,107 @@ export class GetTestResultServiceProxy {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processGetTest(_response);
+            return this.processGetExcelData(_response);
         });
     }
 
-    protected processGetTest(response: AxiosResponse): Promise<void> {
+    protected processGetExcelData(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Excel导入的具体实现
+     * @return Success
+     */
+    import_excel( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/Tools/import_excel";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processImport_excel(_response);
+        });
+    }
+
+    protected processImport_excel(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Excel导出的具体实现
+     * @return Success
+     */
+    export_excel( cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/Tools/export_excel";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processExport_excel(_response);
+        });
+    }
+
+    protected processExport_excel(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1543,7 +2096,7 @@ export class UsersServiceProxy {
      * 获取用户列表
      * @return Success
      */
-    getUserPageList( cancelToken?: CancelToken): Promise<RoadOfGropingUsers[]> {
+    getUserPageList( cancelToken?: CancelToken): Promise<Users[]> {
         let url_ = this.baseUrl + "/api/Users/GetUserPageList";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1567,7 +2120,7 @@ export class UsersServiceProxy {
         });
     }
 
-    protected processGetUserPageList(response: AxiosResponse): Promise<RoadOfGropingUsers[]> {
+    protected processGetUserPageList(response: AxiosResponse): Promise<Users[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1584,18 +2137,18 @@ export class UsersServiceProxy {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(RoadOfGropingUsers.fromJS(item));
+                    result200.push(Users.fromJS(item));
             }
             else {
                 result200 = <any>null;
             }
-            return Promise.resolve<RoadOfGropingUsers[]>(result200);
+            return Promise.resolve<Users[]>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<RoadOfGropingUsers[]>(null as any);
+        return Promise.resolve<Users[]>(null as any);
     }
 
     /**
@@ -1603,7 +2156,7 @@ export class UsersServiceProxy {
      * @param id (optional) 
      * @return Success
      */
-    getUserById(id: string | undefined, cancelToken?: CancelToken): Promise<RoadOfGropingUsers> {
+    getUserById(id: string | undefined, cancelToken?: CancelToken): Promise<Users> {
         let url_ = this.baseUrl + "/api/Users/GetUserById?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -1631,7 +2184,7 @@ export class UsersServiceProxy {
         });
     }
 
-    protected processGetUserById(response: AxiosResponse): Promise<RoadOfGropingUsers> {
+    protected processGetUserById(response: AxiosResponse): Promise<Users> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1645,14 +2198,14 @@ export class UsersServiceProxy {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = RoadOfGropingUsers.fromJS(resultData200);
-            return Promise.resolve<RoadOfGropingUsers>(result200);
+            result200 = Users.fromJS(resultData200);
+            return Promise.resolve<Users>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<RoadOfGropingUsers>(null as any);
+        return Promise.resolve<Users>(null as any);
     }
 
     /**
@@ -1663,9 +2216,10 @@ export class UsersServiceProxy {
      * @param userEmail (optional) 邮箱
      * @param userPhone (optional) 手机号
      * @param file (optional) 
+     * @param roles (optional) 角色
      * @return Success
      */
-    createOrUpdateUser(id: string | undefined, userName: string | undefined, passwordHash: string | undefined, userEmail: string | undefined, userPhone: string | undefined, file: FileParameter | undefined, cancelToken?: CancelToken): Promise<RoadOfGropingUsers> {
+    createOrUpdateUser(id: string | undefined, userName: string | undefined, passwordHash: string | undefined, userEmail: string | undefined, userPhone: string | undefined, file: FileParameter | undefined, roles: string[] | undefined, cancelToken?: CancelToken): Promise<Users> {
         let url_ = this.baseUrl + "/api/Users/CreateOrUpdateUser";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1694,6 +2248,10 @@ export class UsersServiceProxy {
             throw new Error("The parameter 'file' cannot be null.");
         else
             content_.append("File", file.data, file.fileName ? file.fileName : "File");
+        if (roles === null || roles === undefined)
+            throw new Error("The parameter 'roles' cannot be null.");
+        else
+            roles.forEach(item_ => content_.append("Roles", item_.toString()));
 
         let options_: AxiosRequestConfig = {
             data: content_,
@@ -1716,7 +2274,7 @@ export class UsersServiceProxy {
         });
     }
 
-    protected processCreateOrUpdateUser(response: AxiosResponse): Promise<RoadOfGropingUsers> {
+    protected processCreateOrUpdateUser(response: AxiosResponse): Promise<Users> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1730,14 +2288,172 @@ export class UsersServiceProxy {
             const _responseText = response.data;
             let result200: any = null;
             let resultData200  = _responseText;
-            result200 = RoadOfGropingUsers.fromJS(resultData200);
-            return Promise.resolve<RoadOfGropingUsers>(result200);
+            result200 = Users.fromJS(resultData200);
+            return Promise.resolve<Users>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<RoadOfGropingUsers>(null as any);
+        return Promise.resolve<Users>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createOrUpdate(body: CreateOrUpdateUserInput | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/Users/CreateOrUpdate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreateOrUpdate(_response);
+        });
+    }
+
+    protected processCreateOrUpdate(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * 添加系统用户
+     * @param body (optional) 
+     * @return Success
+     */
+    createUser(body: CreateOrUpdateUserInput | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/Users/CreateUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreateUser(_response);
+        });
+    }
+
+    protected processCreateUser(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * 更新系统用户信息
+     * @param body (optional) 
+     * @return Success
+     */
+    updateUser(body: CreateOrUpdateUserInput | undefined, cancelToken?: CancelToken): Promise<void> {
+        let url_ = this.baseUrl + "/api/Users/UpdateUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processUpdateUser(_response);
+        });
+    }
+
+    protected processUpdateUser(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
     }
 
     /**
@@ -1794,11 +2510,12 @@ export class UsersServiceProxy {
     }
 }
 
-export class AuthTokenDto implements IAuthTokenDto {
-    accessToken: string | undefined;
-    refreshToken: string | undefined;
+export class ChangePasswordInput implements IChangePasswordInput {
+    oldPassword: string | undefined;
+    newPassword: string | undefined;
+    confirmPassword: string | undefined;
 
-    constructor(data?: IAuthTokenDto) {
+    constructor(data?: IChangePasswordInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1809,36 +2526,191 @@ export class AuthTokenDto implements IAuthTokenDto {
 
     init(_data?: any) {
         if (_data) {
-            this.accessToken = _data["accessToken"];
-            this.refreshToken = _data["refreshToken"];
+            this.oldPassword = _data["oldPassword"];
+            this.newPassword = _data["newPassword"];
+            this.confirmPassword = _data["confirmPassword"];
         }
     }
 
-    static fromJS(data: any): AuthTokenDto {
+    static fromJS(data: any): ChangePasswordInput {
         data = typeof data === 'object' ? data : {};
-        let result = new AuthTokenDto();
+        let result = new ChangePasswordInput();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["accessToken"] = this.accessToken;
-        data["refreshToken"] = this.refreshToken;
+        data["oldPassword"] = this.oldPassword;
+        data["newPassword"] = this.newPassword;
+        data["confirmPassword"] = this.confirmPassword;
         return data;
     }
 
-    clone(): AuthTokenDto {
+    clone(): ChangePasswordInput {
         const json = this.toJSON();
-        let result = new AuthTokenDto();
+        let result = new ChangePasswordInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IAuthTokenDto {
-    accessToken: string | undefined;
-    refreshToken: string | undefined;
+export interface IChangePasswordInput {
+    oldPassword: string | undefined;
+    newPassword: string | undefined;
+    confirmPassword: string | undefined;
+}
+
+export class CreateOrUpdateUserInput implements ICreateOrUpdateUserInput {
+    id: string | undefined;
+    /** 用户名 */
+    userName: string;
+    /** 密码哈希值 */
+    password: string;
+    /** 邮箱 */
+    userEmail: string | undefined;
+    /** 手机号 */
+    userPhone: string | undefined;
+    avatar: string | undefined;
+    /** 角色 */
+    roles: string[] | undefined;
+
+    constructor(data?: ICreateOrUpdateUserInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userName = _data["userName"];
+            this.password = _data["password"];
+            this.userEmail = _data["userEmail"];
+            this.userPhone = _data["userPhone"];
+            this.avatar = _data["avatar"];
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateOrUpdateUserInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOrUpdateUserInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userName"] = this.userName;
+        data["password"] = this.password;
+        data["userEmail"] = this.userEmail;
+        data["userPhone"] = this.userPhone;
+        data["avatar"] = this.avatar;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
+        return data;
+    }
+
+    clone(): CreateOrUpdateUserInput {
+        const json = this.toJSON();
+        let result = new CreateOrUpdateUserInput();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateOrUpdateUserInput {
+    id: string | undefined;
+    /** 用户名 */
+    userName: string;
+    /** 密码哈希值 */
+    password: string;
+    /** 邮箱 */
+    userEmail: string | undefined;
+    /** 手机号 */
+    userPhone: string | undefined;
+    avatar: string | undefined;
+    /** 角色 */
+    roles: string[] | undefined;
+}
+
+export class FeatureListDto implements IFeatureListDto {
+    /** 权限 */
+    permissions: string[] | undefined;
+    /** 角色 */
+    roles: string[] | undefined;
+
+    constructor(data?: IFeatureListDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["permissions"])) {
+                this.permissions = [] as any;
+                for (let item of _data["permissions"])
+                    this.permissions.push(item);
+            }
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): FeatureListDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FeatureListDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.permissions)) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item);
+        }
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
+        return data;
+    }
+
+    clone(): FeatureListDto {
+        const json = this.toJSON();
+        let result = new FeatureListDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IFeatureListDto {
+    /** 权限 */
+    permissions: string[] | undefined;
+    /** 角色 */
+    roles: string[] | undefined;
 }
 
 export class FileInfoOutput implements IFileInfoOutput {
@@ -2166,7 +3038,6 @@ export interface IItem {
 export class LoginDto implements ILoginDto {
     userName: string | undefined;
     password: string | undefined;
-    isApiLogin: boolean;
 
     constructor(data?: ILoginDto) {
         if (data) {
@@ -2181,7 +3052,6 @@ export class LoginDto implements ILoginDto {
         if (_data) {
             this.userName = _data["userName"];
             this.password = _data["password"];
-            this.isApiLogin = _data["isApiLogin"];
         }
     }
 
@@ -2196,7 +3066,6 @@ export class LoginDto implements ILoginDto {
         data = typeof data === 'object' ? data : {};
         data["userName"] = this.userName;
         data["password"] = this.password;
-        data["isApiLogin"] = this.isApiLogin;
         return data;
     }
 
@@ -2211,7 +3080,6 @@ export class LoginDto implements ILoginDto {
 export interface ILoginDto {
     userName: string | undefined;
     password: string | undefined;
-    isApiLogin: boolean;
 }
 
 export class Order implements IOrder {
@@ -2265,110 +3133,216 @@ export interface IOrder {
     dateTime: moment.Moment;
 }
 
-export class RoadOfGropingUsers implements IRoadOfGropingUsers {
-    id: string;
-    creatorId: string | undefined;
-    creationTime: moment.Moment | undefined;
-    deleterId: string | undefined;
-    deletionTime: moment.Moment | undefined;
-    isDeleted: boolean;
-    modifierId: string | undefined;
-    modificationTime: moment.Moment | undefined;
-    userName: string;
-    roles: string[];
-    passwordHash: string;
-    userEmail: string | undefined;
-    userPhone: string | undefined;
-    avatar: string | undefined;
+export class PasswordResetInput implements IPasswordResetInput {
+    /** 用户名称 */
+    userName: string | undefined;
+    /** 邮箱地址 */
+    emailAddress: string | undefined;
 
-    constructor(data?: IRoadOfGropingUsers) {
+    constructor(data?: IPasswordResetInput) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
         }
-        if (!data) {
-            this.roles = [];
-        }
     }
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
-            this.creatorId = _data["creatorId"];
-            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
-            this.deleterId = _data["deleterId"];
-            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
-            this.isDeleted = _data["isDeleted"];
-            this.modifierId = _data["modifierId"];
-            this.modificationTime = _data["modificationTime"] ? moment(_data["modificationTime"].toString()) : <any>undefined;
             this.userName = _data["userName"];
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles.push(item);
-            }
-            this.passwordHash = _data["passwordHash"];
-            this.userEmail = _data["userEmail"];
-            this.userPhone = _data["userPhone"];
-            this.avatar = _data["avatar"];
+            this.emailAddress = _data["emailAddress"];
         }
     }
 
-    static fromJS(data: any): RoadOfGropingUsers {
+    static fromJS(data: any): PasswordResetInput {
         data = typeof data === 'object' ? data : {};
-        let result = new RoadOfGropingUsers();
+        let result = new PasswordResetInput();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["creatorId"] = this.creatorId;
-        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
-        data["deleterId"] = this.deleterId;
-        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
-        data["isDeleted"] = this.isDeleted;
-        data["modifierId"] = this.modifierId;
-        data["modificationTime"] = this.modificationTime ? this.modificationTime.toISOString() : <any>undefined;
         data["userName"] = this.userName;
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item);
-        }
-        data["passwordHash"] = this.passwordHash;
-        data["userEmail"] = this.userEmail;
-        data["userPhone"] = this.userPhone;
-        data["avatar"] = this.avatar;
+        data["emailAddress"] = this.emailAddress;
         return data;
     }
 
-    clone(): RoadOfGropingUsers {
+    clone(): PasswordResetInput {
         const json = this.toJSON();
-        let result = new RoadOfGropingUsers();
+        let result = new PasswordResetInput();
         result.init(json);
         return result;
     }
 }
 
-export interface IRoadOfGropingUsers {
-    id: string;
-    creatorId: string | undefined;
-    creationTime: moment.Moment | undefined;
-    deleterId: string | undefined;
-    deletionTime: moment.Moment | undefined;
-    isDeleted: boolean;
-    modifierId: string | undefined;
-    modificationTime: moment.Moment | undefined;
-    userName: string;
-    roles: string[];
-    passwordHash: string;
-    userEmail: string | undefined;
-    userPhone: string | undefined;
-    avatar: string | undefined;
+export interface IPasswordResetInput {
+    /** 用户名称 */
+    userName: string | undefined;
+    /** 邮箱地址 */
+    emailAddress: string | undefined;
+}
+
+export class RefreshTokenInput implements IRefreshTokenInput {
+    accessToken: string | undefined;
+    refreshToken: string | undefined;
+
+    constructor(data?: IRefreshTokenInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.accessToken = _data["accessToken"];
+            this.refreshToken = _data["refreshToken"];
+        }
+    }
+
+    static fromJS(data: any): RefreshTokenInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new RefreshTokenInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["accessToken"] = this.accessToken;
+        data["refreshToken"] = this.refreshToken;
+        return data;
+    }
+
+    clone(): RefreshTokenInput {
+        const json = this.toJSON();
+        let result = new RefreshTokenInput();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IRefreshTokenInput {
+    accessToken: string | undefined;
+    refreshToken: string | undefined;
+}
+
+export class SendPasswordResetCodeInput implements ISendPasswordResetCodeInput {
+    /** 邮箱地址 */
+    emailAddress: string;
+    /** 链接 */
+    link: string | undefined;
+    /** 验证码 */
+    verificationCode: string | undefined;
+
+    constructor(data?: ISendPasswordResetCodeInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.emailAddress = _data["emailAddress"];
+            this.link = _data["link"];
+            this.verificationCode = _data["verificationCode"];
+        }
+    }
+
+    static fromJS(data: any): SendPasswordResetCodeInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new SendPasswordResetCodeInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["emailAddress"] = this.emailAddress;
+        data["link"] = this.link;
+        data["verificationCode"] = this.verificationCode;
+        return data;
+    }
+
+    clone(): SendPasswordResetCodeInput {
+        const json = this.toJSON();
+        let result = new SendPasswordResetCodeInput();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISendPasswordResetCodeInput {
+    /** 邮箱地址 */
+    emailAddress: string;
+    /** 链接 */
+    link: string | undefined;
+    /** 验证码 */
+    verificationCode: string | undefined;
+}
+
+export class TokenInfoOutput implements ITokenInfoOutput {
+    /** Token */
+    accessToken: string | undefined;
+    /** 刷新Token */
+    refreshToken: string | undefined;
+    /** Token过期时间 */
+    expires: moment.Moment;
+
+    constructor(data?: ITokenInfoOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.accessToken = _data["accessToken"];
+            this.refreshToken = _data["refreshToken"];
+            this.expires = _data["expires"] ? moment(_data["expires"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): TokenInfoOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new TokenInfoOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["accessToken"] = this.accessToken;
+        data["refreshToken"] = this.refreshToken;
+        data["expires"] = this.expires ? this.expires.toISOString() : <any>undefined;
+        return data;
+    }
+
+    clone(): TokenInfoOutput {
+        const json = this.toJSON();
+        let result = new TokenInfoOutput();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITokenInfoOutput {
+    /** Token */
+    accessToken: string | undefined;
+    /** 刷新Token */
+    refreshToken: string | undefined;
+    /** Token过期时间 */
+    expires: moment.Moment;
 }
 
 export class UploadFileOutput implements IUploadFileOutput {
@@ -2422,16 +3396,15 @@ export interface IUploadFileOutput {
     url: string | undefined;
 }
 
-export class UserLoginDto implements IUserLoginDto {
+export class UserInfoOutPut implements IUserInfoOutPut {
+    /** 头像 */
     avater: string | undefined;
+    /** 用户名 */
     userName: string | undefined;
+    /** 昵称 */
     nickName: string | undefined;
-    roles: string[] | undefined;
-    accessToken: string | undefined;
-    refreshToken: string | undefined;
-    expires: moment.Moment;
 
-    constructor(data?: IUserLoginDto) {
+    constructor(data?: IUserInfoOutPut) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2445,14 +3418,58 @@ export class UserLoginDto implements IUserLoginDto {
             this.avater = _data["avater"];
             this.userName = _data["userName"];
             this.nickName = _data["nickName"];
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles.push(item);
+        }
+    }
+
+    static fromJS(data: any): UserInfoOutPut {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserInfoOutPut();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["avater"] = this.avater;
+        data["userName"] = this.userName;
+        data["nickName"] = this.nickName;
+        return data;
+    }
+
+    clone(): UserInfoOutPut {
+        const json = this.toJSON();
+        let result = new UserInfoOutPut();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserInfoOutPut {
+    /** 头像 */
+    avater: string | undefined;
+    /** 用户名 */
+    userName: string | undefined;
+    /** 昵称 */
+    nickName: string | undefined;
+}
+
+export class UserLoginDto implements IUserLoginDto {
+    userInfoOutPut: UserInfoOutPut;
+    tokenInfoOutput: TokenInfoOutput;
+
+    constructor(data?: IUserLoginDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
             }
-            this.accessToken = _data["accessToken"];
-            this.refreshToken = _data["refreshToken"];
-            this.expires = _data["expires"] ? moment(_data["expires"].toString()) : <any>undefined;
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userInfoOutPut = _data["userInfoOutPut"] ? UserInfoOutPut.fromJS(_data["userInfoOutPut"]) : <any>undefined;
+            this.tokenInfoOutput = _data["tokenInfoOutput"] ? TokenInfoOutput.fromJS(_data["tokenInfoOutput"]) : <any>undefined;
         }
     }
 
@@ -2465,17 +3482,8 @@ export class UserLoginDto implements IUserLoginDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["avater"] = this.avater;
-        data["userName"] = this.userName;
-        data["nickName"] = this.nickName;
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item);
-        }
-        data["accessToken"] = this.accessToken;
-        data["refreshToken"] = this.refreshToken;
-        data["expires"] = this.expires ? this.expires.toISOString() : <any>undefined;
+        data["userInfoOutPut"] = this.userInfoOutPut ? this.userInfoOutPut.toJSON() : <any>undefined;
+        data["tokenInfoOutput"] = this.tokenInfoOutput ? this.tokenInfoOutput.toJSON() : <any>undefined;
         return data;
     }
 
@@ -2488,13 +3496,103 @@ export class UserLoginDto implements IUserLoginDto {
 }
 
 export interface IUserLoginDto {
-    avater: string | undefined;
-    userName: string | undefined;
+    userInfoOutPut: UserInfoOutPut;
+    tokenInfoOutput: TokenInfoOutput;
+}
+
+export class Users implements IUsers {
+    id: string | undefined;
+    creatorId: string | undefined;
+    creationTime: moment.Moment | undefined;
+    deleterId: string | undefined;
+    deletionTime: moment.Moment | undefined;
+    isDeleted: boolean;
+    modifierId: string | undefined;
+    modificationTime: moment.Moment | undefined;
+    userName: string;
     nickName: string | undefined;
-    roles: string[] | undefined;
-    accessToken: string | undefined;
-    refreshToken: string | undefined;
-    expires: moment.Moment;
+    password: string;
+    userEmail: string | undefined;
+    userPhone: string | undefined;
+    avater: string | undefined;
+
+    constructor(data?: IUsers) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creatorId = _data["creatorId"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.deleterId = _data["deleterId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.isDeleted = _data["isDeleted"];
+            this.modifierId = _data["modifierId"];
+            this.modificationTime = _data["modificationTime"] ? moment(_data["modificationTime"].toString()) : <any>undefined;
+            this.userName = _data["userName"];
+            this.nickName = _data["nickName"];
+            this.password = _data["password"];
+            this.userEmail = _data["userEmail"];
+            this.userPhone = _data["userPhone"];
+            this.avater = _data["avater"];
+        }
+    }
+
+    static fromJS(data: any): Users {
+        data = typeof data === 'object' ? data : {};
+        let result = new Users();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creatorId"] = this.creatorId;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["deleterId"] = this.deleterId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["isDeleted"] = this.isDeleted;
+        data["modifierId"] = this.modifierId;
+        data["modificationTime"] = this.modificationTime ? this.modificationTime.toISOString() : <any>undefined;
+        data["userName"] = this.userName;
+        data["nickName"] = this.nickName;
+        data["password"] = this.password;
+        data["userEmail"] = this.userEmail;
+        data["userPhone"] = this.userPhone;
+        data["avater"] = this.avater;
+        return data;
+    }
+
+    clone(): Users {
+        const json = this.toJSON();
+        let result = new Users();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUsers {
+    id: string | undefined;
+    creatorId: string | undefined;
+    creationTime: moment.Moment | undefined;
+    deleterId: string | undefined;
+    deletionTime: moment.Moment | undefined;
+    isDeleted: boolean;
+    modifierId: string | undefined;
+    modificationTime: moment.Moment | undefined;
+    userName: string;
+    nickName: string | undefined;
+    password: string;
+    userEmail: string | undefined;
+    userPhone: string | undefined;
+    avater: string | undefined;
 }
 
 export interface FileParameter {

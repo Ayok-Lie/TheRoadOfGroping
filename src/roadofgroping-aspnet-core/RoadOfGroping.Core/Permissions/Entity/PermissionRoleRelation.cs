@@ -15,12 +15,11 @@ namespace RoadOfGroping.Core.Permissions.Entity
         public string RoleId { get; set; }
 
         /// <summary>
-        /// 权限编码
+        /// 权限Id
         /// </summary>
+        [Comment("权限Id")]
         [Required]
-        [MaxLength(128)]
-        [Comment("权限编码")]
-        public string PermissionCode { get; set; }
+        public Guid PermissionId { get; set; }
 
         /// <summary>
         /// 是否授权

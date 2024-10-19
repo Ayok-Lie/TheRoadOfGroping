@@ -15,9 +15,9 @@ builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddControllers(c =>
 {
+    c.Filters.AddService<UnitOfWorkFilter>(99);
     //·µ»ØÖµÀ¹½ØÆ÷
-    c.Filters.AddService<SucceededUnifyResultFilter>(99);
-    c.Filters.AddService<UnitOfWorkFilter>(100);
+    c.Filters.AddService<SucceededUnifyResultFilter>(100);
     //c.Filters.Add<ApiResultFilterAttribute>();
     //c.Filters.Add<ModelValidateActionFilterAttribute>();
 });
