@@ -1,9 +1,7 @@
 # TheRoadOfGroping
 Net的摸索之路，写着玩，有很多不足
-## 🎃.NET 8 后端框架
-### 👕SunBlog.AspNetCore/src 后端自己搭建的框架
-
 - 🛺.Net8
+- 😶‍🌫️VUE3
 - EF Core 8 适配SqlServer和Mysql🎏
   - 仓储
   - 简单工作单元
