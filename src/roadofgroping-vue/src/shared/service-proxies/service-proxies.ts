@@ -1547,6 +1547,85 @@ export class OrdersServiceProxy {
     }
 }
 
+export class PermissionssServiceProxy {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "";
+
+    }
+
+    /**
+     * @param c (optional) 
+     * @return Success
+     */
+    getABC(a: number, b: string, c: number | undefined, cancelToken?: CancelToken): Promise<number> {
+        let url_ = this.baseUrl + "/api/Permissionss/GetABC?";
+        if (a === undefined || a === null)
+            throw new Error("The parameter 'a' must be defined and cannot be null.");
+        else
+            url_ += "A=" + encodeURIComponent("" + a) + "&";
+        if (b === undefined || b === null)
+            throw new Error("The parameter 'b' must be defined and cannot be null.");
+        else
+            url_ += "B=" + encodeURIComponent("" + b) + "&";
+        if (c === null)
+            throw new Error("The parameter 'c' cannot be null.");
+        else if (c !== undefined)
+            url_ += "C=" + encodeURIComponent("" + c) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetABC(_response);
+        });
+    }
+
+    protected processGetABC(response: AxiosResponse): Promise<number> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return Promise.resolve<number>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<number>(null as any);
+    }
+}
+
 export class RedissServiceProxy {
     protected instance: AxiosInstance;
     protected baseUrl: string;

@@ -12,14 +12,13 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 using RoadOfGroping.Common.Attributes;
 using RoadOfGroping.Host.Extensions;
-using TencentCloud.Cfg.V20210820.Models;
 
 namespace RoadOfGroping.Host.UnifyResult.Fiters
 {
     /// <summary>
     /// 规范化结构（请求成功）过滤器
     /// </summary>
-    public class SucceededUnifyResultFilter : ActionFilter, IOrderedFilter
+    public class SucceededUnifyResultFilter : IActionFilter, IOrderedFilter
     {
         /// <summary>
         /// 过滤器排序
@@ -30,6 +29,11 @@ namespace RoadOfGroping.Host.UnifyResult.Fiters
         /// 排序属性
         /// </summary>
         public int Order => FilterOrder;
+
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+            //throw new NotImplementedException();
+        }
 
         /// <summary>
         /// 处理规范化结果

@@ -473,7 +473,7 @@
             状态码
             </summary>
         </member>
-        <member name="P:RoadOfGroping.Host.UnifyResult.RESTfulResult`1.Data">
+        <member name="P:RoadOfGroping.Host.UnifyResult.RESTfulResult`1.Result">
             <summary>
             数据
             </summary>

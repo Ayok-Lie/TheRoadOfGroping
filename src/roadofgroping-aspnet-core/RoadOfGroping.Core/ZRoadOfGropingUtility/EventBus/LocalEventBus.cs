@@ -1,4 +1,6 @@
-﻿namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus
+﻿using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.ChannelHandler;
+
+namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus
 {
     public class LocalEventBus : ILocalEventBus
     {

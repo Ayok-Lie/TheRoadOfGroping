@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus
+namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.RabbitMQHandler
 {
     public class RabbitMQBasedEventHandlerManager : IRabbitMQBasedEventHandlerManager, IDisposable
     {
@@ -66,7 +66,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus
 
             var eventName = typeof(TEvent).Name;
             _channel.ExchangeDeclare(exchange: "events", type: ExchangeType.Direct);
-            _channel.QueueDeclare(queue: eventName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+            _channel?.QueueDeclare(queue: eventName, durable: true, exclusive: false, autoDelete: false, arguments: null);
             _channel.QueueBind(queue: eventName, exchange: "events", routingKey: eventName);
 
             var consumer = new EventingBasicConsumer(_channel);

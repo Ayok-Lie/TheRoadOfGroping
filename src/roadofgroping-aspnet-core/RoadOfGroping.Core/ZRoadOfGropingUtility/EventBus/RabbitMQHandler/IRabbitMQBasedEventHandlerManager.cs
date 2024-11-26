@@ -1,4 +1,4 @@
-﻿namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus
+﻿namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.RabbitMQHandler
 {
     public interface IRabbitMQBasedEventHandlerManager
     {

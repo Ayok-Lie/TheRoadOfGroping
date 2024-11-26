@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 
-namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus
+namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.RabbitMQHandler
 {
     public interface IRabbitMQConnectionFactory
     {

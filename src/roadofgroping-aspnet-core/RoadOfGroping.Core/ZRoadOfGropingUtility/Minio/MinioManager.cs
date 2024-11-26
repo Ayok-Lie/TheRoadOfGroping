@@ -220,6 +220,7 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Minio
                 .WithBucket(input.BucketName)
                 .WithObject(input.ObjectName);
 
+
             await _minioClient.StatObjectAsync(statObjectArgs);
 
             MemoryStream objStream = new MemoryStream();

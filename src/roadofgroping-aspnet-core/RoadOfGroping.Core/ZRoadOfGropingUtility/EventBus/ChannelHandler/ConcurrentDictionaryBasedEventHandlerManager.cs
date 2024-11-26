@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.Attributes;
 
-namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus
+namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.ChannelHandler
 {
     public class ConcurrentDictionaryBasedEventHandlerManager : IConcurrentDictionaryBasedEventHandlerManager
     {

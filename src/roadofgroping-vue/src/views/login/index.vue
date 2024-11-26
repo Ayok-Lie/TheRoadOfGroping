@@ -17,13 +17,15 @@ import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
 import Lock from "@iconify-icons/ri/lock-fill";
 import User from "@iconify-icons/ri/user-3-fill";
-import { LoginDto } from "@/shared";
+import { AccountsServiceProxy, LoginDto } from "@/shared";
+import { setToken, setUser } from "@/utils/auth";
 defineOptions({
   name: "Login"
 });
 const router = useRouter();
 const loading = ref(false);
 const ruleFormRef = ref<FormInstance>();
+const accountServiceProxy = new AccountsServiceProxy();
 const { initStorage } = useLayout();
 initStorage();
 
@@ -41,21 +43,17 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       loading.value = true;
-      useUserStoreHook()
-        .loginByUsername(ruleForm)
+      accountServiceProxy
+        .login(ruleForm)
         .then(res => {
           if (res) {
-            // 获取后端路由
-            return initRouter().then(() => {
-              router.push(getTopMenu(true).path).then(() => {
-                message("登录成功", { type: "success" });
-              });
-            });
-          } else {
-            message("登录失败", { type: "error" });
+            setUser(res.userInfoOutPut);
+            setToken(res.tokenInfoOutput);
           }
         })
-        .finally(() => (loading.value = false));
+        .catch(error => {
+          message("登录失败", { type: "error" });
+        });
     }
   });
 };

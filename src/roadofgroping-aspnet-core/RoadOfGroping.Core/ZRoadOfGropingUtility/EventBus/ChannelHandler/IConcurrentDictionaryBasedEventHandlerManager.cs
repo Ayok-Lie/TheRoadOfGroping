@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus
+namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.ChannelHandler
 {
     public interface IConcurrentDictionaryBasedEventHandlerManager : IDisposable
     {

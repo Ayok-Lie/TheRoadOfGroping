@@ -27,7 +27,16 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Token
         {
             if (context.Request.Cookies.TryGetValue(HeaderNames.Authorization, out var token))
             {
-                context.Token = JsonConvert.DeserializeObject<AuthTokenDto>(token)?.AccessToken;
+                try
+                {
+                    context.Token = JsonConvert.DeserializeObject<AuthTokenDto>(token)?.AccessToken;
+                }
+                catch (Exception)
+                {
+
+                    context.Token = token;
+                }
+               
             }
 
             return Task.CompletedTask;

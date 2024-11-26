@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.ChannelHandler;
+using RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.RabbitMQHandler;
 
 namespace RoadOfGroping.Core.ZRoadOfGropingUtility.EventBus.Extensions
 {

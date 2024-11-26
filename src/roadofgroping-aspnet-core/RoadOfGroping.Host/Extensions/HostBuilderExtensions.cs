@@ -100,7 +100,7 @@ namespace RoadOfGroping.Host.Extensions
 
             app.UseRequestLocalization();
             // 添加异常处理中间件
-            //app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             // 启用身份验证
             app.UseAuthentication();
