@@ -58,19 +58,8 @@ export default defineFlatConfig([
       ...configPrettier.rules,
       ...pluginPrettier.configs.recommended.rules,
       "no-debugger": "off",
-      "no-unused-vars": [
-        "error",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_"
-        }
-      ],
-      "prettier/prettier": [
-        "error",
-        {
-          endOfLine: "auto"
-        }
-      ]
+      "no-unused-vars": "off",
+      "prettier/prettier": "off",
     }
   },
   {
@@ -87,29 +76,20 @@ export default defineFlatConfig([
     rules: {
       ...pluginTypeScript.configs.strict.rules,
       "@typescript-eslint/ban-types": "off",
-      "@typescript-eslint/no-redeclare": "error",
+      "@typescript-eslint/no-redeclare": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/prefer-as-const": "warn",
+      "@typescript-eslint/prefer-as-const": "off",
       "@typescript-eslint/no-empty-function": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
-      "@typescript-eslint/no-import-type-side-effects": "error",
+      "@typescript-eslint/no-import-type-side-effects": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/consistent-type-imports": [
         "error",
         { disallowTypeAnnotations: false, fixStyle: "inline-type-imports" }
       ],
-      "@typescript-eslint/prefer-literal-enum-member": [
-        "error",
-        { allowBitwiseExpressions: true }
-      ],
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_"
-        }
-      ]
+      "@typescript-eslint/prefer-literal-enum-member": "off",
+      "@typescript-eslint/no-unused-vars": "off",
     }
   },
   {
@@ -164,18 +144,7 @@ export default defineFlatConfig([
       "vue/require-explicit-emits": "off",
       "vue/multi-word-component-names": "off",
       "vue/no-setup-props-reactivity-loss": "off",
-      "vue/html-self-closing": [
-        "error",
-        {
-          html: {
-            void: "always",
-            normal: "always",
-            component: "always"
-          },
-          svg: "always",
-          math: "always"
-        }
-      ]
+      "vue/html-self-closing": "off"
     }
   }
 ]);

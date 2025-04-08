@@ -12,25 +12,19 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations
 
         public AppAuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
         {
-            BackupPolicyProvider = new DefaultAuthorizationPolicyProvider(options);
+            _backupPolicyProvider = new DefaultAuthorizationPolicyProvider(options);
             _authorizationOptions = options.Value;
         }
 
-        private DefaultAuthorizationPolicyProvider BackupPolicyProvider { get; }
+        private DefaultAuthorizationPolicyProvider _backupPolicyProvider { get; }
 
         public async Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
         {
             if (policyName is null) throw new ArgumentNullException(nameof(policyName));
 
-            var policy = await BackupPolicyProvider.GetPolicyAsync(policyName);
-            if (policy is not null)
-            {
-                return policy;
-            }
-
             using (await _mutex.LockAsync())
             {
-                policy = await BackupPolicyProvider.GetPolicyAsync(policyName);
+                var policy = await _backupPolicyProvider.GetPolicyAsync(policyName);
                 if (policy is not null)
                 {
                     return policy;
@@ -52,12 +46,12 @@ namespace RoadOfGroping.Core.ZRoadOfGropingUtility.Permission.Authorizations
 
         public Task<AuthorizationPolicy> GetDefaultPolicyAsync()
         {
-            return BackupPolicyProvider.GetDefaultPolicyAsync();
+            return _backupPolicyProvider.GetDefaultPolicyAsync();
         }
 
         public Task<AuthorizationPolicy> GetFallbackPolicyAsync()
         {
-            return BackupPolicyProvider.GetFallbackPolicyAsync();
+            return _backupPolicyProvider.GetFallbackPolicyAsync();
         }
     }
 }

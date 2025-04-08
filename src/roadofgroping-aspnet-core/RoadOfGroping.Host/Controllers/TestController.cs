@@ -42,7 +42,7 @@ namespace RoadOfGroping.Host.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [PermissionAuthorize(AppPermissions.User.Delete)]
+        [PermissionAuthorize("aaaa")]
         public async Task<string> HttpClient()
         {
             using (var httpClient = new HttpClient())

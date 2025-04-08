@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Security.Cryptography;
+using Always.DynamicWebAPI.Extensions;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -9,6 +10,7 @@ using Hangfire.MySql;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
@@ -33,7 +35,6 @@ using RoadOfGroping.Host.UnifyResult.Fiters;
 using RoadOfGroping.Model.Extensions;
 using RoadOfGroping.Repository.Auditing;
 using RoadOfGroping.Repository.Dappers;
-using RoadOfGroping.Repository.DynamicWebAPI;
 using RoadOfGroping.Repository.Extensions;
 using RoadOfGroping.Repository.Repository;
 using RoadOfGroping.Repository.UnitOfWorks;
@@ -61,7 +62,6 @@ namespace RoadOfGroping.Host.Extensions
         /// <param name="builder"></param>
         public static void AddCoreServices(this WebApplicationBuilder builder)
         {
-            //var context = new ServiceConfigerContext(builder.Services);
             configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
             Env = builder.Environment;
             // 配置AppsettingHelper
@@ -69,17 +69,27 @@ namespace RoadOfGroping.Host.Extensions
             builder.Services.AddCors();
             builder.Services.UseRepository();
             builder.Services.ConfigureHangfireService();
-            builder.Services.ServicesMvc();
-            builder.Services.AddSwaggerGen(builder);
+            builder.Services.AddDynamicApi(configuration);
+            builder.Services.AddSwagger(options =>
+            {
+                options.Version = "v1";
+                options.DefaultModelExpandDepth = -1;
+                options.EnableDeepLinking = true;
+                options.EnableXmlComments = true;
+                options.DocExpansion = DocExpansion.None;
+                options.EnableLoginPage = false;
+                options.LoginPagePath = "/pages/swagger.html";
+                options.Title = "TheRoadOfGroping API";
+                options.WebRootPath = builder.Environment.WebRootPath;
+                options.EnableSimpleToken = false;
+            });
             builder.Services.AddUnitOfWork();
             builder.Services.AddJwtConfig();
             builder.Services.AddJosnLocalization();
-            //builder.Services.AddAutoMapper();
             builder.Services.UseRedis();
             builder.Services.AddSignalR();
             builder.Services.AddSession();
             builder.Services.AddMinio(configuration);
-            //builder.Services.AddFilters();
         }
 
         /// <summary>
@@ -89,10 +99,9 @@ namespace RoadOfGroping.Host.Extensions
         public static void AddUseCore(this WebApplicationBuilder builder)
         {
             var app = builder.Build();
-
             app.UseRouting();
 
-            app.UseSwaggerUI(builder);
+            app.UseAlwaysSwaggerUI();
 
             app.UseHttpsRedirection();
             // 启用CORS策略
@@ -256,104 +265,6 @@ namespace RoadOfGroping.Host.Extensions
         }
 
         /// <summary>
-        /// 动态WebAPI 配置
-        /// </summary>
-        /// <returns></returns>
-        public static void ServicesMvc(this IServiceCollection services)
-        {
-            services.AddMvc(options =>
-            {
-            })
-                .AddRazorPagesOptions((options) => { })
-                .AddRazorRuntimeCompilation()
-                .AddDynamicWebApi();
-        }
-
-        /// <summary>
-        /// Swagger 配置
-        /// </summary>
-        /// <returns></returns>
-        public static void AddSwaggerGen(this IServiceCollection services, WebApplicationBuilder builder)
-        {
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen(options =>
-            {
-                options.OperationFilter<AddResponseHeadersFilter>();
-                options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
-                options.OperationFilter<SecurityRequirementsOperationFilter>();
-                //使Post请求的Body参数在Swagger UI中以Json格式显示。
-                //options.OperationFilter<JsonBodyOperationFilter>();
-                //options.DocumentFilter<RemoveAppSuffixFilter>();
-                options.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "TheRoadOfGroping API",
-                    Version = "v1",
-                    Description = "Asp.Net Core6 WebApi开发实战",
-                    Contact = new OpenApiContact()
-                    {
-                        Name = "Lie",
-                        Email = "88888888@qq.com",
-                        Url = new Uri("https://blog.csdn.net/ousetuhou?type=blog")
-                    }
-                });
-                var binXmlFiles =
-                new DirectoryInfo(Path.Join(builder?.Environment.WebRootPath, "ApiDocs"))
-                .GetFiles("*.xml", SearchOption.TopDirectoryOnly);
-                foreach (var filePath in binXmlFiles.Select(item => item.FullName))
-                {
-                    options.IncludeXmlComments(filePath, true);
-                }
-                //开启Authorize权限按钮——方式一
-                options.AddSecurityDefinition("JWTBearer", new OpenApiSecurityScheme()
-                {
-                    Description = "这是方式一(直接在输入框中输入认证信息，不需要在开头添加Bearer) ",
-                    Name = "Authorization",        //jwt默认的参数名称
-                    In = ParameterLocation.Header,  //jwt默认存放Authorization信息的位置(请求头中)
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer"
-                });
-                var scheme = new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference()
-                    {
-                        Id = "JWTBearer",
-                        Type = ReferenceType.SecurityScheme
-                    }
-                };
-                ////开启Authorize权限按钮——方式二
-
-                //options.AddSecurityDefinition("JwtBearer", new OpenApiSecurityScheme()
-                //{
-                //    Description = "这是方式二(JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）)",
-                //    Name = "Authorization",//jwt默认的参数名称
-                //    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
-                //    Type = SecuritySchemeType.ApiKey
-                //});
-
-                ////开启Authorize权限按钮——默认
-                //options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                //{
-                //    {
-                //        new OpenApiSecurityScheme
-                //        {
-                //            Reference = new OpenApiReference
-                //            {
-                //                Type = ReferenceType.SecurityScheme,
-                //                Id = "Bearer"
-                //            },Scheme = "oauth2",Name = "Bearer",In=ParameterLocation.Header,
-                //        },new List<string>()
-                //    }
-                //});
-
-                //声明一个Scheme，注意下面的Id要和上面AddSecurityDefinition中的参数name一致
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    { scheme, Array.Empty<string>() }
-                });
-            });
-        }
-
-        /// <summary>
         /// 注册UnitOfWork服务
         /// </summary>
         /// <returns></returns>
@@ -422,23 +333,6 @@ namespace RoadOfGroping.Host.Extensions
                 options.EventsType = typeof(AppJwtBearerEvents);
             });
         }
-
-        /// <summary>
-        /// CORS策略
-        /// </summary>
-        /// <returns></returns>
-        //public static void AddCors(this IServiceCollection services)
-        //{
-        //    services.AddCors(options =>
-        //    {
-        //        options.AddPolicy("DefaultCorsPolicy", builder =>
-        //        {
-        //            builder.AllowAnyOrigin()
-        //                   .AllowAnyMethod()
-        //                   .AllowAnyHeader();
-        //        });
-        //    });
-        //}
 
         /// <summary>
         /// CORS策略
@@ -598,32 +492,6 @@ namespace RoadOfGroping.Host.Extensions
                     throw new Exception("不支持的数据库类型");
             }
             return configuration;
-        }
-
-        /// <summary>
-        /// 配置swaggerUI
-        /// </summary>
-        /// <returns></returns>
-        public static void UseSwaggerUI(this WebApplication app, WebApplicationBuilder builder)
-        {
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(options =>
-                {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1 Docs");
-                    //options.RoutePrefix = String.Empty;
-                    //options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
-                    //options.DefaultModelExpandDepth(-1);
-                    //options.EnableDeepLinking(); //深链接功能
-                    options.DocExpansion(DocExpansion.None); //swagger文档是否打开
-                    options.IndexStream = () =>
-                    {
-                        var path = Path.Join(builder.Environment!.WebRootPath, "pages", "swagger.html");
-                        return new FileInfo(path).OpenRead();
-                    };
-                });
-            }
         }
     }
 }

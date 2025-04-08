@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json;
 
 namespace RoadOfGroping.Host.UnifyResult.Providers
 {
@@ -55,7 +56,16 @@ namespace RoadOfGroping.Host.UnifyResult.Providers
         /// <returns></returns>
         public IActionResult OnSucceeded(ActionExecutedContext context, object data)
         {
-            return new JsonResult(RESTfulResult(StatusCodes.Status200OK, true, data));
+            //return new JsonResult(RESTfulResult(StatusCodes.Status200OK, true, data));
+            //return new ContentResult
+            //{
+            //    StatusCode = StatusCodes.Status200OK,
+            //    Content = JsonConvert.SerializeObject(data),
+            //    ContentType = "application/json;charset=utf-8",
+            //};
+            return new JsonResult(data) { 
+                StatusCode = StatusCodes.Status200OK,
+            };
         }
 
         /// <summary>

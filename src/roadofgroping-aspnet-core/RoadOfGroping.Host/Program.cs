@@ -2,6 +2,7 @@ using RoadOfGroping.Host.Extensions;
 using RoadOfGroping.Host.UnifyResult.Fiters;
 
 var builder = WebApplication.CreateBuilder(args);
+
 // ÅäÖÃÎÄ¼ş¶ÁÈ¡
 var basePath = AppContext.BaseDirectory;
 var config = new ConfigurationBuilder()

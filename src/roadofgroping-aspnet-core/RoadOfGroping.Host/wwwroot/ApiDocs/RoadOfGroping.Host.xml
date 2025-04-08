@@ -139,18 +139,6 @@
             <param name="services"></param>
             <param name="optionsAction"></param>
         </member>
-        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.ServicesMvc(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            动态WebAPI 配置
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddSwaggerGen(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
-            <summary>
-            Swagger 配置
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.AddUnitOfWork(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             注册UnitOfWork服务
@@ -192,12 +180,6 @@
             使用 Hangfire Storage
             </summary>
             <param name="configuration"></param>
-            <returns></returns>
-        </member>
-        <member name="M:RoadOfGroping.Host.Extensions.HostBuilderExtensions.UseSwaggerUI(Microsoft.AspNetCore.Builder.WebApplication,Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
-            <summary>
-            配置swaggerUI
-            </summary>
             <returns></returns>
         </member>
         <member name="M:RoadOfGroping.Host.Extensions.HttpContextExtensions.FileInlineHandle(Microsoft.AspNetCore.Http.HttpContext,System.String)">
@@ -473,7 +455,7 @@
             状态码
             </summary>
         </member>
-        <member name="P:RoadOfGroping.Host.UnifyResult.RESTfulResult`1.Result">
+        <member name="P:RoadOfGroping.Host.UnifyResult.RESTfulResult`1.Data">
             <summary>
             数据
             </summary>

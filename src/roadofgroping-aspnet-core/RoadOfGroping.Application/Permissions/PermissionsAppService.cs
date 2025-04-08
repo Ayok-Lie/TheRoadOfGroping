@@ -25,7 +25,7 @@ namespace RoadOfGroping.Application.Permissions
         [Required]
         public int A { get; set; }
         [Required]
-        [MinLength(10)]
+        [MaxLength(10)]
         public string B { get; set; }
         public int C { get; set; }
     }
