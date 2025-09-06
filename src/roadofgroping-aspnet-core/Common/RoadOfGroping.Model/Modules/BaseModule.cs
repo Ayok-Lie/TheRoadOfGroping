@@ -26,27 +26,21 @@ namespace RoadOfGroping.Model.Modules
         /// </summary>
         /// <param name="context"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public virtual void PreConfigureServices(ServiceConfigerContext context)
-        {
-        }
+        public virtual void PreConfigureServices(ServiceConfigerContext context) { }
 
         /// <summary>
         /// 服务注册与配置
         /// </summary>
         /// <param name="context"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public virtual void ConfigerService(ServiceConfigerContext context)
-        {
-        }
+        public virtual void ConfigerService(ServiceConfigerContext context) { }
 
         /// <summary>
         /// 配置中间件
         /// </summary>
         /// <param name="context"></param>
         /// <exception cref="NotImplementedException"></exception>
-        public virtual void InitApplication(InitApplicationContext context)
-        {
-        }
+        public virtual void InitApplication(InitApplicationContext context) { }
 
         public virtual async Task InitApplicationAsync(InitApplicationContext context)
         {
@@ -57,9 +51,7 @@ namespace RoadOfGroping.Model.Modules
         ///
         /// </summary>
         /// <param name="context"></param>
-        public virtual void LaterInitApplication(InitApplicationContext context)
-        {
-        }
+        public virtual void LaterInitApplication(InitApplicationContext context) { }
 
         public virtual async Task LaterInitApplicationAsync(InitApplicationContext context)
         {
@@ -70,11 +62,10 @@ namespace RoadOfGroping.Model.Modules
         {
             var typeInfo = type.GetTypeInfo();
 
-            return
-                typeInfo.IsClass &&
-                !typeInfo.IsAbstract &&
-                !typeInfo.IsGenericType &&
-                typeof(IBaseModule).GetTypeInfo().IsAssignableFrom(type);
+            return typeInfo.IsClass
+                && !typeInfo.IsAbstract
+                && !typeInfo.IsGenericType
+                && typeof(IBaseModule).GetTypeInfo().IsAssignableFrom(type);
         }
 
         internal static void CheckModuleType(Type type)
@@ -85,7 +76,8 @@ namespace RoadOfGroping.Model.Modules
             }
         }
 
-        public void Configure<TOptions>(Action<TOptions> action) where TOptions : class
+        public void Configure<TOptions>(Action<TOptions> action)
+            where TOptions : class
         {
             ServiceConfigerContext.Services.Configure<TOptions>(action);
         }
